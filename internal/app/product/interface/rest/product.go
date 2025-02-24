@@ -1,7 +1,15 @@
 package rest
 
-type ProductHandler struct {}
+import "github.com/gofiber/fiber/v2"
 
-func NewProductHandler() {
-    ProductHandler := ProductHandler{}
+type ProductHandler struct{}
+
+func NewProductHandler(routerGroup fiber.Router) {
+	handler := ProductHandler{}
+
+	routerGroup.Get("/", handler.GetAllProducts)
+}
+
+func (h *ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
+	return ctx.SendString("succesfully get all products")
 }

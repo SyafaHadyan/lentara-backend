@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"fmt"
+	producthandler "lentara-backend/internal/app/product/interface/rest"
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/mysql"
@@ -23,6 +24,10 @@ func Start() error {
 	))
 
 	app := fiber.New()
+
+	v1 := app.Group("")
+
+	producthandler.NewProductHandler(v1)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
