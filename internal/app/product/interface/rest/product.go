@@ -7,6 +7,8 @@ type ProductHandler struct{}
 func NewProductHandler(routerGroup fiber.Router) {
 	handler := ProductHandler{}
 
+	routerGroup = routerGroup.Group("/products")
+
 	routerGroup.Get("/", handler.GetAllProducts)
 }
 

@@ -1,15 +1,15 @@
 package repository
 
-import(
-    "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
 )
 
-type ProductMySQLItf interface {}
+type ProductMySQLItf interface{}
 
 type ProductMySQL struct {
-    db *gorm.DB
+	db *gorm.DB
 }
 
 func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
-    return &ProductMySQL{db}
+	return &ProductMySQL{db}
 }
