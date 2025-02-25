@@ -25,6 +25,12 @@ func Start() error {
 		config.DBName,
 	))
 
+	// TODO: Add flag to migrate (get from os args)
+	err = mysql.Migrate(database)
+	if err != nil {
+		panic(err)
+	}
+
 	app := fiber.New()
 
 	v1 := app.Group("/api/v1")

@@ -1,6 +1,9 @@
 package usecase
 
-import "lentara-backend/internal/app/product/repository"
+import (
+	"lentara-backend/internal/app/product/repository"
+	"lentara-backend/internal/domain/dto"
+)
 
 type ProductUsecaseItf interface {
 	Intermediary() string
@@ -16,6 +19,9 @@ func NewProductUsecase(productRepository repository.ProductMySQLItf) ProductUsec
 	}
 }
 
-func (u ProductUsecase) Intermediary() string {
+func (u ProductUsecase) Intermediary() (dto.ResponseCreateProduct, string) {
 	return u.ProductRepository.GetProducts()
+}
+
+func (u ProductUseCase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
 }

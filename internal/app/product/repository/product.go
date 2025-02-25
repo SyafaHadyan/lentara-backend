@@ -17,5 +17,5 @@ func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
 }
 
 func (r ProductMySQL) GetProducts() string {
-	return "successfully get products"
+	return "I use Arch btw"
 }

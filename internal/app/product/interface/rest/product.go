@@ -2,6 +2,7 @@ package rest
 
 import (
 	"lentara-backend/internal/app/product/usecase"
+	"lentara-backend/internal/domain/dto"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,6 +19,8 @@ func NewProductHandler(routerGroup fiber.Router, productUseCase usecase.ProductU
 	routerGroup = routerGroup.Group("/products")
 
 	routerGroup.Get("/", handler.GetAllProducts)
+
+	routerGroup.Post("/", handler.CreateProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -27,4 +30,22 @@ func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 		"message": res,
 	})
 	// return ctx.SendString("succesfully get all products")
+}
+
+func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
+	// var request dto.RequestCreateProduct
+	request := new(dto.RequestCreateProduct)
+
+	err := ctx.BodyParser(request)
+	if err != nil {
+		return ctx.JSON(fiber.Map{
+			"message": "failed to parse request body",
+		})
+	}
+
+	return ctx.JSON(request)
+
+	// return ctx.JSON(fiber.Map{
+	// 	"message": "post",
+	// })
 }
