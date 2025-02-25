@@ -5,7 +5,7 @@ type RequestCreateProduct struct {
 	Description string `json:"description"`
 	Price       int64  `json:"price"`
 	Stock       int32  `json:"stock"`
-	PhotoURL    string `json:"photo_url"`
+	PhotoUrl    string `json:"photo_url"`
 }
 
 type ResponseCreateProduct struct {
@@ -13,6 +13,6 @@ type ResponseCreateProduct struct {
 	Description string `json:"description"`
 	Price       int64  `json:"price"`
 	Stock       int32  `json:"stock"`
-	PhotoURL    string `json:"photo_url"`
+	PhotoUrl    string `json:"photo_url"`
 }
 

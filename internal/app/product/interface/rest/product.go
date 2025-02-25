@@ -33,17 +33,30 @@ func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 }
 
 func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
-	// var request dto.RequestCreateProduct
-	request := new(dto.RequestCreateProduct)
+	var request dto.RequestCreateProduct
+	// request := new(dto.RequestCreateProduct)
 
-	err := ctx.BodyParser(request)
+	err := ctx.BodyParser(&request)
 	if err != nil {
-		return ctx.JSON(fiber.Map{
-			"message": "failed to parse request body",
-		})
+		return err
+		// return ctx.JSON(fiber.Map{
+		// 	"message": "failed to parse request body",
+		// })
 	}
 
-	return ctx.JSON(request)
+	res, err := h.ProductUseCase.CreateProduct(request)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(fiber.Map{
+		"message": "succesfully created product",
+		"payload": res,
+	})
+
+	// return ctx.JSON(res)
+
+	// return ctx.JSON(request)
 
 	// return ctx.JSON(fiber.Map{
 	// 	"message": "post",

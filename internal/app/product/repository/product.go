@@ -1,11 +1,14 @@
 package repository
 
 import (
+	"lentara-backend/internal/domain/entity"
+
 	"gorm.io/gorm"
 )
 
 type ProductMySQLItf interface {
 	GetProducts() string
+	Create(product *entity.Product) error
 }
 
 type ProductMySQL struct {
@@ -18,4 +21,8 @@ func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
 
 func (r ProductMySQL) GetProducts() string {
 	return "I use Arch btw"
+}
+
+func (r ProductMySQL) Create(product *entity.Product) error {
+	return r.db.Create(product).Error
 }
