@@ -38,10 +38,10 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 
 	err := ctx.BodyParser(&request)
 	if err != nil {
-		return err
-		// return ctx.JSON(fiber.Map{
-		// 	"message": "failed to parse request body",
-		// })
+		// return err
+		return ctx.JSON(fiber.Map{
+			"message": "failed to parse request body",
+		})
 	}
 
 	res, err := h.ProductUseCase.CreateProduct(request)
