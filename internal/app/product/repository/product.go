@@ -4,7 +4,9 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductMySQLItf interface{}
+type ProductMySQLItf interface {
+	GetProducts() string
+}
 
 type ProductMySQL struct {
 	db *gorm.DB
@@ -12,4 +14,8 @@ type ProductMySQL struct {
 
 func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
 	return &ProductMySQL{db}
+}
+
+func (r ProductMySQL) GetProducts() string {
+	return "successfully get products"
 }

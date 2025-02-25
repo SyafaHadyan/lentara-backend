@@ -1,9 +1,21 @@
 package usecase
 
-type ProductUsecaseItf interface {}
+import "lentara-backend/internal/app/product/repository"
 
-type ProductUsecase struct {}
+type ProductUsecaseItf interface {
+	Intermediary() string
+}
 
-func NewProductUsecase() ProductUsecaseItf {
-    return &ProductUsecase{}
+type ProductUsecase struct {
+	ProductRepository repository.ProductMySQLItf
+}
+
+func NewProductUsecase(productRepository repository.ProductMySQLItf) ProductUsecaseItf {
+	return &ProductUsecase{
+		ProductRepository: productRepository,
+	}
+}
+
+func (u ProductUsecase) Intermediary() string {
+	return u.ProductRepository.GetProducts()
 }

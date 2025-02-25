@@ -4,8 +4,6 @@ go 1.24.0
 
 require github.com/gofiber/fiber/v2 v2.52.6
 
-require github.com/caarlos0/env v3.5.0+incompatible // indirect
-
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/caarlos0/env/v11 v11.3.1 // direct

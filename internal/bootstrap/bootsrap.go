@@ -21,7 +21,7 @@ func Start() error {
 		config.DBUsername,
 		config.DBPassword,
 		config.DBHost,
-		config.DBPassword,
+		config.DBPort,
 		config.DBName,
 	))
 
@@ -30,8 +30,8 @@ func Start() error {
 	v1 := app.Group("/api/v1")
 
 	productRepository := productrepository.NewProductMySQL(database)
-	productUseCase := productusecase.NewProductUsecase()
-	producthandler.NewProductHandler(v1)
+	productUseCase := productusecase.NewProductUsecase(productRepository)
+	producthandler.NewProductHandler(v1, productUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }

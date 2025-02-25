@@ -1,17 +1,30 @@
 package rest
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"lentara-backend/internal/app/product/usecase"
 
-type ProductHandler struct{}
+	"github.com/gofiber/fiber/v2"
+)
 
-func NewProductHandler(routerGroup fiber.Router) {
-	handler := ProductHandler{}
+type ProductHandler struct {
+	ProductUseCase usecase.ProductUsecaseItf
+}
+
+func NewProductHandler(routerGroup fiber.Router, productUseCase usecase.ProductUsecaseItf) {
+	handler := ProductHandler{
+		ProductUseCase: productUseCase,
+	}
 
 	routerGroup = routerGroup.Group("/products")
 
 	routerGroup.Get("/", handler.GetAllProducts)
 }
 
-func (h *ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
-	return ctx.SendString("succesfully get all products")
+func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
+	res := h.ProductUseCase.Intermediary()
+
+	return ctx.JSON(fiber.Map{
+		"message": res,
+	})
+	// return ctx.SendString("succesfully get all products")
 }
