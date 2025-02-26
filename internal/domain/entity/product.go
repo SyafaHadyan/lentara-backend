@@ -52,3 +52,18 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 		UpdatedAt:     p.UpdatedAt,
 	}
 }
+
+func (p Product) ParseToDTOGetSpecificProduct() dto.GetSpecificProduct {
+	return dto.GetSpecificProduct{
+		ID:            p.ID,
+		Title:         p.Title,
+		Description:   p.Description,
+		Specification: p.Specification,
+		Category:      p.Category,
+		Price:         p.Price,
+		Stock:         p.Stock,
+		PhotoUrl:      p.PhotoUrl,
+		CreatedAt:     p.CreatedAt,
+		UpdatedAt:     p.UpdatedAt,
+	}
+}

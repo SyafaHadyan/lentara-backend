@@ -11,7 +11,7 @@ import (
 type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
-	GetSpecificProduct(productID uuid.UUID) (dto.ResponseCreateProduct, error)
+	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
 }
 
 type ProductUsecase struct {
@@ -72,15 +72,15 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 	// return dto.ResponseCreateProduct{}, nil
 }
 
-func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.ResponseCreateProduct, error) {
+func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
 	product := &entity.Product{
 		ID: productID,
 	}
 
 	err := u.ProductRepository.GetSpecificProduct(product)
 	if err != nil {
-		return dto.ResponseCreateProduct{}, err
+		return dto.GetSpecificProduct{}, err
 	}
 
-	return product.ParseToDTO(), err
+	return product.ParseToDTOGetSpecificProduct(), err
 }

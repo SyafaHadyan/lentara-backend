@@ -26,6 +26,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/", handler.GetAllProducts)
 	routerGroup.Post("/", handler.CreateProduct)
 	routerGroup.Get("/:id", handler.GetSpecificProduct)
+	routerGroup.Patch("/:id", handler.UpdateProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -89,4 +90,8 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(res)
+}
+
+func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
+	return nil
 }
