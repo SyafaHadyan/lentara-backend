@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type ProductHandler struct {
@@ -24,7 +25,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 	routerGroup.Get("/", handler.GetAllProducts)
 	routerGroup.Post("/", handler.CreateProduct)
-	// routerGroup.Get("/id")
+	routerGroup.Get("/:id", handler.GetSpecificProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -74,4 +75,18 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	// return ctx.JSON(fiber.Map{
 	// 	"message": "post",
 	// })
+}
+
+func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "not a valid uuid")
+	}
+
+	res, err := h.ProductUseCase.GetSpecificProduct(productID)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "can't find uuid")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(res)
 }
