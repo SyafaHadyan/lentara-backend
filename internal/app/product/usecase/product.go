@@ -32,6 +32,7 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 		ID:          uuid.New(),
 		Title:       request.Title,
 		Description: request.Description,
+		Category:    request.Category,
 		Price:       request.Price,
 		Stock:       request.Stock,
 		PhotoUrl:    request.PhotoUrl,

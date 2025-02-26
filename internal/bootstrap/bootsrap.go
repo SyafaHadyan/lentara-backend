@@ -8,6 +8,8 @@ import (
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/mysql"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func Start() error {
@@ -31,13 +33,15 @@ func Start() error {
 		panic(err)
 	}
 
+	val := validator.New()
+
 	app := fiber.New()
 
 	v1 := app.Group("/api/v1")
 
 	productRepository := productrepository.NewProductMySQL(database)
 	productUseCase := productusecase.NewProductUsecase(productRepository)
-	producthandler.NewProductHandler(v1, productUseCase)
+	producthandler.NewProductHandler(v1, val, productUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }

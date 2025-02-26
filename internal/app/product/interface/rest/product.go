@@ -4,15 +4,18 @@ import (
 	"lentara-backend/internal/app/product/usecase"
 	"lentara-backend/internal/domain/dto"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
 type ProductHandler struct {
+	Validator      *validator.Validate
 	ProductUseCase usecase.ProductUsecaseItf
 }
 
-func NewProductHandler(routerGroup fiber.Router, productUseCase usecase.ProductUsecaseItf) {
+func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf) {
 	handler := ProductHandler{
+		Validator:      validator,
 		ProductUseCase: productUseCase,
 	}
 
@@ -25,7 +28,6 @@ func NewProductHandler(routerGroup fiber.Router, productUseCase usecase.ProductU
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	res := h.ProductUseCase.Intermediary()
-
 	return ctx.JSON(fiber.Map{
 		"message": res,
 	})
@@ -42,6 +44,11 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{
 			"message": "failed to parse request body",
 		})
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return err
 	}
 
 	res, err := h.ProductUseCase.CreateProduct(request)
