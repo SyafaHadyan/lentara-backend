@@ -44,13 +44,14 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 
 func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
 	product := entity.Product{
-		ID:          uuid.New(),
-		Title:       request.Title,
-		Description: request.Description,
-		Category:    request.Category,
-		Price:       request.Price,
-		Stock:       request.Stock,
-		PhotoUrl:    request.PhotoUrl,
+		ID:            uuid.New(),
+		Title:         request.Title,
+		Description:   request.Description,
+		Specification: request.Specification,
+		Category:      request.Category,
+		Price:         request.Price,
+		Stock:         request.Stock,
+		PhotoUrl:      request.PhotoUrl,
 	}
 
 	err := u.ProductRepository.Create(&product)
