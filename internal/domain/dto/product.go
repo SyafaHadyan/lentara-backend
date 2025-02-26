@@ -2,7 +2,7 @@ package dto
 
 type RequestCreateProduct struct {
 	Title       string `json:"title" validate:"required,min=3"`
-	Description string `json:"description"`
+	Description string `json:"description" validate:"required,min=5"`
 	Category    string `json:"category" validate:"required"`
 	Price       int64  `json:"price" validate:"required"`
 	Stock       int32  `json:"stock" validate:"required"`

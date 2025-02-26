@@ -3,6 +3,7 @@ package rest
 import (
 	"lentara-backend/internal/app/product/usecase"
 	"lentara-backend/internal/domain/dto"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -28,7 +29,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	res := h.ProductUseCase.Intermediary()
-	return ctx.JSON(fiber.Map{
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": res,
 	})
 	// return ctx.SendString("succesfully get all products")
@@ -41,11 +42,12 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	err := ctx.BodyParser(&request)
 	if err != nil {
 		// return err
-		return ctx.JSON(fiber.Map{
+		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"message": "failed to parse request body",
 		})
 	}
 
+	// TODO parse error
 	err = h.Validator.Struct(request)
 	if err != nil {
 		return err
@@ -56,7 +58,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(fiber.Map{
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "succesfully created product",
 		"payload": res,
 	})
