@@ -1,15 +1,30 @@
 package repository
 
-import(
-    "gorm.io/gorm"
+import (
+	"lentara-backend/internal/domain/entity"
+
+	"gorm.io/gorm"
 )
 
-type ProductMySQLItf interface {}
+type ProductMySQLItf interface {
+	GetAllProducts(products *[]entity.Product) error
+	Create(product *entity.Product) error
+}
 
 type ProductMySQL struct {
-    db *gorm.DB
+	db *gorm.DB
 }
 
 func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
-    return &ProductMySQL{db}
+	return &ProductMySQL{db}
+}
+
+func (r ProductMySQL) GetAllProducts(products *[]entity.Product) error {
+	return r.db.Find(products).Error
+
+	// return "I use Arch btw"
+}
+
+func (r ProductMySQL) Create(product *entity.Product) error {
+	return r.db.Create(product).Error
 }

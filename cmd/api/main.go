@@ -1,41 +1,58 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	"lentara-backend/internal/bootstrap"
+	// "lentara-backend/internal/infra/env"
+	// "lentara-backend/internal/infra/fiber"
 )
 
-const idleTimeout = 5 * time.Second
-
 func main() {
-	app := fiber.New(fiber.Config{
-		IdleTimeout: idleTimeout,
-	})
+	err := bootstrap.Start()
+	if err != nil {
+		panic(err)
+	}
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello world!")
-	})
+	// _env, err := env.New()
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	// Listen from a different goroutine
-	go func() {
-		if err := app.Listen(":8080"); err != nil {
-			log.Panic(err)
-		}
-	}()
+	// _mysql
 
-	c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
+	// _fiber, err := fiber.New()
+	// if err != nil {
+	//   //
+	// }
 
-	_ = <-c // This blocks the main thread until an interrupt is received
-	fmt.Println("Gracefully shutting down...")
-	_ = app.Shutdown()
+	// cfg, err := env.New()
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	fmt.Println("Running cleanup tasks...")
-
-	fmt.Println("Fiber was successful shutdown.")
+	//	app := fiber.New(fiber.Config{
+	//		IdleTimeout: idleTimeout,
+	//	})
+	//
+	//	app.Get("/", func(c *fiber.Ctx) error {
+	//		return c.SendString("Hello world!")
+	//	})
+	//
+	// // Listen from a different goroutine
+	//
+	//	go func() {
+	//		if err := app.Listen(":8080"); err != nil {
+	//			log.Panic(err)
+	//		}
+	//	}()
+	//
+	// c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
+	// signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
+	//
+	// _ = <-c // This blocks the main thread until an interrupt is received
+	// fmt.Println("Gracefully shutting down...")
+	// _ = app.Shutdown()
+	//
+	// fmt.Println("Running cleanup tasks...")
+	//
+	// fmt.Println("Fiber was successful shutdown.")
 }
