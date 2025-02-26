@@ -4,14 +4,17 @@ import (
 	"lentara-backend/internal/app/product/repository"
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
+	"net/http"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
 type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
-	GetSpecificProduct(productID uuid.UUID) (dto.ResponseCreateProduct, error)
+	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
+	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
 }
 
 type ProductUsecase struct {
@@ -72,15 +75,36 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 	// return dto.ResponseCreateProduct{}, nil
 }
 
-func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.ResponseCreateProduct, error) {
+func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
 	product := &entity.Product{
 		ID: productID,
 	}
 
 	err := u.ProductRepository.GetSpecificProduct(product)
 	if err != nil {
-		return dto.ResponseCreateProduct{}, err
+		return dto.GetSpecificProduct{}, err
 	}
 
-	return product.ParseToDTO(), err
+	return product.ParseToDTOGetSpecificProduct(), err
+}
+
+func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
+	product := &entity.Product{
+		ID:            ProductID,
+		Title:         request.Title,
+		Description:   request.Description,
+		Specification: request.Specification,
+		Category:      request.Category,
+		Price:         request.Price,
+		Stock:         request.Stock,
+		RentCount:     request.RentCount,
+		Rating:        request.Rating,
+	}
+
+	err := u.ProductRepository.UpdateProduct(product)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to update product")
+	}
+
+	return nil
 }

@@ -26,6 +26,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/", handler.GetAllProducts)
 	routerGroup.Post("/", handler.CreateProduct)
 	routerGroup.Get("/:id", handler.GetSpecificProduct)
+	routerGroup.Patch("/:id", handler.UpdateProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -86,6 +87,37 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 	res, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "can't find uuid")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(res)
+}
+
+func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
+	var request dto.UpdateProduct
+
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
+	}
+
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "can't find product with current id")
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "payload invalid")
+	}
+
+	err = h.ProductUseCase.UpdateProduct(productID, request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
+	}
+
+	res, err := h.ProductUseCase.GetSpecificProduct(productID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(res)
