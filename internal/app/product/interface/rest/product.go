@@ -93,5 +93,32 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 }
 
 func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
-	return nil
+	var request dto.UpdateProduct
+
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
+	}
+
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "can't find product with current id")
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "payload invalid")
+	}
+
+	err = h.ProductUseCase.UpdateProduct(productID, request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
+	}
+
+	res, err := h.ProductUseCase.GetSpecificProduct(productID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(res)
 }

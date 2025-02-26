@@ -47,6 +47,7 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 		Price:         p.Price,
 		Stock:         p.Stock,
 		RentCount:     p.RentCount,
+		Rating:        p.Rating,
 		PhotoUrl:      p.PhotoUrl,
 		CreatedAt:     p.CreatedAt,
 		UpdatedAt:     p.UpdatedAt,
