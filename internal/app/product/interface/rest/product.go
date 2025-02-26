@@ -23,12 +23,16 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup = routerGroup.Group("/products")
 
 	routerGroup.Get("/", handler.GetAllProducts)
-
 	routerGroup.Post("/", handler.CreateProduct)
+	// routerGroup.Get("/id")
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
-	res := h.ProductUseCase.Intermediary()
+	res, err := h.ProductUseCase.GetAllProducts()
+	if err != nil {
+		return err
+	}
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": res,
 	})

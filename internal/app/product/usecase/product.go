@@ -9,7 +9,7 @@ import (
 )
 
 type ProductUsecaseItf interface {
-	Intermediary() string
+	GetAllProducts() (*[]dto.GetAllProducts, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
 }
 
@@ -23,8 +23,22 @@ func NewProductUsecase(productRepository repository.ProductMySQLItf) ProductUsec
 	}
 }
 
-func (u ProductUsecase) Intermediary() string {
-	return u.ProductRepository.GetProducts()
+func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.GetAllProducts(products)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]dto.GetAllProducts, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOGetAllProducts()
+	}
+
+	return &res, nil
+
+	// return u.db.Find().Error()
 }
 
 func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {

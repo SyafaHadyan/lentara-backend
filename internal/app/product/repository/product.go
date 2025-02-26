@@ -7,7 +7,7 @@ import (
 )
 
 type ProductMySQLItf interface {
-	GetProducts() string
+	GetAllProducts(products *[]entity.Product) error
 	Create(product *entity.Product) error
 }
 
@@ -19,8 +19,10 @@ func NewProductMySQL(db *gorm.DB) ProductMySQLItf {
 	return &ProductMySQL{db}
 }
 
-func (r ProductMySQL) GetProducts() string {
-	return "I use Arch btw"
+func (r ProductMySQL) GetAllProducts(products *[]entity.Product) error {
+	return r.db.Find(products).Error
+
+	// return "I use Arch btw"
 }
 
 func (r ProductMySQL) Create(product *entity.Product) error {

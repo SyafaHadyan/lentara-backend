@@ -29,3 +29,17 @@ func (p Product) ParseToDTO() dto.ResponseCreateProduct {
 		PhotoUrl:    p.PhotoUrl,
 	}
 }
+
+func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
+	return dto.GetAllProducts{
+		ID:          p.ID,
+		Title:       p.Title,
+		Description: p.Description,
+		Category:    p.Category,
+		Price:       p.Price,
+		Stock:       p.Stock,
+		PhotoUrl:    p.PhotoUrl,
+		CreatedAt:   p.CreatedAt,
+		UpdatedAt:   p.UpdatedAt,
+	}
+}

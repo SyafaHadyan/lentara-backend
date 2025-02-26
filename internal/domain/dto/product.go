@@ -1,5 +1,11 @@
 package dto
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type RequestCreateProduct struct {
 	Title       string `json:"title" validate:"required,min=3"`
 	Description string `json:"description" validate:"required,min=5"`
@@ -16,4 +22,16 @@ type ResponseCreateProduct struct {
 	Price       int64  `json:"price"`
 	Stock       int32  `json:"stock"`
 	PhotoUrl    string `json:"photo_url"`
+}
+
+type GetAllProducts struct {
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Category    string    `json:"category"`
+	Price       int64     `json:"price"`
+	Stock       int32     `json:"stock"`
+	PhotoUrl    string    `json:"photo_url"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
