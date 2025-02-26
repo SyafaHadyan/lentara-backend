@@ -36,6 +36,8 @@ type ResponseCreateProduct struct {
 	Category      string    `json:"category"`
 	Price         int64     `json:"price"`
 	Stock         int32     `json:"stock"`
+	RentCount     int32     `json:"rent_count"`
+	Rating        float32   `json:"rating"`
 	PhotoUrl      string    `json:"photo_url"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
@@ -64,6 +66,8 @@ type GetSpecificProduct struct {
 	Category      string    `json:"category"`
 	Price         int64     `json:"price"`
 	Stock         int32     `json:"stock"`
+	RentCount     int32     `json:"rent_count"`
+	Rating        float32   `json:"rating"`
 	PhotoUrl      string    `json:"photo_url"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
