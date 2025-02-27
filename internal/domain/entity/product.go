@@ -22,23 +22,6 @@ type Product struct {
 	UpdatedAt     time.Time `gorm:"type:timestamp;autoUpdateTime"`
 }
 
-func (p Product) ParseToDTO() dto.ResponseCreateProduct {
-	return dto.ResponseCreateProduct{
-		ID:            p.ID,
-		Title:         p.Title,
-		Description:   p.Description,
-		Specification: p.Specification,
-		Category:      p.Category,
-		Price:         p.Price,
-		Stock:         p.Stock,
-		RentCount:     p.RentCount,
-		Rating:        p.Rating,
-		PhotoUrl:      p.PhotoUrl,
-		CreatedAt:     p.CreatedAt,
-		UpdatedAt:     p.UpdatedAt,
-	}
-}
-
 func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 	return dto.GetAllProducts{
 		ID:            p.ID,
@@ -58,6 +41,40 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 
 func (p Product) ParseToDTOGetSpecificProduct() dto.GetSpecificProduct {
 	return dto.GetSpecificProduct{
+		ID:            p.ID,
+		Title:         p.Title,
+		Description:   p.Description,
+		Specification: p.Specification,
+		Category:      p.Category,
+		Price:         p.Price,
+		Stock:         p.Stock,
+		RentCount:     p.RentCount,
+		Rating:        p.Rating,
+		PhotoUrl:      p.PhotoUrl,
+		CreatedAt:     p.CreatedAt,
+		UpdatedAt:     p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTOGetProductCategory() dto.GetProductCategory {
+	return dto.GetProductCategory{
+		ID:            p.ID,
+		Title:         p.Title,
+		Description:   p.Description,
+		Specification: p.Specification,
+		Category:      p.Category,
+		Price:         p.Price,
+		Stock:         p.Stock,
+		RentCount:     p.RentCount,
+		Rating:        p.Rating,
+		PhotoUrl:      p.PhotoUrl,
+		CreatedAt:     p.CreatedAt,
+		UpdatedAt:     p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTO() dto.ResponseCreateProduct {
+	return dto.ResponseCreateProduct{
 		ID:            p.ID,
 		Title:         p.Title,
 		Description:   p.Description,

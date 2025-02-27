@@ -24,58 +24,21 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup = routerGroup.Group("/products")
 
 	routerGroup.Get("/", handler.GetAllProducts)
-	routerGroup.Post("/", handler.CreateProduct)
 	routerGroup.Get("/:id", handler.GetSpecificProduct)
+	routerGroup.Get("/category/:category", handler.GetProductCategory)
+	routerGroup.Post("/", handler.CreateProduct)
 	routerGroup.Patch("/:id", handler.UpdateProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	res, err := h.ProductUseCase.GetAllProducts()
 	if err != nil {
-		return err
+		return fiber.NewError(http.StatusInternalServerError, "failed to get products")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": res,
 	})
-	// return ctx.SendString("succesfully get all products")
-}
-
-func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
-	var request dto.RequestCreateProduct
-	// request := new(dto.RequestCreateProduct)
-
-	err := ctx.BodyParser(&request)
-	if err != nil {
-		// return err
-		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "failed to parse request body",
-		})
-	}
-
-	// TODO parse error
-	err = h.Validator.Struct(request)
-	if err != nil {
-		return err
-	}
-
-	res, err := h.ProductUseCase.CreateProduct(request)
-	if err != nil {
-		return err
-	}
-
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "succesfully created product",
-		"payload": res,
-	})
-
-	// return ctx.JSON(res)
-
-	// return ctx.JSON(request)
-
-	// return ctx.JSON(fiber.Map{
-	// 	"message": "post",
-	// })
 }
 
 func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
@@ -90,6 +53,44 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(res)
+}
+
+func (h ProductHandler) GetProductCategory(ctx *fiber.Ctx) error {
+	res, err := h.ProductUseCase.GetProductCategory(ctx.Params("category"))
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product category")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": res,
+	})
+}
+
+func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
+	var request dto.RequestCreateProduct
+	// request := new(dto.RequestCreateProduct)
+
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to parse request body",
+		})
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		fiber.NewError(http.StatusBadRequest, "failed to validate request")
+	}
+
+	res, err := h.ProductUseCase.CreateProduct(request)
+	if err != nil {
+		fiber.NewError(http.StatusInternalServerError, "failed to create product")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "succesfully created product",
+		"payload": res,
+	})
 }
 
 func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
