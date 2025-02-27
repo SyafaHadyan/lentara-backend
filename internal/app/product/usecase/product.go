@@ -12,8 +12,9 @@ import (
 
 type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
-	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
 	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
+	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
+	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
 	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
 }
 
@@ -41,8 +42,35 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	}
 
 	return &res, nil
+}
 
-	// return u.db.Find().Error()
+func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
+	product := &entity.Product{
+		ID: productID,
+	}
+
+	err := u.ProductRepository.GetSpecificProduct(product)
+	if err != nil {
+		return dto.GetSpecificProduct{}, err
+	}
+
+	return product.ParseToDTOGetSpecificProduct(), err
+}
+
+func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.GetProductCategory(products, productCategory)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to get product category")
+	}
+
+	res := make([]dto.GetProductCategory, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOGetProductCategory()
+	}
+
+	return &res, nil
 }
 
 func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
@@ -75,19 +103,6 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 	// return dto.ResponseCreateProduct{}, nil
 }
 
-func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
-	product := &entity.Product{
-		ID: productID,
-	}
-
-	err := u.ProductRepository.GetSpecificProduct(product)
-	if err != nil {
-		return dto.GetSpecificProduct{}, err
-	}
-
-	return product.ParseToDTOGetSpecificProduct(), err
-}
-
 func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
 	product := &entity.Product{
 		ID:            ProductID,
@@ -99,6 +114,7 @@ func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdatePro
 		Stock:         request.Stock,
 		RentCount:     request.RentCount,
 		Rating:        request.Rating,
+		PhotoUrl:      request.PhotoUrl,
 	}
 
 	err := u.ProductRepository.UpdateProduct(product)
