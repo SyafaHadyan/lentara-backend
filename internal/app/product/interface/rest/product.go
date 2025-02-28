@@ -21,13 +21,14 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 		ProductUseCase: productUseCase,
 	}
 
-	routerGroup = routerGroup.Group("/products")
+	routerGroup = routerGroup.Group("/")
 
-	routerGroup.Get("/", handler.GetAllProducts)
-	routerGroup.Get("/:id", handler.GetSpecificProduct)
-	routerGroup.Get("/category/:category", handler.GetProductCategory)
-	routerGroup.Post("/", handler.CreateProduct)
-	routerGroup.Patch("/:id", handler.UpdateProduct)
+	routerGroup.Get("/products", handler.GetAllProducts)
+	routerGroup.Get("/products/:id", handler.GetSpecificProduct)
+	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
+	routerGroup.Get("/search/:title", handler.SearchProduct)
+	routerGroup.Post("/products", handler.CreateProduct)
+	routerGroup.Patch("/products/:id", handler.UpdateProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -62,7 +63,18 @@ func (h ProductHandler) GetProductCategory(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": res,
+		"payload": res,
+	})
+}
+
+func (h ProductHandler) SearchProduct(ctx *fiber.Ctx) error {
+	res, err := h.ProductUseCase.SearchProduct(ctx.Params("title"))
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to search product")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"payload": res,
 	})
 }
 

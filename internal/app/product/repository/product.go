@@ -10,6 +10,7 @@ type ProductMySQLItf interface {
 	GetAllProducts(products *[]entity.Product) error
 	GetSpecificProduct(products *entity.Product) error
 	GetProductCategory(products *[]entity.Product, category string) error
+	SearchProduct(products *[]entity.Product, query string) error
 	Create(product *entity.Product) error
 	UpdateProduct(products *entity.Product) error
 }
@@ -32,6 +33,10 @@ func (r ProductMySQL) GetSpecificProduct(products *entity.Product) error {
 
 func (r ProductMySQL) GetProductCategory(products *[]entity.Product, category string) error {
 	return r.db.Debug().Debug().Where("category = ?", category).Find(products).Error
+}
+
+func (r ProductMySQL) SearchProduct(products *[]entity.Product, query string) error {
+	return r.db.Debug().Where("title LIKE ?", "%"+query+"%").Find(products).Error
 }
 
 func (r ProductMySQL) Create(product *entity.Product) error {
