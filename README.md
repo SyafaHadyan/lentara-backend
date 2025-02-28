@@ -18,9 +18,7 @@
 
 ## Args
 
-`--migrate`
-
-Migrate database
+`--migrate`: Migrate database
 
 ## Sample Response
 
