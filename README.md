@@ -26,6 +26,8 @@ Migrate database
 
 ### Get All Products
 
+#### Response Body
+
 ```json
 {
     "message": [
@@ -161,6 +163,8 @@ Migrate database
 
 ### Get Product by ID
 
+#### Response Body
+
 ```json
 {
     "id": "4de2993e-811b-462c-a2a1-7788934426db",
@@ -179,6 +183,8 @@ Migrate database
 ```
 
 ### Get Product by Category
+
+#### Response Body
 
 ```json
 {
@@ -216,6 +222,8 @@ Migrate database
 ```
 
 ### Search Product by Name
+
+#### Response Body
 
 ```json
 {
