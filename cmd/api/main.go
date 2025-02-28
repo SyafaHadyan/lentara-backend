@@ -2,12 +2,14 @@ package main
 
 import (
 	"lentara-backend/internal/bootstrap"
-	// "lentara-backend/internal/infra/env"
-	// "lentara-backend/internal/infra/fiber"
+	"log"
+	"os"
+	"time"
 )
 
 func main() {
-	err := bootstrap.Start()
+	log.Printf("Current time: %v\n", time.Now())
+	err := bootstrap.Start(os.Args)
 	if err != nil {
 		panic(err)
 	}
@@ -16,26 +18,26 @@ func main() {
 	// if err != nil {
 	// 	panic(err)
 	// }
-
+	//
 	// _mysql
-
+	//
 	// _fiber, err := fiber.New()
 	// if err != nil {
 	//   //
 	// }
-
+	//
 	// cfg, err := env.New()
 	// if err != nil {
 	// 	panic(err)
 	// }
-
+	//
 	//	app := fiber.New(fiber.Config{
 	//		IdleTimeout: idleTimeout,
 	//	})
 	//
-	//	app.Get("/", func(c *fiber.Ctx) error {
-	//		return c.SendString("Hello world!")
-	//	})
+	// 	app.Get("/", func(c *fiber.Ctx) error {
+	// 		return c.SendString("Hello world!")
+	// 	})
 	//
 	// // Listen from a different goroutine
 	//

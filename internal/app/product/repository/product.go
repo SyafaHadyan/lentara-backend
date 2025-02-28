@@ -13,6 +13,7 @@ type ProductMySQLItf interface {
 	SearchProduct(products *[]entity.Product, query string) error
 	Create(product *entity.Product) error
 	UpdateProduct(products *entity.Product) error
+	DeleteProduct(product *entity.Product) error
 }
 
 type ProductMySQL struct {
@@ -45,4 +46,8 @@ func (r ProductMySQL) Create(product *entity.Product) error {
 
 func (r ProductMySQL) UpdateProduct(product *entity.Product) error {
 	return r.db.Debug().Updates(product).Error
+}
+
+func (r ProductMySQL) DeleteProduct(product *entity.Product) error {
+	return r.db.Debug().Delete(product).Error
 }

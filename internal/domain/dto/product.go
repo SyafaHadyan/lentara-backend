@@ -102,3 +102,33 @@ type UpdateProduct struct {
 	Rating        float32 `json:"rating"`
 	PhotoUrl      string  `json:"photo_url"`
 }
+
+type DeleteProduct struct {
+	ID            uuid.UUID `json:"id" validate:"required"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Specification string    `json:"Specification"`
+	Category      string    `json:"category"`
+	Price         int64     `json:"price"`
+	Stock         int32     `json:"stock"`
+	RentCount     int32     `json:"rent_count"`
+	Rating        float32   `json:"rating"`
+	PhotoUrl      string    `json:"photo_url"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+type ResponseDeleteProduct struct {
+	ID            uuid.UUID `json:"id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Specification string    `json:"Specification"`
+	Category      string    `json:"category"`
+	Price         int64     `json:"price"`
+	Stock         int32     `json:"stock"`
+	RentCount     int32     `json:"rent_count"`
+	Rating        float32   `json:"rating"`
+	PhotoUrl      string    `json:"photo_url"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}

@@ -90,8 +90,41 @@ func (p Product) ParseToDTOSearchProduct() dto.SearchProduct {
 	}
 }
 
-func (p Product) ParseToDTO() dto.ResponseCreateProduct {
+func (p Product) ParseToDTOResponseCreateProduct() dto.ResponseCreateProduct {
 	return dto.ResponseCreateProduct{
+		ID:            p.ID,
+		Title:         p.Title,
+		Description:   p.Description,
+		Specification: p.Specification,
+		Category:      p.Category,
+		Price:         p.Price,
+		Stock:         p.Stock,
+		RentCount:     p.RentCount,
+		Rating:        p.Rating,
+		PhotoUrl:      p.PhotoUrl,
+		CreatedAt:     p.CreatedAt,
+		UpdatedAt:     p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTODeleteProduct() dto.DeleteProduct {
+	return dto.DeleteProduct{
+		Title:         p.Title,
+		Description:   p.Description,
+		Specification: p.Specification,
+		Category:      p.Category,
+		Price:         p.Price,
+		Stock:         p.Stock,
+		RentCount:     p.RentCount,
+		Rating:        p.Rating,
+		PhotoUrl:      p.PhotoUrl,
+		CreatedAt:     p.CreatedAt,
+		UpdatedAt:     p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTOResponseDeleteProduct() dto.ResponseDeleteProduct {
+	return dto.ResponseDeleteProduct{
 		ID:            p.ID,
 		Title:         p.Title,
 		Description:   p.Description,

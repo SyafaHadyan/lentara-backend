@@ -17,6 +17,7 @@ type ProductUsecaseItf interface {
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
 	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
+	DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error)
 }
 
 type ProductUsecase struct {
@@ -107,17 +108,7 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 		return dto.ResponseCreateProduct{}, err
 	}
 
-	return product.ParseToDTO(), nil
-
-	// res := dto.ResponseCreateProduct{
-	// 	Title:       product.Title,
-	// 	Description: product.Description,
-	// 	Price:       product.Price,
-	// 	Stock:       product.Stock,
-	// 	PhotoUrl:    product.PhotoUrl,
-	// }
-
-	// return dto.ResponseCreateProduct{}, nil
+	return product.ParseToDTOResponseCreateProduct(), nil
 }
 
 func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
@@ -140,4 +131,17 @@ func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdatePro
 	}
 
 	return nil
+}
+
+func (u ProductUsecase) DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error) {
+	productID := &entity.Product{
+		ID: ProductID,
+	}
+
+	err := u.ProductRepository.DeleteProduct(productID)
+	if err != nil {
+		return dto.ResponseDeleteProduct{}, fiber.NewError(http.StatusBadRequest, "failed to find product id")
+	}
+
+	return productID.ParseToDTOResponseDeleteProduct(), nil
 }

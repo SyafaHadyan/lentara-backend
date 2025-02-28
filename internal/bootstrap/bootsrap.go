@@ -8,12 +8,13 @@ import (
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/mysql"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-func Start() error {
+func Start(args []string) error {
 	config, err := env.New()
 	if err != nil {
 		panic(err)
@@ -28,11 +29,19 @@ func Start() error {
 		config.DBName,
 	))
 
-	// TODO: Add flag to migrate (get from os args)
-	err = mysql.Migrate(database)
-	if err != nil {
-		panic(err)
+	if len(args) != 1 && args[1] == "--migrate" {
+		err = mysql.Migrate(database)
+		if err != nil {
+			log.Println("failed to migrate")
+			log.Println(err)
+		} else {
+			log.Println("migration success")
+		}
+	} else {
+		log.Println("no migration performed, running normally ...")
 	}
+
+	log.Printf("args: %v\n", args)
 
 	val := validator.New()
 
