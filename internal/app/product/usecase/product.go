@@ -14,6 +14,7 @@ type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
 	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
+	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
 	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
 }
@@ -68,6 +69,22 @@ func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetPr
 	res := make([]dto.GetProductCategory, len(*products))
 	for i, product := range *products {
 		res[i] = product.ParseToDTOGetProductCategory()
+	}
+
+	return &res, nil
+}
+
+func (u ProductUsecase) SearchProduct(query string) (*[]dto.SearchProduct, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.SearchProduct(products, query)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to search product")
+	}
+
+	res := make([]dto.SearchProduct, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOSearchProduct()
 	}
 
 	return &res, nil

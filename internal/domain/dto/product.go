@@ -51,6 +51,21 @@ type GetProductCategory struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
+type SearchProduct struct {
+	ID            uuid.UUID `json:"id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Specification string    `json:"Specification"`
+	Category      string    `json:"category"`
+	Price         int64     `json:"price"`
+	Stock         int32     `json:"stock"`
+	RentCount     int32     `json:"rent_count"`
+	Rating        float32   `json:"rating"`
+	PhotoUrl      string    `json:"photo_url"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
 type RequestCreateProduct struct {
 	Title         string `json:"title" validate:"required,min=3"`
 	Description   string `json:"description" validate:"required,min=5"`
