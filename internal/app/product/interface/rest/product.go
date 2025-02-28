@@ -29,6 +29,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", handler.CreateProduct)
 	routerGroup.Patch("/products/:id", handler.UpdateProduct)
+	routerGroup.Delete("/products/:id", handler.DeleteProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -131,6 +132,32 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 	res, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(res)
+}
+
+func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
+	var request dto.DeleteProduct
+
+	err := ctx.BodyParser(request)
+	if err != nil {
+		fiber.NewError(http.StatusBadRequest, "failed to parse request with current id")
+	}
+
+	ProductID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		fiber.NewError(http.StatusInternalServerError, "failed to get product id")
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		fiber.NewError(http.StatusBadRequest, "invalid product id")
+	}
+
+	res, err := h.ProductUseCase.DeleteProduct(ProductID, request)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "failed to delete product")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(res)
