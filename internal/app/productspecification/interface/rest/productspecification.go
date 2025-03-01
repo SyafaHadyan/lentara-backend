@@ -47,7 +47,6 @@ func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) 
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "succesfully set product specifications",
 		"payload": res,
 	})
 }
@@ -76,8 +75,9 @@ func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) 
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"product_id":            productID.String(),
-		"product_specification": res,
+		"payload": res,
+		// "product_id":            productID.String(),
+		//"product_specification": res,
 	})
 }
 
