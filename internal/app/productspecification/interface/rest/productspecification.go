@@ -23,6 +23,8 @@ func NewProductSpecificationHandler(routerGroup fiber.Router, validator *validat
 
 	routerGroup = routerGroup.Group("/productspecification")
 
+	routerGroup.Post("/:id", productSpecificationHandler.CreateProductSpecification)
+	routerGroup.Patch("/:id", productSpecificationHandler.UpdateProductSpecification)
 	routerGroup.Get("/:id", productSpecificationHandler.GetProductSpecification)
 }
 
