@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"lentara-backend/internal/app/product/repository"
+	repository "lentara-backend/internal/app/product/repository"
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
 	"net/http"
@@ -51,6 +51,8 @@ func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecific
 		ID: productID,
 	}
 
+	// productSpecification := //
+
 	productSpecification := &entity.ProductSpecification{
 		ID: productID,
 	}
@@ -60,7 +62,7 @@ func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecific
 		return dto.GetSpecificProduct{}, dto.GetProductSpecification{}, err
 	}
 
-	return product.ParseToDTOGetSpecificProduct(), productSpecification.ParseToDTOProductSpecification(), err
+	return product.ParseToDTOGetSpecificProduct(), productSpecification.ParseToDTOGetProductSpecification(), err
 }
 
 func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {

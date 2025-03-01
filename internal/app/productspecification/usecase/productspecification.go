@@ -11,6 +11,8 @@ import (
 )
 
 type ProductSpecificationUsecaseItf interface {
+	CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error)
+	UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.UpdateProductSpecification, error)
 	GetProductSpecification(productID uuid.UUID) (*[]dto.GetProductSpecification, error)
 }
 
@@ -24,6 +26,42 @@ func NewProductSpecificationUsecase(productSpecificationRepository repository.Pr
 	}
 }
 
+func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error) {
+	product := entity.ProductSpecification{
+		ID:             productSpecification.ID,
+		Specification1: productSpecification.Specification1,
+		Specification2: productSpecification.Specification2,
+		Specification3: productSpecification.Specification3,
+		Specification4: productSpecification.Specification4,
+		Specification5: productSpecification.Specification5,
+	}
+
+	err := u.ProductSpecificationRepository.CreateProductSpecification(product)
+	if err != nil {
+		return dto.ResponseCreateProductSpecification{}, fiber.NewError(http.StatusInternalServerError, "failed to create product specifications")
+	}
+
+	return product.ParseToDTOResponseCreateProductSpecification(), nil
+}
+
+func (u ProductSpecificationUsecase) UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.UpdateProductSpecification, error) {
+	product := &entity.ProductSpecification{
+		ID:             ProductID,
+		Specification1: productSpecification.Specification1,
+		Specification2: productSpecification.Specification2,
+		Specification3: productSpecification.Specification3,
+		Specification4: productSpecification.Specification4,
+		Specification5: productSpecification.Specification5,
+	}
+
+	err := u.ProductSpecificationRepository.UpdateProductSpecification(product, ProductID)
+	if err != nil {
+		return dto.UpdateProductSpecification{}, fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
+	}
+
+	return product.ParseToDTOUpdateProductSpecification(), nil
+}
+
 func (u ProductSpecificationUsecase) GetProductSpecification(productID uuid.UUID) (*[]dto.GetProductSpecification, error) {
 	productSpecification := new([]entity.ProductSpecification)
 
@@ -34,7 +72,7 @@ func (u ProductSpecificationUsecase) GetProductSpecification(productID uuid.UUID
 
 	res := make([]dto.GetProductSpecification, len(*productSpecification))
 	for i, product := range *productSpecification {
-		res[i] = product.ParseToDTOProductSpecification()
+		res[i] = product.ParseToDTOGetProductSpecification()
 	}
 
 	return &res, nil

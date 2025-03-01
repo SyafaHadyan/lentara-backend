@@ -2,6 +2,7 @@ package rest
 
 import (
 	"lentara-backend/internal/app/productspecification/usecase"
+	"lentara-backend/internal/domain/dto"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -25,11 +26,64 @@ func NewProductSpecificationHandler(routerGroup fiber.Router, validator *validat
 	routerGroup.Get("/:id", productSpecificationHandler.GetProductSpecification)
 }
 
+func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) error {
+	var request dto.CreateProductSpecification
+
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to create product specification")
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	}
+
+	res, err := h.ProductSpecificationUseCase.CreateProductSpecification(request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to create product specifications")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "succesfully set product specifications",
+		"payload": res,
+	})
+}
+
+func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) error {
+	var request dto.UpdateProduct
+
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
+	}
+
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to get product id")
+	}
+
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to validate payload")
+	}
+
+	res, err := h.ProductSpecificationUseCase.UpdateProductSpecification(productID, request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"product_id":            productID.String(),
+		"product_specification": res,
+	})
+}
+
 func (h ProductSpecificationHandler) GetProductSpecification(ctx *fiber.Ctx) error {
 	productID, err := uuid.Parse(ctx.Params("id"))
 	// res, err := h.ProductSpecificationUseCase.GetProductSpecification(uuid.Parse(ctx.Params("id")))
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "Not a valid uuid")
+		return fiber.NewError(http.StatusBadRequest, "not a valid uuid")
 	}
 
 	res, err := h.ProductSpecificationUseCase.GetProductSpecification(productID)
