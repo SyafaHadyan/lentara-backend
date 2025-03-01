@@ -28,12 +28,12 @@ func NewProductSpecificationUsecase(productSpecificationRepository repository.Pr
 
 func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error) {
 	product := entity.ProductSpecification{
-		ID:             productSpecification.ID,
-		Specification1: productSpecification.Specification1,
-		Specification2: productSpecification.Specification2,
-		Specification3: productSpecification.Specification3,
-		Specification4: productSpecification.Specification4,
-		Specification5: productSpecification.Specification5,
+		ID:              productSpecification.ID,
+		Specification_1: productSpecification.Specification1,
+		Specification_2: productSpecification.Specification2,
+		Specification_3: productSpecification.Specification3,
+		Specification_4: productSpecification.Specification4,
+		Specification_5: productSpecification.Specification5,
 	}
 
 	err := u.ProductSpecificationRepository.CreateProductSpecification(product)
@@ -46,12 +46,12 @@ func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecifica
 
 func (u ProductSpecificationUsecase) UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.UpdateProductSpecification, error) {
 	product := &entity.ProductSpecification{
-		ID:             ProductID,
-		Specification1: productSpecification.Specification1,
-		Specification2: productSpecification.Specification2,
-		Specification3: productSpecification.Specification3,
-		Specification4: productSpecification.Specification4,
-		Specification5: productSpecification.Specification5,
+		ID:              ProductID,
+		Specification_1: productSpecification.Specification1,
+		Specification_2: productSpecification.Specification2,
+		Specification_3: productSpecification.Specification3,
+		Specification_4: productSpecification.Specification4,
+		Specification_5: productSpecification.Specification5,
 	}
 
 	err := u.ProductSpecificationRepository.UpdateProductSpecification(product, ProductID)

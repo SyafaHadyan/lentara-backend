@@ -16,7 +16,7 @@ type ProductUsecaseItf interface {
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
-	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
+	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) (dto.GetProductSpecification, error)
 	DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error)
 }
 
@@ -61,6 +61,11 @@ func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecific
 	if err != nil {
 		return dto.GetSpecificProduct{}, dto.GetProductSpecification{}, err
 	}
+
+	// return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	// 	"product":               product,
+	// 	"product_specification": productSpecification,
+	// })
 
 	return product.ParseToDTOGetSpecificProduct(), productSpecification.ParseToDTOGetProductSpecification(), err
 }
@@ -117,7 +122,7 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 	return product.ParseToDTOResponseCreateProduct(), nil
 }
 
-func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
+func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) (dto.GetProductSpecification, error) {
 	product := &entity.Product{
 		ID:            ProductID,
 		Title:         request.Title,
@@ -133,10 +138,14 @@ func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdatePro
 
 	err := u.ProductRepository.UpdateProduct(product)
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "failed to update product")
+		return dto.GetProductSpecification{}, fiber.NewError(http.StatusBadRequest, "failed to update product")
 	}
 
-	return nil
+	productSpecification := &entity.ProductSpecification{
+		ID: ProductID,
+	}
+
+	return productSpecification.ParseToDTOGetProductSpecification(), nil
 }
 
 func (u ProductUsecase) DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error) {

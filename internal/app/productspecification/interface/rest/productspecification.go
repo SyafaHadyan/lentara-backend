@@ -21,7 +21,7 @@ func NewProductSpecificationHandler(routerGroup fiber.Router, validator *validat
 		ProductSpecificationUseCase: productSpecificationUseCase,
 	}
 
-	routerGroup = routerGroup.Group("/productspecification")
+	routerGroup = routerGroup.Group("/productspec")
 
 	routerGroup.Post("/:id", productSpecificationHandler.CreateProductSpecification)
 	routerGroup.Patch("/:id", productSpecificationHandler.UpdateProductSpecification)
@@ -36,10 +36,10 @@ func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) 
 		return fiber.NewError(http.StatusInternalServerError, "failed to create product specification")
 	}
 
-	err = h.Validator.Struct(request)
-	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "invalid request body")
-	}
+	// err = h.Validator.Struct(request)
+	// if err != nil {
+	// 	return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	// }
 
 	res, err := h.ProductSpecificationUseCase.CreateProductSpecification(request)
 	if err != nil {
@@ -53,7 +53,7 @@ func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) 
 }
 
 func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) error {
-	var request dto.UpdateProduct
+	var request dto.UpdateProductSpecification
 
 	err := ctx.BodyParser(&request)
 	if err != nil {

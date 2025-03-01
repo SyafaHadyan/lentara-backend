@@ -54,6 +54,8 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product")
 	}
 
+	// productSpecification, err :=
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"product":               product,
 		"product_specification": productSpecification,
@@ -127,18 +129,18 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "payload invalid")
 	}
 
-	err = h.ProductUseCase.UpdateProduct(productID, request)
+	productSpecification, err := h.ProductUseCase.UpdateProduct(productID, request)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
 	}
 
-	product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
-	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
-	}
+	// product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
+	// if err != nil {
+	// 	return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
+	// }
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"product":               product,
+		// "product":               product,
 		"product_specification": productSpecification,
 	})
 }

@@ -7,54 +7,54 @@ import (
 )
 
 type ProductSpecification struct {
-	ID             uuid.UUID `gorm:"type:char(36):foreignKey"`
-	Specification1 string    `gorm:"type:text"`
-	Specification2 string    `gorm:"type:text"`
-	Specification3 string    `gorm:"type:text"`
-	Specification4 string    `gorm:"type:text"`
-	Specification5 string    `gorm:"type:text"`
+	ID              uuid.UUID `gorm:"type:char(36):foreignKey"`
+	Specification_1 string    `gorm:"type:text"`
+	Specification_2 string    `gorm:"type:text"`
+	Specification_3 string    `gorm:"type:text"`
+	Specification_4 string    `gorm:"type:text"`
+	Specification_5 string    `gorm:"type:text"`
 }
 
 func (p ProductSpecification) ParseToDTOCreateProductSpecification() dto.CreateProductSpecification {
 	return dto.CreateProductSpecification{
 		ID:             p.ID,
-		Specification1: p.Specification1,
-		Specification2: p.Specification2,
-		Specification3: p.Specification3,
-		Specification4: p.Specification4,
-		Specification5: p.Specification5,
+		Specification1: p.Specification_1,
+		Specification2: p.Specification_2,
+		Specification3: p.Specification_3,
+		Specification4: p.Specification_4,
+		Specification5: p.Specification_5,
 	}
 }
 
 func (p ProductSpecification) ParseToDTOResponseCreateProductSpecification() dto.ResponseCreateProductSpecification {
 	return dto.ResponseCreateProductSpecification{
 		ID:             p.ID,
-		Specification1: p.Specification1,
-		Specification2: p.Specification2,
-		Specification3: p.Specification3,
-		Specification4: p.Specification4,
-		Specification5: p.Specification5,
+		Specification1: p.Specification_1,
+		Specification2: p.Specification_2,
+		Specification3: p.Specification_3,
+		Specification4: p.Specification_4,
+		Specification5: p.Specification_5,
 	}
 }
 
 func (p ProductSpecification) ParseToDTOUpdateProductSpecification() dto.UpdateProductSpecification {
 	return dto.UpdateProductSpecification{
 		ID:             p.ID,
-		Specification1: p.Specification1,
-		Specification2: p.Specification2,
-		Specification3: p.Specification3,
-		Specification4: p.Specification4,
-		Specification5: p.Specification5,
+		Specification1: p.Specification_1,
+		Specification2: p.Specification_2,
+		Specification3: p.Specification_3,
+		Specification4: p.Specification_4,
+		Specification5: p.Specification_5,
 	}
 }
 
 func (p ProductSpecification) ParseToDTOGetProductSpecification() dto.GetProductSpecification {
 	return dto.GetProductSpecification{
 		ID:             p.ID,
-		Specification1: p.Specification1,
-		Specification2: p.Specification2,
-		Specification3: p.Specification3,
-		Specification4: p.Specification4,
-		Specification5: p.Specification5,
+		Specification1: p.Specification_1,
+		Specification2: p.Specification_2,
+		Specification3: p.Specification_3,
+		Specification4: p.Specification_4,
+		Specification5: p.Specification_5,
 	}
 }
