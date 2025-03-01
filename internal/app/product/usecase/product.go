@@ -12,7 +12,7 @@ import (
 
 type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
-	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
+	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, dto.GetProductSpecification, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
@@ -46,17 +46,21 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	return &res, nil
 }
 
-func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
+func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, dto.GetProductSpecification, error) {
 	product := &entity.Product{
+		ID: productID,
+	}
+
+	productSpecification := &entity.ProductSpecification{
 		ID: productID,
 	}
 
 	err := u.ProductRepository.GetSpecificProduct(product)
 	if err != nil {
-		return dto.GetSpecificProduct{}, err
+		return dto.GetSpecificProduct{}, dto.GetProductSpecification{}, err
 	}
 
-	return product.ParseToDTOGetSpecificProduct(), err
+	return product.ParseToDTOGetSpecificProduct(), productSpecification.ParseToDTOProductSpecification(), err
 }
 
 func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {
@@ -105,7 +109,7 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 
 	err := u.ProductRepository.Create(&product)
 	if err != nil {
-		return dto.ResponseCreateProduct{}, err
+		return dto.ResponseCreateProduct{}, fiber.NewError(http.StatusBadRequest, "failed to create product")
 	}
 
 	return product.ParseToDTOResponseCreateProduct(), nil

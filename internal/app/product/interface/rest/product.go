@@ -49,12 +49,15 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "not a valid uuid")
 	}
 
-	res, err := h.ProductUseCase.GetSpecificProduct(productID)
+	product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "can't find uuid")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(res)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"product":               product,
+		"product_specification": productSpecification,
+	})
 }
 
 func (h ProductHandler) GetProductCategory(ctx *fiber.Ctx) error {
@@ -129,12 +132,15 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
 	}
 
-	res, err := h.ProductUseCase.GetSpecificProduct(productID)
+	product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(res)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"product":               product,
+		"product_specification": productSpecification,
+	})
 }
 
 func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
