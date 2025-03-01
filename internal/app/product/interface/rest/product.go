@@ -39,7 +39,7 @@ func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": res,
+		"payload": res,
 	})
 }
 
@@ -51,7 +51,7 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 
 	product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "can't find uuid")
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
