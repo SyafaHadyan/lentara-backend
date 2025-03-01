@@ -49,17 +49,12 @@ func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "not a valid uuid")
 	}
 
-	product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
+	product, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product")
 	}
 
-	// productSpecification, err :=
-
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"product":               product,
-		"product_specification": productSpecification,
-	})
+	return ctx.Status(http.StatusOK).JSON(product)
 }
 
 func (h ProductHandler) GetProductCategory(ctx *fiber.Ctx) error {
@@ -90,9 +85,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 
 	err := ctx.BodyParser(&request)
 	if err != nil {
-		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "failed to parse request body",
-		})
+		fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
 	}
 
 	err = h.Validator.Struct(request)
@@ -106,7 +99,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "succesfully created product",
+		"message": "successfully created prodcut",
 		"payload": res,
 	})
 }
@@ -129,20 +122,25 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "payload invalid")
 	}
 
-	productSpecification, err := h.ProductUseCase.UpdateProduct(productID, request)
+	err = h.ProductUseCase.UpdateProduct(productID, request)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
 	}
+
+	product, err := h.ProductUseCase.GetSpecificProduct(productID)
+	if err != nil {
+		fiber.NewError(http.StatusInternalServerError, "failed to get product info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(product)
 
 	// product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
 	// if err != nil {
 	// 	return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	// }
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		// "product":               product,
-		"product_specification": productSpecification,
-	})
+	// return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	// "product":               product,
 }
 
 func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
