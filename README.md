@@ -368,6 +368,36 @@ Request below won't change any value except `updated_at`
 }
 ```
 
+### Create Product Specification
+
+#### Request Body
+
+```json
+{
+    "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+    "specification_1": "Hardened wood",
+    "specification_2": "Rounded Edge",
+    "specification_3": "",
+    "specification_4": "",
+    "specification_5": ""
+}
+```
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+        "specification_1": "Hardened wood",
+        "specification_2": "Rounded edge",
+        "specification_3": "",
+        "specification_4": "",
+        "specification_5": ""
+    }
+}
+```
+
 ### Edit Product Specification
 
 #### Request Body
@@ -394,6 +424,18 @@ Request below won't change any value except `updated_at`
         "specification_3": "",
         "specification_4": "",
         "specification_5": ""
+    }
+}
+```
+
+### Delete Product Specification
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "18991ddc-4852-480c-a263-7b974b267506"
     }
 }
 ```
