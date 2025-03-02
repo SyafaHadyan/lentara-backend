@@ -132,7 +132,10 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 		fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(product)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "product udpated",
+		"payload": product,
+	})
 
 	// product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
 	// if err != nil {
@@ -166,5 +169,7 @@ func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, "failed to delete product")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(res)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"payload": res,
+	})
 }
