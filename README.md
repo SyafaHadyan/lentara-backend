@@ -10,11 +10,14 @@
 |:---|:---|:---|
 |GET|/products|Get All Products|
 |GET|/products/:id|Get Product by ID|
-|GET|/produts/category:category|Get Products by Category|
+|GET|/produts/category/:category|Get Products by Category|
 |GET|/search/:title|Search Product by Name|
+|GET|/productspec/:id|Get Product Specification by ID|
 |POST|/products|Create New Product|
+|POST|/productspec/:id|Create New Product Specifications|
 |PATCH|/products/:id|Edit Product by ID|
 |DELETE|/products/:id|Delete Product by ID|
+|DELETE|/productspec/:id|Delete Product Specifications|
 
 ## Args
 
