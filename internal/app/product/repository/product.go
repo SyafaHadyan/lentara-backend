@@ -33,7 +33,7 @@ func (r ProductMySQL) GetSpecificProduct(products *entity.Product) error {
 }
 
 func (r ProductMySQL) GetProductCategory(products *[]entity.Product, category string) error {
-	return r.db.Debug().Debug().Where("category = ?", category).Find(products).Error
+	return r.db.Debug().Where("category = ?", category).Find(products).Error
 }
 
 func (r ProductMySQL) SearchProduct(products *[]entity.Product, query string) error {

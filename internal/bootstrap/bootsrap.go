@@ -5,6 +5,9 @@ import (
 	producthandler "lentara-backend/internal/app/product/interface/rest"
 	productrepository "lentara-backend/internal/app/product/repository"
 	productusecase "lentara-backend/internal/app/product/usecase"
+	productspecificationhandler "lentara-backend/internal/app/productspecification/interface/rest"
+	productspecificationrepository "lentara-backend/internal/app/productspecification/repository"
+	productspecificationusecase "lentara-backend/internal/app/productspecification/usecase"
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/mysql"
@@ -59,6 +62,9 @@ func Start(args []string) error {
 	productRepository := productrepository.NewProductMySQL(database)
 	productUseCase := productusecase.NewProductUsecase(productRepository)
 	producthandler.NewProductHandler(v1, val, productUseCase)
+	productSpecificationRepository := productspecificationrepository.NewProductSpecificationMySQL(database)
+	productSpecificationUseCase := productspecificationusecase.NewProductSpecificationUsecase(productSpecificationRepository)
+	productspecificationhandler.NewProductSpecificationHandler(v1, val, productSpecificationUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }

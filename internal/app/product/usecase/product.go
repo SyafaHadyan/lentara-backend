@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"lentara-backend/internal/app/product/repository"
+	repository "lentara-backend/internal/app/product/repository"
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
 	"net/http"
@@ -93,19 +93,18 @@ func (u ProductUsecase) SearchProduct(query string) (*[]dto.SearchProduct, error
 
 func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
 	product := entity.Product{
-		ID:            uuid.New(),
-		Title:         request.Title,
-		Description:   request.Description,
-		Specification: request.Specification,
-		Category:      request.Category,
-		Price:         request.Price,
-		Stock:         request.Stock,
-		PhotoUrl:      request.PhotoUrl,
+		ID:          uuid.New(),
+		Title:       request.Title,
+		Description: request.Description,
+		Category:    request.Category,
+		Price:       request.Price,
+		Stock:       request.Stock,
+		PhotoUrl:    request.PhotoUrl,
 	}
 
 	err := u.ProductRepository.Create(&product)
 	if err != nil {
-		return dto.ResponseCreateProduct{}, err
+		return dto.ResponseCreateProduct{}, fiber.NewError(http.StatusBadRequest, "failed to create product")
 	}
 
 	return product.ParseToDTOResponseCreateProduct(), nil
@@ -113,16 +112,15 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.Res
 
 func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
 	product := &entity.Product{
-		ID:            ProductID,
-		Title:         request.Title,
-		Description:   request.Description,
-		Specification: request.Specification,
-		Category:      request.Category,
-		Price:         request.Price,
-		Stock:         request.Stock,
-		RentCount:     request.RentCount,
-		Rating:        request.Rating,
-		PhotoUrl:      request.PhotoUrl,
+		ID:          ProductID,
+		Title:       request.Title,
+		Description: request.Description,
+		Category:    request.Category,
+		Price:       request.Price,
+		Stock:       request.Stock,
+		RentCount:   request.RentCount,
+		Rating:      request.Rating,
+		PhotoUrl:    request.PhotoUrl,
 	}
 
 	err := u.ProductRepository.UpdateProduct(product)
