@@ -348,26 +348,6 @@ Request below won't change any value except `updated_at`
 }
 ```
 
-### Delete Product by ID
-
-#### Response Body
-
-```json
-{
-    "id": "b732b2bf-64ed-4844-bacc-d0307fa3ecfc",
-    "title": "",
-    "description": "",
-    "category": "",
-    "price": 0,
-    "stock": 0,
-    "rent_count": 0,
-    "rating": 0,
-    "photo_url": "",
-    "created_at": "0001-01-01T00:00:00Z",
-    "updated_at": "0001-01-01T00:00:00Z"
-}
-```
-
 ### Create Product Specification
 
 #### Request Body
@@ -436,6 +416,18 @@ Request below won't change any value except `updated_at`
 {
     "payload": {
         "product_id": "18991ddc-4852-480c-a263-7b974b267506"
+    }
+}
+```
+
+### Delete Product by ID
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "id": "fd0e46ef-2ac5-47a9-b171-e605c439f9b4"
     }
 }
 ```
