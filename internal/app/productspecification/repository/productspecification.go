@@ -11,6 +11,7 @@ type ProductSpecificationMySQLItf interface {
 	CreateProductSpecification(productSpecification entity.ProductSpecification) error
 	UpdateProductSpecification(productSpecification *entity.ProductSpecification, id uuid.UUID) error
 	GetProductSpecification(productSpecification *[]entity.ProductSpecification, id uuid.UUID) error
+	DeleteProductSpecification(productSpecification *entity.ProductSpecification) error
 }
 
 type ProductSpecificationMySQL struct {
@@ -26,9 +27,13 @@ func (r ProductSpecificationMySQL) CreateProductSpecification(productSpecificati
 }
 
 func (r ProductSpecificationMySQL) UpdateProductSpecification(productSpecification *entity.ProductSpecification, id uuid.UUID) error {
-	return r.db.Debug().Updates(productSpecification).Error
+	return r.db.Debug().Save(productSpecification).Error
 }
 
 func (r ProductSpecificationMySQL) GetProductSpecification(productSpecification *[]entity.ProductSpecification, id uuid.UUID) error {
 	return r.db.Debug().Where("id = ?", id).First(productSpecification).Error
+}
+
+func (r ProductSpecificationMySQL) DeleteProductSpecification(productSpecification *entity.ProductSpecification) error {
+	return r.db.Debug().Delete(productSpecification).Error
 }

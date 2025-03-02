@@ -26,6 +26,7 @@ func NewProductSpecificationHandler(routerGroup fiber.Router, validator *validat
 	routerGroup.Post("/:id", productSpecificationHandler.CreateProductSpecification)
 	routerGroup.Patch("/:id", productSpecificationHandler.UpdateProductSpecification)
 	routerGroup.Get("/:id", productSpecificationHandler.GetProductSpecification)
+	routerGroup.Delete(":id", productSpecificationHandler.DeleteProductSpecification)
 }
 
 func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) error {
@@ -43,7 +44,7 @@ func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) 
 
 	res, err := h.ProductSpecificationUseCase.CreateProductSpecification(request)
 	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "failed to create product specifications")
+		return fiber.NewError(http.StatusBadRequest, "product specification already exist, use PATCH instead")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
@@ -76,8 +77,6 @@ func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) 
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"payload": res,
-		// "product_id":            productID.String(),
-		//"product_specification": res,
 	})
 }
 
@@ -90,7 +89,25 @@ func (h ProductSpecificationHandler) GetProductSpecification(ctx *fiber.Ctx) err
 
 	res, err := h.ProductSpecificationUseCase.GetProductSpecification(productID)
 	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "faled to get product specification")
+		return fiber.NewError(http.StatusBadRequest, "product specifications doesn't exist")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"payload": res,
+	})
+}
+
+func (h ProductSpecificationHandler) DeleteProductSpecification(ctx *fiber.Ctx) error {
+	var request dto.DeleteProductSpecification
+
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid product id")
+	}
+
+	res, err := h.ProductSpecificationUseCase.DeleteProductSpecification(productID, request)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to delete product specification")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
