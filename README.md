@@ -33,7 +33,6 @@
             "id": "437afdc1-32d4-44d0-af5b-7cee2c15b55e",
             "title": "Go Programming Language",
             "description": "Go book",
-            "Specification": "128 pages",
             "category": "book",
             "price": 256144,
             "stock": 128,
@@ -47,7 +46,6 @@
             "id": "4de2993e-811b-462c-a2a1-7788934426db",
             "title": "Pemanas Air",
             "description": "Berfungsi untuk memanaskan air",
-            "Specification": "Support input listrik",
             "category": "electronics",
             "price": 12800,
             "stock": 16,
@@ -61,7 +59,6 @@
             "id": "5895dad4-c317-43ec-8a16-ff07b87395e9",
             "title": "Playing Card",
             "description": "Playing card set",
-            "Specification": "Made with paper",
             "category": "hobby",
             "price": 3200,
             "stock": 128,
@@ -75,7 +72,6 @@
             "id": "71e0affc-f42f-4a48-839e-3b731b4e3aa6",
             "title": "Java Programming Language",
             "description": "Java book",
-            "Specification": "4096 pages",
             "category": "book",
             "price": 128256,
             "stock": 32,
@@ -89,7 +85,6 @@
             "id": "74ff6e6f-7fa1-4a04-82c7-e0c3d5808ac6",
             "title": "Java Programming Language",
             "description": "Java OOP Book",
-            "Specification": "2048 pages",
             "category": "book",
             "price": 128256,
             "stock": 32,
@@ -103,7 +98,6 @@
             "id": "b23e1d35-0098-4480-a7f9-7ce713ffdfc2",
             "title": "Operating System Concepts",
             "description": "Operating system book",
-            "Specification": "1024 pages",
             "category": "book",
             "price": 144000,
             "stock": 64,
@@ -117,7 +111,6 @@
             "id": "b2d71c54-b53a-4291-babf-533ea61aaee5",
             "title": "Rust Programming Language",
             "description": "Rust book",
-            "Specification": "512 pages",
             "category": "book",
             "price": 144000,
             "stock": 64,
@@ -131,7 +124,6 @@
             "id": "e48ccdfd-359a-4771-a033-58b98851d8c0",
             "title": "Java Car",
             "description": "Java car",
-            "Specification": "4 wheels",
             "category": "car",
             "price": 512256,
             "stock": 2,
@@ -145,7 +137,6 @@
             "id": "f0313184-2398-4035-af46-3f8fd3314101",
             "title": "Toaster",
             "description": "Toaster with electricity support",
-            "Specification": "2 bread",
             "category": "electronics",
             "price": 12800,
             "stock": 32,
@@ -168,7 +159,6 @@
     "id": "4de2993e-811b-462c-a2a1-7788934426db",
     "title": "Pemanas Air",
     "description": "Berfungsi untuk memanaskan air",
-    "Specification": "Support input listrik",
     "category": "electronics",
     "price": 12800,
     "stock": 16,
@@ -191,7 +181,6 @@
             "id": "4de2993e-811b-462c-a2a1-7788934426db",
             "title": "Pemanas Air",
             "description": "Berfungsi untuk memanaskan air",
-            "Specification": "Support input listrik",
             "category": "electronics",
             "price": 12800,
             "stock": 16,
@@ -205,7 +194,6 @@
             "id": "f0313184-2398-4035-af46-3f8fd3314101",
             "title": "Toaster",
             "description": "Toaster with electricity support",
-            "Specification": "2 bread",
             "category": "electronics",
             "price": 12800,
             "stock": 32,
@@ -230,7 +218,6 @@
             "id": "71e0affc-f42f-4a48-839e-3b731b4e3aa6",
             "title": "Java Programming Language",
             "description": "Java book",
-            "Specification": "4096 pages",
             "category": "book",
             "price": 128256,
             "stock": 32,
@@ -244,7 +231,6 @@
             "id": "74ff6e6f-7fa1-4a04-82c7-e0c3d5808ac6",
             "title": "Java Programming Language",
             "description": "Java OOP Book",
-            "Specification": "2048 pages",
             "category": "book",
             "price": 128256,
             "stock": 32,
@@ -258,7 +244,6 @@
             "id": "e48ccdfd-359a-4771-a033-58b98851d8c0",
             "title": "Java Car",
             "description": "Java car",
-            "Specification": "4 wheels",
             "category": "car",
             "price": 512256,
             "stock": 2,
@@ -280,7 +265,6 @@
 {
     "title": "Kompor Listrik",
     "description": "Memasak dengan listrik",
-    "specification": "Support input listrik",
     "category": "electronics",
     "price": 6400,
     "stock": 8,
@@ -297,7 +281,6 @@
         "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
         "title": "Kompor Listrik",
         "description": "Memasak dengan listrik",
-        "Specification": "Support input listrik",
         "category": "electronics",
         "price": 6400,
         "stock": 8,
@@ -328,7 +311,6 @@
     "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
     "title": "Kompor Listrik",
     "description": "Memasak dengan listrik",
-    "Specification": "Support input listrik",
     "category": "electronics",
     "price": 6400,
     "stock": 8,
@@ -355,7 +337,6 @@ Request below won't change any value except `updated_at`
     "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
     "title": "Kompor Listrik",
     "description": "Memasak dengan listrik",
-    "Specification": "Support input listrik",
     "category": "electronics",
     "price": 6400,
     "stock": 8,
@@ -367,23 +348,86 @@ Request below won't change any value except `updated_at`
 }
 ```
 
+### Create Product Specification
+
+#### Request Body
+
+```json
+{
+    "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+    "specification_1": "Hardened wood",
+    "specification_2": "Rounded Edge",
+    "specification_3": "",
+    "specification_4": "",
+    "specification_5": ""
+}
+```
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+        "specification_1": "Hardened wood",
+        "specification_2": "Rounded edge",
+        "specification_3": "",
+        "specification_4": "",
+        "specification_5": ""
+    }
+}
+```
+
+### Edit Product Specification
+
+#### Request Body
+
+```json
+{
+    "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+    "specification_1": "Hardened wood",
+    "specification_2": "Rounded Edge",
+    "specification_3": "",
+    "specification_4": "",
+    "specification_5": ""
+}
+```
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+        "specification_1": "Hardened wood",
+        "specification_2": "Rounded edge",
+        "specification_3": "",
+        "specification_4": "",
+        "specification_5": ""
+    }
+}
+```
+
+### Delete Product Specification
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "18991ddc-4852-480c-a263-7b974b267506"
+    }
+}
+```
+
 ### Delete Product by ID
 
 #### Response Body
 
 ```json
 {
-    "id": "b732b2bf-64ed-4844-bacc-d0307fa3ecfc",
-    "title": "",
-    "description": "",
-    "Specification": "",
-    "category": "",
-    "price": 0,
-    "stock": 0,
-    "rent_count": 0,
-    "rating": 0,
-    "photo_url": "",
-    "created_at": "0001-01-01T00:00:00Z",
-    "updated_at": "0001-01-01T00:00:00Z"
+    "payload": {
+        "id": "fd0e46ef-2ac5-47a9-b171-e605c439f9b4"
+    }
 }
 ```
