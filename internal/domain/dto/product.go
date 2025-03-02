@@ -111,15 +111,5 @@ type DeleteProduct struct {
 }
 
 type ResponseDeleteProduct struct {
-	ID          uuid.UUID `json:"id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Category    string    `json:"category"`
-	Price       int64     `json:"price"`
-	Stock       int32     `json:"stock"`
-	RentCount   int32     `json:"rent_count"`
-	Rating      float32   `json:"rating"`
-	PhotoUrl    string    `json:"photo_url"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID uuid.UUID `json:"id"`
 }

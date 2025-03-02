@@ -118,16 +118,6 @@ func (p Product) ParseToDTODeleteProduct() dto.DeleteProduct {
 
 func (p Product) ParseToDTOResponseDeleteProduct() dto.ResponseDeleteProduct {
 	return dto.ResponseDeleteProduct{
-		ID:          p.ID,
-		Title:       p.Title,
-		Description: p.Description,
-		Category:    p.Category,
-		Price:       p.Price,
-		Stock:       p.Stock,
-		RentCount:   p.RentCount,
-		Rating:      p.Rating,
-		PhotoUrl:    p.PhotoUrl,
-		CreatedAt:   p.CreatedAt,
-		UpdatedAt:   p.UpdatedAt,
+		ID: p.ID,
 	}
 }
