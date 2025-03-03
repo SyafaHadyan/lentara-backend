@@ -17,18 +17,17 @@ type Register struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type ResponseRegister struct {
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	IsAdmin   bool      `json:"is_admin"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+type Login struct {
+	Username string `json:"username" validate:"required,min=3"`
+	Password string `json:"password" validate:"required,min=8"`
 }
 
-type Login struct {
+type UserParam struct {
+	ID       uuid.UUID `json:"id"`
+	Username string    `json:"username"`
+}
+
+type ResponseRegister struct {
 	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`

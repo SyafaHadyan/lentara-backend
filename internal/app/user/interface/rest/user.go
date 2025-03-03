@@ -23,13 +23,14 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 	routerGroup = routerGroup.Group("/users")
 
 	routerGroup.Post("/register", userHandler.RegisterUser)
+	routerGroup.Post("/login", userHandler.LoginUser)
 }
 
 func (u *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 	var register dto.Register
 	err := ctx.BodyParser(&register)
 	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
 	}
 
 	err = u.Validator.Struct(register)
@@ -45,5 +46,29 @@ func (u *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully created user",
 		"payload": res,
+	})
+}
+
+func (h *UserHandler) LoginUser(ctx *fiber.Ctx) error {
+	var login dto.Login
+
+	err := ctx.BodyParser(&login)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	err = h.Validator.Struct(login)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	token, err := h.userUsecase.Login(login)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "username or password is invalid")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "logged in",
+		"token":   token,
 	})
 }

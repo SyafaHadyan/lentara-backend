@@ -13,6 +13,7 @@ type Env struct {
 	DBPort       int    `env:"DB_PORT"`
 	DBName       string `env:"DB_NAME"`
 	JWTSecretKey string `env:"JWT_SECRET_KEY"`
+	JWTExpired   int    `env:"JWT_EXPIRED"`
 }
 
 func New() (*Env, error) {
