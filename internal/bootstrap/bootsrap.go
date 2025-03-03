@@ -8,6 +8,9 @@ import (
 	productspecificationhandler "lentara-backend/internal/app/productspecification/interface/rest"
 	productspecificationrepository "lentara-backend/internal/app/productspecification/repository"
 	productspecificationusecase "lentara-backend/internal/app/productspecification/usecase"
+	userhandler "lentara-backend/internal/app/user/interface/rest"
+	userrepository "lentara-backend/internal/app/user/repository"
+	userusecase "lentara-backend/internal/app/user/usecase"
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/mysql"
@@ -31,6 +34,9 @@ func Start(args []string) error {
 		config.DBPort,
 		config.DBName,
 	))
+	if err != nil {
+		return err
+	}
 
 	if len(args) != 1 && args[1] == "--migrate" {
 		err = mysql.Migrate(database)
@@ -65,6 +71,9 @@ func Start(args []string) error {
 	productSpecificationRepository := productspecificationrepository.NewProductSpecificationMySQL(database)
 	productSpecificationUseCase := productspecificationusecase.NewProductSpecificationUsecase(productSpecificationRepository)
 	productspecificationhandler.NewProductSpecificationHandler(v1, val, productSpecificationUseCase)
+	userRepository := userrepository.NewUserMySQL(database)
+	userUseCase := userusecase.NewUserUsecase(userRepository)
+	userhandler.NewUserHandler(v1, val, userUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
