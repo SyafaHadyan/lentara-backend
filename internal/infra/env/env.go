@@ -6,18 +6,18 @@ import (
 )
 
 type Env struct {
-	AppPort    int    `env:"APP_PORT"`
-	DBUsername string `env:"DB_USERNAME"`
-	DBPassword string `env:"DB_PASSWORD"`
-	DBHost     string `env:"DB_HOST"`
-	DBPort     int    `env:"DB_PORT"`
-	DBName     string `env:"DB_NAME"`
+	AppPort      int    `env:"APP_PORT"`
+	DBUsername   string `env:"DB_USERNAME"`
+	DBPassword   string `env:"DB_PASSWORD"`
+	DBHost       string `env:"DB_HOST"`
+	DBPort       int    `env:"DB_PORT"`
+	DBName       string `env:"DB_NAME"`
+	JWTSecretKey string `env:"JWT_SECRET_KEY"`
 }
 
 func New() (*Env, error) {
 	err := godotenv.Load()
 	if err != nil {
-		// log.Fatal("Error loading .env file")
 		return nil, err
 	}
 

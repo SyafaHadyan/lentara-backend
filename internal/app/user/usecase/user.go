@@ -35,8 +35,9 @@ func (u *UserUsecase) Register(register dto.Register) (dto.ResponseRegister, err
 		ID:       uuid.New(),
 		Name:     register.Name,
 		Email:    register.Email,
+		Username: register.Username,
 		Password: string(hashedPassword),
-		IsAdmin:  register.IsAdmin,
+		IsAdmin:  false,
 	}
 
 	err = u.userRepo.Create(&user)
@@ -46,3 +47,18 @@ func (u *UserUsecase) Register(register dto.Register) (dto.ResponseRegister, err
 
 	return user.ParseToDTOResponseRegister(), nil
 }
+
+// func (u *UserUsecase) Login(login dto.Login) (dto.Reesponselogin, error) {
+// 	err := bcrypt.CompareHashAndPassword(repository.UserMySQL, []byte(login.Password))
+// 	if err != nil {
+// 		return dto.ResponseLogin{}, fiber.NewError(http.StatusBadRequest, "invalid password")
+// 	}
+//
+// 	config, err := env.New()
+// 	if err != nil {
+// 		return dto.ResponseLogin{}, fiber.NewError(http.StatusInternalServerError, "failed to get env")
+// 	}
+//
+// 	token = jwt.New(jwt.SigningMethodHS256)
+// 	s = token.SignedString(config.JWTSecretKey)
+// }

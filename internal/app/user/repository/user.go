@@ -8,6 +8,8 @@ import (
 
 type UserMySQLItf interface {
 	Create(user *entity.User) error
+	Update(user *entity.User) error
+	Login(user *entity.User) error
 }
 
 type UserMySQL struct {
@@ -20,4 +22,12 @@ func NewUserMySQL(db *gorm.DB) UserMySQLItf {
 
 func (r *UserMySQL) Create(user *entity.User) error {
 	return r.db.Debug().Create(user).Error
+}
+
+func (r *UserMySQL) Update(user *entity.User) error {
+	return r.db.Debug().Updates(user).Error
+}
+
+func (r *UserMySQL) Login(user *entity.User) error {
+	return r.db.Debug().First(user).Error
 }
