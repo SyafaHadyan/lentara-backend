@@ -3,6 +3,7 @@ package rest
 import (
 	"lentara-backend/internal/app/product/usecase"
 	"lentara-backend/internal/domain/dto"
+	"lentara-backend/internal/middleware"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -13,12 +14,14 @@ import (
 type ProductHandler struct {
 	Validator      *validator.Validate
 	ProductUseCase usecase.ProductUsecaseItf
+	Middleware     middleware.MiddlewareItf
 }
 
-func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf) {
+func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf, middleware middleware.MiddlewareItf) {
 	handler := ProductHandler{
 		Validator:      validator,
 		ProductUseCase: productUseCase,
+		Middleware:     middleware,
 	}
 
 	routerGroup = routerGroup.Group("/")
@@ -27,9 +30,9 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/products/:id", handler.GetSpecificProduct)
 	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
 	routerGroup.Get("/search/:title", handler.SearchProduct)
-	routerGroup.Post("/products", handler.CreateProduct)
-	routerGroup.Patch("/products/:id", handler.UpdateProduct)
-	routerGroup.Delete("/products/:id", handler.DeleteProduct)
+	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
+	routerGroup.Patch("/products/:id", middleware.Authentication, handler.UpdateProduct)
+	routerGroup.Delete("/products/:id", middleware.Authentication, middleware.Authorization, handler.DeleteProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {

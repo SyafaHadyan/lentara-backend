@@ -8,9 +8,14 @@ import (
 	productspecificationhandler "lentara-backend/internal/app/productspecification/interface/rest"
 	productspecificationrepository "lentara-backend/internal/app/productspecification/repository"
 	productspecificationusecase "lentara-backend/internal/app/productspecification/usecase"
+	userhandler "lentara-backend/internal/app/user/interface/rest"
+	userrepository "lentara-backend/internal/app/user/repository"
+	userusecase "lentara-backend/internal/app/user/usecase"
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
+	"lentara-backend/internal/infra/jwt"
 	"lentara-backend/internal/infra/mysql"
+	"lentara-backend/internal/middleware"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -31,6 +36,9 @@ func Start(args []string) error {
 		config.DBPort,
 		config.DBName,
 	))
+	if err != nil {
+		return err
+	}
 
 	if len(args) != 1 && args[1] == "--migrate" {
 		err = mysql.Migrate(database)
@@ -50,6 +58,10 @@ func Start(args []string) error {
 
 	app := fiber.New()
 
+	jwt := jwt.NewJWT(config)
+
+	middleware := middleware.NewMiddleWare(*jwt)
+
 	app.Use(cors.New(cors.Config{
 		AllowHeaders: "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
 		AllowOrigins: "*",
@@ -61,10 +73,13 @@ func Start(args []string) error {
 
 	productRepository := productrepository.NewProductMySQL(database)
 	productUseCase := productusecase.NewProductUsecase(productRepository)
-	producthandler.NewProductHandler(v1, val, productUseCase)
+	producthandler.NewProductHandler(v1, val, productUseCase, middleware)
 	productSpecificationRepository := productspecificationrepository.NewProductSpecificationMySQL(database)
 	productSpecificationUseCase := productspecificationusecase.NewProductSpecificationUsecase(productSpecificationRepository)
 	productspecificationhandler.NewProductSpecificationHandler(v1, val, productSpecificationUseCase)
+	userRepository := userrepository.NewUserMySQL(database)
+	userUseCase := userusecase.NewUserUsecase(userRepository, jwt)
+	userhandler.NewUserHandler(v1, val, userUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }

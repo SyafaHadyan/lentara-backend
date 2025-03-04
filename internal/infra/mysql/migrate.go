@@ -7,14 +7,9 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
-	errProduct := db.AutoMigrate(entity.Product{})
-	if errProduct != nil {
-		return errProduct
-	}
-
-	errProductSpecification := db.AutoMigrate(entity.ProductSpecification{})
-	if errProductSpecification != nil {
-		return errProductSpecification
+	err := db.AutoMigrate(entity.Product{}, entity.ProductSpecification{}, entity.User{})
+	if err != nil {
+		return err
 	}
 
 	return nil
