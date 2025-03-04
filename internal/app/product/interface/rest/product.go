@@ -32,7 +32,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
 	routerGroup.Patch("/products/:id", middleware.Authentication, handler.UpdateProduct)
-	routerGroup.Delete("/products/:id", middleware.Authentication, handler.DeleteProduct)
+	routerGroup.Delete("/products/:id", middleware.Authentication, middleware.Authorization, handler.DeleteProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {

@@ -70,6 +70,7 @@ func (j *JWT) ValidateToken(tokenString string) (uuid.UUID, bool, error) {
 	}
 
 	userID := claim.ID
+	isAdmin := claim.IsAdmin
 
-	return userID, claim.IsAdmin, nil
+	return userID, isAdmin, nil
 }

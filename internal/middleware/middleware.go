@@ -8,6 +8,7 @@ import (
 
 type MiddlewareItf interface {
 	Authentication(ctx *fiber.Ctx) error
+	Authorization(ctx *fiber.Ctx) error
 }
 
 type Middleware struct {
