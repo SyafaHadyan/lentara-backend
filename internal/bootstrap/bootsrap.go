@@ -5,6 +5,9 @@ import (
 	producthandler "lentara-backend/internal/app/product/interface/rest"
 	productrepository "lentara-backend/internal/app/product/repository"
 	productusecase "lentara-backend/internal/app/product/usecase"
+	productmediahandler "lentara-backend/internal/app/productmedia/interface/rest"
+	productmediarepository "lentara-backend/internal/app/productmedia/repository"
+	productmediausecase "lentara-backend/internal/app/productmedia/usecase"
 	productspecificationhandler "lentara-backend/internal/app/productspecification/interface/rest"
 	productspecificationrepository "lentara-backend/internal/app/productspecification/repository"
 	productspecificationusecase "lentara-backend/internal/app/productspecification/usecase"
@@ -80,6 +83,9 @@ func Start(args []string) error {
 	userRepository := userrepository.NewUserMySQL(database)
 	userUseCase := userusecase.NewUserUsecase(userRepository, jwt)
 	userhandler.NewUserHandler(v1, val, userUseCase)
+	productMediaRepository := productmediarepository.NewProductMediaMySQL(database)
+	productMediaUseCase := productmediausecase.NewProductMediaUsecase(productMediaRepository)
+	productmediahandler.NewProductMediahandler(v1, productMediaUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
