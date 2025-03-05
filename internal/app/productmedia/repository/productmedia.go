@@ -26,7 +26,7 @@ func (r ProductMediaMySQL) CreateProductMedia(productMedia *entity.ProductMedia)
 }
 
 func (r ProductMediaMySQL) UpdateProductMedia(productMedia *entity.ProductMedia, id uuid.UUID) error {
-	return r.db.Debug().Updates(productMedia).Error
+	return r.db.Debug().Save(productMedia).Error
 }
 
 func (r ProductMediaMySQL) GetProductMedia(productMedia *[]entity.ProductMedia, id uuid.UUID) error {

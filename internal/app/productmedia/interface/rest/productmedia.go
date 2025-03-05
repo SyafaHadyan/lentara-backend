@@ -52,6 +52,11 @@ func (h ProductMediaHandler) CreateProductMedia(ctx *fiber.Ctx) error {
 func (h ProductMediaHandler) UpdateProductMedia(ctx *fiber.Ctx) error {
 	var request dto.UpdateProductMedia
 
+	err := ctx.BodyParser(&request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
 	productID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "inavlid product id")

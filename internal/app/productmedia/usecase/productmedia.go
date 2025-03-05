@@ -12,7 +12,7 @@ import (
 
 type ProductMediaUsecaseItf interface {
 	CreateProductMedia(productID uuid.UUID, productMedia dto.CreateProductMedia) (dto.CreateProductMedia, error)
-	UpdateProductMedia(productID uuid.UUID, productMedia dto.UpdateProductMedia) (dto.UpdateProductMedia, error)
+	UpdateProductMedia(productID uuid.UUID, productMedia dto.UpdateProductMedia) (dto.ResponseUpdateProductMedia, error)
 	GetProductMedia(productID uuid.UUID) (*[]dto.GetProductMedia, error)
 }
 
@@ -48,8 +48,8 @@ func (u ProductMediaUsecase) CreateProductMedia(productID uuid.UUID, productMedi
 	return product.ParseToDTOCreateProductMedia(), nil
 }
 
-func (u ProductMediaUsecase) UpdateProductMedia(productID uuid.UUID, productMedia dto.UpdateProductMedia) (dto.UpdateProductMedia, error) {
-	product := &entity.ProductMedia{
+func (u ProductMediaUsecase) UpdateProductMedia(productID uuid.UUID, productMedia dto.UpdateProductMedia) (dto.ResponseUpdateProductMedia, error) {
+	product := entity.ProductMedia{
 		ID:       productID,
 		Media_1:  productMedia.Media1,
 		Media_2:  productMedia.Media2,
@@ -63,11 +63,11 @@ func (u ProductMediaUsecase) UpdateProductMedia(productID uuid.UUID, productMedi
 		Media_10: productMedia.Media10,
 	}
 
-	err := u.ProductMediaRepository.UpdateProductMedia(product, productID)
+	err := u.ProductMediaRepository.UpdateProductMedia(&product, productID)
 	if err != nil {
-		return dto.UpdateProductMedia{}, fiber.NewError(http.StatusInternalServerError, "failed to create product media")
+		return dto.ResponseUpdateProductMedia{}, fiber.NewError(http.StatusInternalServerError, "failed to update product media")
 	}
-	return product.ParseToDTOUpdateProductMedia(), nil
+	return product.ParseToDTOResponseUpdateProductMedia(), nil
 }
 
 func (u ProductMediaUsecase) GetProductMedia(productID uuid.UUID) (*[]dto.GetProductMedia, error) {
