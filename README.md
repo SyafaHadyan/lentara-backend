@@ -4,6 +4,10 @@
 
 `go run main.go [args]`
 
+### Args
+
+`--migrate`: Migrate database
+
 ## Supported Request
 
 |Request|Route Handler|Function|
@@ -18,10 +22,6 @@
 |PATCH|/products/:id|Edit Product by ID|
 |DELETE|/products/:id|Delete Product by ID|
 |DELETE|/productspec/:id|Delete Product Specifications|
-
-## Args
-
-`--migrate`: Migrate database
 
 ## Sample Response
 
