@@ -24,10 +24,16 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, car
 	routerGroup = routerGroup.Group("/cart")
 
 	routerGroup.Post("/:id", cartHandler.CreateCart)
+	routerGroup.Patch("/:id", cartHandler.UpdateCart)
 }
 
 func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	var create dto.CreateCart
+	err := ctx.BodyParser(&create)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid product id")
+	}
+
 	userID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid user id")
@@ -39,7 +45,25 @@ func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "successfully created cart",
+		"message": "successfully created cart item",
+		"payload": res,
+	})
+}
+
+func (c *CartHandler) UpdateCart(ctx *fiber.Ctx) error {
+	var update dto.UpdateCart
+	err := ctx.BodyParser(&update)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	res, err := c.cartUsecase.UpdateCart(update)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update cart")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"messag":  "successfully udpated cart",
 		"payload": res,
 	})
 }

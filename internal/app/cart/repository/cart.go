@@ -8,6 +8,8 @@ import (
 
 type CartMySQLItf interface {
 	CreateCart(cart *entity.Cart) error
+	UpdateCart(cart *entity.Cart) error
+	GetCartById(cart *entity.Cart) error
 }
 
 type CartMySQL struct {
@@ -20,4 +22,12 @@ func NewCartMySQL(db *gorm.DB) CartMySQLItf {
 
 func (r *CartMySQL) CreateCart(cart *entity.Cart) error {
 	return r.db.Debug().Create(cart).Error
+}
+
+func (r *CartMySQL) UpdateCart(cart *entity.Cart) error {
+	return r.db.Debug().Updates(cart).Error
+}
+
+func (r *CartMySQL) GetCartById(cart *entity.Cart) error {
+	return r.db.Debug().First(cart).Error
 }
