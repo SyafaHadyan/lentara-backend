@@ -88,17 +88,17 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 
 	err := ctx.BodyParser(&request)
 	if err != nil {
-		fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
+		return fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
 	}
 
 	err = h.Validator.Struct(request)
 	if err != nil {
-		fiber.NewError(http.StatusBadRequest, "failed to validate request")
+		return fiber.NewError(http.StatusBadRequest, "failed to validate request")
 	}
 
 	res, err := h.ProductUseCase.CreateProduct(request)
 	if err != nil {
-		fiber.NewError(http.StatusInternalServerError, "failed to create product")
+		return fiber.NewError(http.StatusInternalServerError, "failed to create product")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
@@ -132,21 +132,13 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 
 	product, err := h.ProductUseCase.GetSpecificProduct(productID)
 	if err != nil {
-		fiber.NewError(http.StatusInternalServerError, "failed to get product info")
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "product udpated",
 		"payload": product,
 	})
-
-	// product, productSpecification, err := h.ProductUseCase.GetSpecificProduct(productID)
-	// if err != nil {
-	// 	return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
-	// }
-
-	// return ctx.Status(http.StatusOK).JSON(fiber.Map{
-	// "product":               product,
 }
 
 func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
@@ -154,17 +146,17 @@ func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
 
 	err := ctx.BodyParser(request)
 	if err != nil {
-		fiber.NewError(http.StatusBadRequest, "failed to parse request with current id")
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request with current id")
 	}
 
 	ProductID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
-		fiber.NewError(http.StatusInternalServerError, "failed to get product id")
+		return fiber.NewError(http.StatusInternalServerError, "failed to get product id")
 	}
 
 	err = h.Validator.Struct(request)
 	if err != nil {
-		fiber.NewError(http.StatusBadRequest, "invalid product id")
+		return fiber.NewError(http.StatusBadRequest, "invalid product id")
 	}
 
 	res, err := h.ProductUseCase.DeleteProduct(ProductID, request)

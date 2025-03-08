@@ -12,6 +12,7 @@ type Product struct {
 	Title       string    `gorm:"type:varchar(100);not null"`
 	Description string    `gorm:"type:text;not null"`
 	Category    string    `gorm:"type:text;not null"`
+	Origin      string    `gorm:"type:text;not null"`
 	Price       int64     `gorm:"type:bigint;not null"`
 	Stock       int32     `gorm:"type:int;not null"`
 	RentCount   int32     `gorm:"type:int"`
@@ -27,6 +28,7 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
@@ -43,6 +45,7 @@ func (p Product) ParseToDTOGetSpecificProduct() dto.GetSpecificProduct {
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
@@ -59,6 +62,7 @@ func (p Product) ParseToDTOGetProductCategory() dto.GetProductCategory {
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
@@ -75,6 +79,7 @@ func (p Product) ParseToDTOSearchProduct() dto.SearchProduct {
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
@@ -91,6 +96,7 @@ func (p Product) ParseToDTOResponseCreateProduct() dto.ResponseCreateProduct {
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
@@ -103,9 +109,11 @@ func (p Product) ParseToDTOResponseCreateProduct() dto.ResponseCreateProduct {
 
 func (p Product) ParseToDTODeleteProduct() dto.DeleteProduct {
 	return dto.DeleteProduct{
+		ID:          p.ID,
 		Title:       p.Title,
 		Description: p.Description,
 		Category:    p.Category,
+		Origin:      p.Origin,
 		Price:       p.Price,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,

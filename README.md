@@ -51,6 +51,7 @@
             "title": "Hyper Tough #2 x 6 inch Screwdriver",
             "description": "Hyper Tough #2 x 6 inch Screwdriver",
             "category": "tools",
+            "origin": "Malang, Jawa Timur",
             "price": 7800,
             "stock": 1,
             "rent_count": 0,
@@ -64,6 +65,7 @@
             "title": "onn. 50” Class 4K UHD",
             "description": "onn. 50” Class 4K UHD (2160P) LED Roku Smart Television HDR",
             "category": "electronics",
+            "origin": "Malang, Jawa Timur",
             "price": 6400,
             "stock": 24500,
             "rent_count": 0,
@@ -77,6 +79,7 @@
             "title": "javaSport Car",
             "description": "javaSport Car",
             "category": "holiday",
+            "origin": "Malang, Jawa Timur",
             "price": 128512,
             "stock": 1,
             "rent_count": 0,
@@ -90,6 +93,7 @@
             "title": "HORUSDY 10 Pcs Magnetic Screwdriver Set",
             "description": "4 Phillips 5 Flat Head Tips",
             "category": "tools",
+            "origin": "Malang, Jawa Timur",
             "price": 6400,
             "stock": 12,
             "rent_count": 0,
@@ -103,6 +107,7 @@
             "title": "Vim Complete Guide",
             "description": "Beginner's book for learning Vim",
             "category": "hobby",
+            "origin": "Malang, Jawa Timur",
             "price": 4800,
             "stock": 12,
             "rent_count": 0,
@@ -292,6 +297,7 @@
     "title": "Outdoor Patio Dining Set Large",
     "description": "Mainstays Albany Lane Steel 6-Piece Outdoor Patio Dining Set with Umbrella: Large Version",
     "category": "holiday",
+    "origin": "Malang, Jawa Timur",
     "price": 12500,
     "stock": 3,
     "photo_url": "https://i5.walmartimages.com/seo/Mainstays-Albany-Lane-Steel-6-Piece-Outdoor-Patio-Dining-Set-with-Umbrella-Red_507de98f-62a3-4960-808c-46e0d3c4a822_1.c3440198a7932410a2e8a1ebd91177e5.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
@@ -304,17 +310,18 @@
 {
     "message": "successfully created prodcut",
     "payload": {
-        "id": "940885ca-def9-467e-b5cd-e4551241bfbc",
+        "id": "651f8082-9a58-4301-b501-933a250a2b49",
         "title": "Outdoor Patio Dining Set Large",
         "description": "Mainstays Albany Lane Steel 6-Piece Outdoor Patio Dining Set with Umbrella: Large Version",
         "category": "holiday",
+        "origin": "Malang, Jawa Timur",
         "price": 12500,
         "stock": 3,
         "rent_count": 0,
         "rating": 0,
         "photo_url": "https://i5.walmartimages.com/seo/Mainstays-Albany-Lane-Steel-6-Piece-Outdoor-Patio-Dining-Set-with-Umbrella-Red_507de98f-62a3-4960-808c-46e0d3c4a822_1.c3440198a7932410a2e8a1ebd91177e5.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
-        "created_at": "2025-03-07T17:21:07.483+07:00",
-        "updated_at": "2025-03-07T17:21:07.483+07:00"
+        "created_at": "2025-03-08T21:31:22.109+07:00",
+        "updated_at": "2025-03-08T21:31:22.109+07:00"
     }
 }
 ```
