@@ -25,6 +25,7 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, car
 
 	routerGroup.Post("/:id", cartHandler.CreateCart)
 	routerGroup.Patch("/:id", cartHandler.UpdateCart)
+	routerGroup.Get("/cartid/:id", cartHandler.GetCartByID)
 }
 
 func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
@@ -64,6 +65,23 @@ func (c *CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"messag":  "successfully udpated cart",
+		"payload": res,
+	})
+}
+
+func (c *CartHandler) GetCartByID(ctx *fiber.Ctx) error {
+	cartID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
+	}
+
+	res, err := c.cartUsecase.GetCartByID(cartID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get cart by id",
 		"payload": res,
 	})
 }

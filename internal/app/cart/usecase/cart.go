@@ -13,6 +13,7 @@ import (
 type CartUsecaseItf interface {
 	CreateCart(cart dto.CreateCart, userID uuid.UUID) (dto.CreateCart, error)
 	UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error)
+	GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error)
 }
 
 type CartUsecase struct {
@@ -54,4 +55,17 @@ func (u *CartUsecase) UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error) {
 	}
 
 	return cartUser.ParseToDTOUpdateCart(), nil
+}
+
+func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error) {
+	cartUser := entity.Cart{
+		CartItemID: cartID,
+	}
+
+	err := u.cartRepo.GetCartById(&cartUser)
+	if err != nil {
+		return dto.GetCartByID{}, fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
+	}
+
+	return cartUser.ParseToDTOGetCartByID(), nil
 }
