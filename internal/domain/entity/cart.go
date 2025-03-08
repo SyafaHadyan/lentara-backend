@@ -49,13 +49,14 @@ func (c Cart) ParseToDTOGetCartByID() dto.GetCartByID {
 	}
 }
 
-func (c Cart) ParseToDTODeleteCart() dto.DeleteCart {
-	return dto.DeleteCart{
+func (c Cart) ParseToDTODeleteCartByCartID() dto.DeleteCartByCartID {
+	return dto.DeleteCartByCartID{
 		CartItemID: c.CartItemID,
-		UserID:     c.UserID,
-		ProductID:  c.ProductID,
-		Count:      c.Count,
-		CreatedAt:  c.CreatedAt,
-		UpdatedAt:  c.UpdatedAt,
+	}
+}
+
+func (c Cart) ParseToDTODeleteCartByUserID() dto.DeleteCartByUserID {
+	return dto.DeleteCartByUserID{
+		UserID: c.UserID,
 	}
 }

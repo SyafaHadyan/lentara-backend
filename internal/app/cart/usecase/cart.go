@@ -14,6 +14,8 @@ type CartUsecaseItf interface {
 	CreateCart(cart dto.CreateCart, userID uuid.UUID) (dto.CreateCart, error)
 	UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error)
 	GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error)
+	DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error)
+	DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error)
 }
 
 type CartUsecase struct {
@@ -62,10 +64,36 @@ func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error) {
 		CartItemID: cartID,
 	}
 
-	err := u.cartRepo.GetCartById(&cartUser)
+	err := u.cartRepo.GetCartByID(&cartUser)
 	if err != nil {
 		return dto.GetCartByID{}, fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
 	}
 
 	return cartUser.ParseToDTOGetCartByID(), nil
+}
+
+func (u *CartUsecase) DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error) {
+	cartUser := entity.Cart{
+		CartItemID: CartID,
+	}
+
+	err := u.cartRepo.DeleteCartByCartID(&cartUser)
+	if err != nil {
+		return dto.DeleteCartByCartID{}, fiber.NewError(http.StatusInternalServerError, "failed to delete cart by id")
+	}
+
+	return cartUser.ParseToDTODeleteCartByCartID(), nil
+}
+
+func (u *CartUsecase) DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error) {
+	cartUserID := entity.Cart{
+		UserID: UserID,
+	}
+
+	err := u.cartRepo.DeleteCartByUserID(&cartUserID, UserID)
+	if err != nil {
+		return dto.DeleteCartByUserID{}, fiber.NewError(http.StatusInternalServerError, "failed to delete cart by user id")
+	}
+
+	return cartUserID.ParseToDTODeleteCartByUserID(), nil
 }
