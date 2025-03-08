@@ -16,7 +16,7 @@
 |:---|:---|:---|
 |GET|/products|Get All Products|
 |GET|/search/:title|Search Product by Name|
-|GET|/products/:id|Get Product by ID|
+|GET|/products/:id|Get Product by Product ID|
 |GET|/produts/category/:category|Get Products by Category|
 |GET|/productspec/:id|Get Product Specifications by Product ID|
 |GET|/productmedia/:id|Get Product Media by Product ID|
@@ -113,64 +113,7 @@
 }
 ```
 
-### Get Product by ID
-
-#### Response Body
-
-```json
-{
-    "id": "4de2993e-811b-462c-a2a1-7788934426db",
-    "title": "Pemanas Air",
-    "description": "Berfungsi untuk memanaskan air",
-    "category": "electronics",
-    "price": 12800,
-    "stock": 16,
-    "rent_count": 0,
-    "rating": 0,
-    "photo_url": "https://image.example.com/water-heater.png",
-    "created_at": "2025-02-28T15:22:14Z",
-    "updated_at": "2025-02-28T15:22:14Z"
-}
-```
-
-### Get Product by Category
-
-#### Response Body
-
-```json
-{
-    "payload": [
-        {
-            "id": "4de2993e-811b-462c-a2a1-7788934426db",
-            "title": "Pemanas Air",
-            "description": "Berfungsi untuk memanaskan air",
-            "category": "electronics",
-            "price": 12800,
-            "stock": 16,
-            "rent_count": 0,
-            "rating": 0,
-            "photo_url": "https://image.example.com/water-heater.png",
-            "created_at": "2025-02-28T15:22:14Z",
-            "updated_at": "2025-02-28T15:22:14Z"
-        },
-        {
-            "id": "f0313184-2398-4035-af46-3f8fd3314101",
-            "title": "Toaster",
-            "description": "Toaster with electricity support",
-            "category": "electronics",
-            "price": 12800,
-            "stock": 32,
-            "rent_count": 0,
-            "rating": 0,
-            "photo_url": "https://image.example.com/bread-toaster.png",
-            "created_at": "2025-02-28T13:45:35Z",
-            "updated_at": "2025-02-28T13:45:35Z"
-        }
-    ]
-}
-```
-
-### Search Product by Name
+### Search Product by Name `/search/:title`
 
 #### Response Body
 
@@ -220,177 +163,102 @@
 }
 ```
 
-### Create New Product
-
-#### Request Body
-
-```json
-{
-    "title": "Kompor Listrik",
-    "description": "Memasak dengan listrik",
-    "category": "electronics",
-    "price": 6400,
-    "stock": 8,
-    "photo_url": "https://image.example.com/electric-stove.png"
-}
-```
-
-#### Response
-
-```json
-{
-    "message": "succesfully created product",
-    "payload": {
-        "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
-        "title": "Kompor Listrik",
-        "description": "Memasak dengan listrik",
-        "category": "electronics",
-        "price": 6400,
-        "stock": 8,
-        "rent_count": 0,
-        "rating": 0,
-        "photo_url": "https://image.example.com/electric-stove.png",
-        "created_at": "2025-02-28T19:45:46.655Z",
-        "updated_at": "2025-02-28T19:45:46.655Z"
-    }
-}
-```
-
-### Edit Product by ID
-
-#### Request Body
-
-```json
-{
-    "rent_count" : 2,
-    "rating": 4.8
-}
-```
-
-#### Response
-
-```json
-{
-    "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
-    "title": "Kompor Listrik",
-    "description": "Memasak dengan listrik",
-    "category": "electronics",
-    "price": 6400,
-    "stock": 8,
-    "rent_count": 2,
-    "rating": 4.8,
-    "photo_url": "https://image.example.com/electric-stove.png",
-    "created_at": "2025-02-28T19:45:46Z",
-    "updated_at": "2025-02-28T19:47:22Z"
-}
-```
-
-> Note: data fields are optional
-
-Request below won't change any value except `updated_at`
-
-```json
-{
-
-}
-```
-
-```json
-{
-    "id": "eea949da-eba8-4e7b-8b02-ead902ea7644",
-    "title": "Kompor Listrik",
-    "description": "Memasak dengan listrik",
-    "category": "electronics",
-    "price": 6400,
-    "stock": 8,
-    "rent_count": 2,
-    "rating": 4.8,
-    "photo_url": "https://image.example.com/electric-stove.png",
-    "created_at": "2025-02-28T19:45:46Z",
-    "updated_at": "2025-02-28T19:49:28Z"
-}
-```
-
-### Create Product Specification
-
-#### Request Body
-
-```json
-{
-    "product_id": "18991ddc-4852-480c-a263-7b974b267506",
-    "specification_1": "Hardened wood",
-    "specification_2": "Rounded Edge",
-    "specification_3": "",
-    "specification_4": "",
-    "specification_5": ""
-}
-```
+### Get Product by Product ID `/products/:id`
 
 #### Response Body
 
 ```json
 {
-    "payload": {
-        "product_id": "18991ddc-4852-480c-a263-7b974b267506",
-        "specification_1": "Hardened wood",
-        "specification_2": "Rounded edge",
-        "specification_3": "",
-        "specification_4": "",
-        "specification_5": ""
-    }
+    "id": "940885ca-def9-467e-b5cd-e4551241bfbc",
+    "title": "Outdoor Patio Dining Set Large",
+    "description": "Mainstays Albany Lane Steel 6-Piece Outdoor Patio Dining Set with Umbrella: Large Version",
+    "category": "holiday",
+    "price": 12500,
+    "stock": 3,
+    "rent_count": 0,
+    "rating": 0,
+    "photo_url": "https://i5.walmartimages.com/seo/Mainstays-Albany-Lane-Steel-6-Piece-Outdoor-Patio-Dining-Set-with-Umbrella-Red_507de98f-62a3-4960-808c-46e0d3c4a822_1.c3440198a7932410a2e8a1ebd91177e5.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
+    "created_at": "2025-03-07T17:21:07+07:00",
+    "updated_at": "2025-03-07T17:21:07+07:00"
 }
 ```
 
-### Edit Product Specification
-
-#### Request Body
-
-```json
-{
-    "product_id": "18991ddc-4852-480c-a263-7b974b267506",
-    "specification_1": "Hardened wood",
-    "specification_2": "Rounded Edge",
-    "specification_3": "",
-    "specification_4": "",
-    "specification_5": ""
-}
-```
+### Get Products by Category `products/category/:category`
 
 #### Response Body
 
 ```json
 {
-    "payload": {
-        "product_id": "18991ddc-4852-480c-a263-7b974b267506",
-        "specification_1": "Hardened wood",
-        "specification_2": "Rounded edge",
-        "specification_3": "",
-        "specification_4": "",
-        "specification_5": ""
-    }
+    "payload": [
+        {
+            "id": "462b492c-991e-4393-9303-d56651558cdf",
+            "title": "onn. 50” Class 4K UHD",
+            "description": "onn. 50” Class 4K UHD (2160P) LED Roku Smart Television HDR",
+            "category": "electronics",
+            "price": 6400,
+            "stock": 24500,
+            "rent_count": 0,
+            "rating": 0,
+            "photo_url": "https://i5.walmartimages.com/seo/onn-50-Class-4K-UHD-2160P-LED-Roku-Smart-Television-HDR-100012585_5a6dd417-3795-4dc0-a964-f078638716a8.a3aa3bd9a2ef2a749dc3de23c504748e.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
+            "created_at": "2025-03-05T14:00:44Z",
+            "updated_at": "2025-03-05T14:00:44Z"
+        },
+        {
+            "id": "87640b50-0fec-4fcf-aa72-cb42fdfdceab",
+            "title": "PlayStation 5 Digital Console Slim",
+            "description": "PlayStation 5 Digital Console Slim",
+            "category": "electronics",
+            "price": 7850,
+            "stock": 11,
+            "rent_count": 0,
+            "rating": 0,
+            "photo_url": "https://i5.walmartimages.com/seo/PlayStation-5-Digital-Console-Slim_330f0b1b-c9b6-4d17-8875-f35fea51bdfd.587fde46f23ab38eb3197552e46f5305.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
+            "created_at": "2025-03-05T14:02:52Z",
+            "updated_at": "2025-03-05T14:02:52Z"
+        }
+    ]
 }
 ```
 
-### Delete Product Specification
+### Get Product Specifications by Product ID `/productspec/:id`
 
 #### Response Body
 
 ```json
 {
-    "payload": {
-        "product_id": "18991ddc-4852-480c-a263-7b974b267506"
-    }
+    "payload": [
+        {
+            "product_id": "18991ddc-4852-480c-a263-7b974b267506",
+            "specification_1": "Hardened wood",
+            "specification_2": "Rounded edge",
+            "specification_3": "",
+            "specification_4": "",
+            "specification_5": ""
+        }
+    ]
 }
 ```
 
-### Delete Product by ID
+### Get Product Media by Product ID `/productmedia/:id`
 
 #### Response Body
 
 ```json
 {
-    "payload": {
-        "id": "fd0e46ef-2ac5-47a9-b171-e605c439f9b4"
-    }
+    "payload": [
+        {
+            "id": "18991ddc-4852-480c-a263-7b974b267506",
+            "media_1": "https://i5.walmartimages.com/seo/Hyper-Tough-55-Piece-Screwdriver-Set_51e48a96-8faa-41b9-b7a2-cd88e2abf965.73a18f2dab5c7f856fcd5010376cedd5.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
+            "media_2": "https://i5.walmartimages.com/asr/d0c5a616-91ac-4013-ae2d-ba2b8af7b860.9adb851dea5b587608b626aa0ed3ea24.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF",
+            "media_3": "",
+            "media_4": "",
+            "media_5": "",
+            "media_6": "",
+            "media_7": "",
+            "media_8": "",
+            "media_9": "",
+            "media_10": "test"
+        }
+    ]
 }
 ```
