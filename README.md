@@ -33,6 +33,7 @@
 |PATCH|/cart/:id|Edit Cart from User ID|
 |DELETE|/products/:id|Delete Product by Product ID|
 |DELETE|/productspec/:id|Delete Product Specifications by Product ID|
+|DELETE|/productmedia/:id|Delete Product Media by Product ID|
 |DELETE|/cart/cartid/:id|Delete Cart by Cart ID|
 |DELETE|/cart/cartuser/:id|Delete All Carts from User ID|
 
@@ -576,6 +577,62 @@
         "count": 64,
         "created_at": "2025-03-08T12:29:37+07:00",
         "updated_at": "2025-03-08T21:02:51+07:00"
+    }
+}
+```
+
+### Delete Product by Product ID `/products/:id`
+
+> Note: Product specifications and media must be deleted before deleting product
+
+#### Response Body
+
+```json
+a
+```
+
+### Delete Product Specifications by Product ID `/productspec/:id`
+
+#### Response Body
+
+```json
+{
+    "payload": {
+        "product_id": "1e7dcc75-b8e4-4cc6-b785-59782347d591"
+    }
+}
+```
+
+### Delete Product Media by Product ID `/productmedia/:id`
+
+#### Response Body
+
+```json
+a
+```
+
+### Delete Cart by Cart ID `/cartid/:id`
+
+#### Response Body
+
+```json
+{
+    "message": "successfully deleted cart",
+    "payload": {
+        "cart_item_id": "44ec4df6-81de-4d5d-b623-8ccf2c97a6ba"
+    }
+}
+```
+
+### Delete All Carts from User ID `/cart/cartuser/:id`
+
+#### Response Body
+
+```json
+{
+    "message": "successfully deleted all carts form user id",
+    "payload": {
+        "user_id": "97ce2aea-04bf-4420-9b57-63a1c5dedac5"
     }
 }
 ```
