@@ -10,8 +10,8 @@ type Register struct {
 	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name" validate:"omitempty,min=3"`
 	Email     string    `json:"email" validate:"required,email"`
-	Username  string    `json:"username" validate:"required,min=3"`
-	Password  string    `json:"password" validate:"required,min=8"`
+	Username  string    `json:"username" validate:"required,min=3,max=128"`
+	Password  string    `json:"password" validate:"required,min=8,max=128"`
 	IsAdmin   bool      `json:"is_admin"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

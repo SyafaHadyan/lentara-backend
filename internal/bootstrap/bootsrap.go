@@ -2,6 +2,9 @@ package bootstrap
 
 import (
 	"fmt"
+	carthandler "lentara-backend/internal/app/cart/interface/rest"
+	cartrepository "lentara-backend/internal/app/cart/repository"
+	cartusecase "lentara-backend/internal/app/cart/usecase"
 	producthandler "lentara-backend/internal/app/product/interface/rest"
 	productrepository "lentara-backend/internal/app/product/repository"
 	productusecase "lentara-backend/internal/app/product/usecase"
@@ -86,6 +89,9 @@ func Start(args []string) error {
 	productMediaRepository := productmediarepository.NewProductMediaMySQL(database)
 	productMediaUseCase := productmediausecase.NewProductMediaUsecase(productMediaRepository)
 	productmediahandler.NewProductMediahandler(v1, productMediaUseCase)
+	cartRepository := cartrepository.NewCartMySQL(database)
+	cartUseCase := cartusecase.NewCartUsecase(cartRepository)
+	carthandler.NewCartHandler(v1, val, cartUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
