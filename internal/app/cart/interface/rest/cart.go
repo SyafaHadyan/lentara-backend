@@ -63,6 +63,13 @@ func (c *CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update cart")
 	}
 
+	cartID, err := uuid.Parse(update.CartItemID.String())
+	if err != nil {
+		/* Proceed even if cart id is invalid */
+	}
+
+	res, err := c.cartUsecase.GetCartByID(cartID)
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"messag":  "successfully udpated cart",
 		"payload": res,
