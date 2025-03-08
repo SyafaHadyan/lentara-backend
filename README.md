@@ -37,7 +37,7 @@
 
 ## Sample Response
 
-### Get All Products
+### Get All Products `/products`
 
 #### Response Body
 
