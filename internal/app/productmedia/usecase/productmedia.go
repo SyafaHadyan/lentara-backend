@@ -14,6 +14,7 @@ type ProductMediaUsecaseItf interface {
 	CreateProductMedia(productID uuid.UUID, productMedia dto.CreateProductMedia) (dto.CreateProductMedia, error)
 	UpdateProductMedia(productID uuid.UUID, productMedia dto.UpdateProductMedia) (dto.ResponseUpdateProductMedia, error)
 	GetProductMedia(productID uuid.UUID) (*[]dto.GetProductMedia, error)
+	DeleteProductMedia(productID uuid.UUID) (dto.DeleteProductMedia, error)
 }
 
 type ProductMediaUsecase struct {
@@ -84,4 +85,17 @@ func (u ProductMediaUsecase) GetProductMedia(productID uuid.UUID) (*[]dto.GetPro
 	}
 
 	return &res, err
+}
+
+func (u ProductMediaUsecase) DeleteProductMedia(productID uuid.UUID) (dto.DeleteProductMedia, error) {
+	productMedia := entity.ProductMedia{
+		ID: productID,
+	}
+
+	err := u.ProductMediaRepository.DeleteProductMedia(&productMedia)
+	if err != nil {
+		return dto.DeleteProductMedia{}, fiber.NewError(http.StatusInternalServerError, "failed to delete product media")
+	}
+
+	return productMedia.ParseToDTODeleteProductMedia(), nil
 }

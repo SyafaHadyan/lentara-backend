@@ -590,12 +590,16 @@
 
 ### Delete Product by Product ID `/products/:id`
 
-> Note: Product specifications and media must be deleted before deleting product
+> Note: Product **specifications** and **media** must be deleted before deleting product
 
 #### Response Body
 
 ```json
-a
+{
+    "payload": {
+        "product_id": "1e7dcc75-b8e4-4cc6-b785-59782347d591"
+    }
+}
 ```
 
 ### Delete Product Specifications by Product ID `/productspec/:id`
@@ -615,7 +619,11 @@ a
 #### Response Body
 
 ```json
-a
+{
+    "payload": {
+        "product_id": "1e7dcc75-b8e4-4cc6-b785-59782347d591"
+    }
+}
 ```
 
 ### Delete Cart by Cart ID `/cartid/:id`
