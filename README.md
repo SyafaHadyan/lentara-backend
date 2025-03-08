@@ -10,6 +10,8 @@
 
 ## Supported Request
 
+>> Append after `/api/v1/`
+
 |Request|Route Handler|Function|
 |:---|:---|:---|
 |GET|/products|Get All Products|
