@@ -10,7 +10,7 @@
 
 ## Supported Request
 
->> Append after `/api/v1/`
+> Append after `/api/v1/`
 
 |Request|Route Handler|Function|
 |:---|:---|:---|
