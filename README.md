@@ -262,3 +262,21 @@
     ]
 }
 ```
+
+### Get Cart by Cart ID `/cart/cartid/:id`
+
+#### Response Body
+
+```json
+{
+    "message": "successfully get cart by id",
+    "payload": {
+        "cart_item_id": "360e7a6e-bf2a-49da-a2f8-a4eaab916b78",
+        "user_id": "97ce2aea-04bf-4420-9b57-63a1c5dedac5",
+        "product_id": "940885ca-def9-467e-b5cd-e4551241bfbc",
+        "count": 2,
+        "created_at": "2025-03-08T12:29:41+07:00",
+        "updated_at": "2025-03-08T12:29:41+07:00"
+    }
+}
+```
