@@ -18,11 +18,12 @@ func NewProductMediahandler(routerGroup fiber.Router, productMediaUseCase usecas
 		ProductMediaUseCase: productMediaUseCase,
 	}
 
-	routerGroup = routerGroup.Group("/")
+	routerGroup = routerGroup.Group("/productmedia")
 
-	routerGroup.Get("/productmedia/:id", handler.GetProductMedia)
-	routerGroup.Patch("/productmedia/:id", handler.UpdateProductMedia)
-	routerGroup.Post("/productmedia/:id", handler.CreateProductMedia)
+	routerGroup.Get("/:id", handler.GetProductMedia)
+	routerGroup.Patch("/:id", handler.UpdateProductMedia)
+	routerGroup.Post("/:id", handler.CreateProductMedia)
+	routerGroup.Delete("/:id", handler.DeleteProductMedia)
 }
 
 func (h ProductMediaHandler) CreateProductMedia(ctx *fiber.Ctx) error {
@@ -86,5 +87,22 @@ func (h ProductMediaHandler) GetProductMedia(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"payload": productMedia,
+	})
+}
+
+func (h ProductMediaHandler) DeleteProductMedia(ctx *fiber.Ctx) error {
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid product id")
+	}
+
+	res, err := h.ProductMediaUseCase.DeleteProductMedia(productID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to delete product media")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully deleted product media",
+		"payload": res,
 	})
 }

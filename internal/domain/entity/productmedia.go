@@ -83,3 +83,9 @@ func (p ProductMedia) ParseToDTOGetProductMedia() dto.GetProductMedia {
 		Media10: p.Media_10,
 	}
 }
+
+func (p ProductMedia) ParseToDTODeleteProductMedia() dto.DeleteProductMedia {
+	return dto.DeleteProductMedia{
+		ID: p.ID,
+	}
+}

@@ -57,3 +57,7 @@ type GetProductMedia struct {
 	Media9  string    `json:"media_9"`
 	Media10 string    `json:"media_10"`
 }
+
+type DeleteProductMedia struct {
+	ID uuid.UUID `json:"id"`
+}

@@ -11,6 +11,7 @@ type ProductMediaMySQLItf interface {
 	CreateProductMedia(productMedia *entity.ProductMedia) error
 	UpdateProductMedia(productMedia *entity.ProductMedia, id uuid.UUID) error
 	GetProductMedia(productMedia *[]entity.ProductMedia, id uuid.UUID) error
+	DeleteProductMedia(productMedia *entity.ProductMedia) error
 }
 
 type ProductMediaMySQL struct {
@@ -31,4 +32,8 @@ func (r ProductMediaMySQL) UpdateProductMedia(productMedia *entity.ProductMedia,
 
 func (r ProductMediaMySQL) GetProductMedia(productMedia *[]entity.ProductMedia, id uuid.UUID) error {
 	return r.db.Debug().Where("id = ?", id).First(productMedia).Error
+}
+
+func (r ProductMediaMySQL) DeleteProductMedia(productMedia *entity.ProductMedia) error {
+	return r.db.Debug().Delete(productMedia).Error
 }
