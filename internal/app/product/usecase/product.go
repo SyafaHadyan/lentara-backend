@@ -4,8 +4,6 @@ import (
 	repository "lentara-backend/internal/app/product/repository"
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
-	"log"
-	"math"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +11,7 @@ import (
 )
 
 type ProductUsecaseItf interface {
-	GetAllProducts(page int) (*[]dto.GetAllProducts, error)
+	GetAllProducts() (*[]dto.GetAllProducts, error)
 	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
@@ -32,7 +30,7 @@ func NewProductUsecase(productRepository repository.ProductMySQLItf) ProductUsec
 	}
 }
 
-func (u ProductUsecase) GetAllProducts(page int) (*[]dto.GetAllProducts, error) {
+func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	products := new([]entity.Product)
 
 	err := u.ProductRepository.GetAllProducts(products)
@@ -42,17 +40,8 @@ func (u ProductUsecase) GetAllProducts(page int) (*[]dto.GetAllProducts, error) 
 
 	res := make([]dto.GetAllProducts, len(*products))
 
-	pagination := (page - 1) * 10
-	limit := int(math.Min(float64(len(*products)), float64(pagination+10)))
-
-	log.Println(pagination)
-	log.Println(limit)
-
 	for i, product := range *products {
 		res[i] = product.ParseToDTOGetAllProducts()
-		//if pagination == limit {
-		//	break
-		//}
 	}
 
 	return &res, nil

@@ -5,7 +5,6 @@ import (
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/middleware"
 	"net/http"
-	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -27,7 +26,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 	routerGroup = routerGroup.Group("/")
 
-	routerGroup.Get("/products/page/:page", handler.GetAllProducts)
+	routerGroup.Get("/products/", handler.GetAllProducts)
 	routerGroup.Get("/products/:id", handler.GetProductByID)
 	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
 	routerGroup.Get("/search/:title", handler.SearchProduct)
@@ -37,12 +36,12 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
-	page, err := strconv.Atoi(ctx.Params("page"))
-	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "page number must be specified")
-	}
+	//page, err := strconv.Atoi(ctx.Params("page"))
+	//if err != nil {
+	//	return fiber.NewError(http.StatusBadRequest, "page number must be specified")
+	//}
 
-	res, err := h.ProductUseCase.GetAllProducts(page)
+	res, err := h.ProductUseCase.GetAllProducts()
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get products")
 	}
