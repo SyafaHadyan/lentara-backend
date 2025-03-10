@@ -8,10 +8,11 @@ import (
 
 type ProductMySQLItf interface {
 	GetAllProducts(products *[]entity.Product) error
-	GetSpecificProduct(products *entity.Product) error
+	GetProductByID(products *entity.Product) error
 	GetProductCategory(products *[]entity.Product, category string) error
 	SearchProduct(products *[]entity.Product, query string) error
-	Create(product *entity.Product) error
+	SearchAndCategoryProduct(products *[]entity.Product, query string, category string) error
+	CreateProduct(product *entity.Product) error
 	UpdateProduct(products *entity.Product) error
 	DeleteProduct(product *entity.Product) error
 }
@@ -28,7 +29,7 @@ func (r ProductMySQL) GetAllProducts(products *[]entity.Product) error {
 	return r.db.Debug().Find(products).Error
 }
 
-func (r ProductMySQL) GetSpecificProduct(products *entity.Product) error {
+func (r ProductMySQL) GetProductByID(products *entity.Product) error {
 	return r.db.Debug().First(products).Error
 }
 
@@ -40,7 +41,11 @@ func (r ProductMySQL) SearchProduct(products *[]entity.Product, query string) er
 	return r.db.Debug().Where("title LIKE ?", "%"+query+"%").Find(products).Error
 }
 
-func (r ProductMySQL) Create(product *entity.Product) error {
+func (r ProductMySQL) SearchAndCategoryProduct(products *[]entity.Product, query string, category string) error {
+	return r.db.Debug().Where("title LIKE ?", "%"+query+"%").Where("category = ?", category).Find(products).Error
+}
+
+func (r ProductMySQL) CreateProduct(product *entity.Product) error {
 	return r.db.Debug().Create(product).Error
 }
 
