@@ -38,14 +38,15 @@ func (u *SellerUsecase) SellerRegister(register dto.SellerRegister) (dto.Respons
 	}
 
 	seller := entity.Seller{
-		ID:            uuid.New(),
-		Name:          register.Name,
-		Email:         register.Email,
-		Username:      register.Username,
-		Password:      string(hashedPassword),
-		StoreName:     register.StoreName,
-		StoreLocation: register.StoreLocation,
-		PhoneNumber:   register.PhoneNumber,
+		ID:             uuid.New(),
+		Name:           register.Name,
+		Email:          register.Email,
+		Username:       register.Username,
+		Password:       string(hashedPassword),
+		StoreName:      register.StoreName,
+		StoreLocation:  register.StoreLocation,
+		PhoneNumber:    register.PhoneNumber,
+		ProfilePicture: "https://static.vecteezy.com/system/resources/previews/026/619/142/original/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg",
 	}
 
 	err = u.sellerRepo.SellerRegister(&seller)

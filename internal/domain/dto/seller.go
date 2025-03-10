@@ -7,29 +7,31 @@ import (
 )
 
 type SellerRegister struct {
-	ID            uuid.UUID `json:"id"`
-	Name          string    `json:"name" validate:"required,min=3"`
-	Email         string    `json:"email" validate:"required,email"`
-	Username      string    `json:"username" validate:"required,min=3,max=128"`
-	Password      string    `json:"password" validate:"required,min=8,max=128"`
-	StoreName     string    `json:"store_name" validate:"required,min=3,max=128"`
-	StoreLocation string    `json:"store_location" validate:"required,min=3,max=128"`
-	PhoneNumber   string    `json:"phone_number" validate:"required"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID             uuid.UUID `json:"id"`
+	Name           string    `json:"name"`
+	Email          string    `json:"email" validate:"required,email"`
+	Username       string    `json:"username" validate:"required,min=3,max=128"`
+	Password       string    `json:"password" validate:"required,min=8,max=128"`
+	StoreName      string    `json:"store_name" validate:"required,min=3,max=128"`
+	StoreLocation  string    `json:"store_location" validate:"required,min=3,max=128"`
+	PhoneNumber    string    `json:"phone_number" validate:"required"`
+	ProfilePicture string    `json:"profile_picture"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }
 
 type ResponseSellerRegister struct {
-	ID            uuid.UUID `json:"id"`
-	Name          string    `json:"name"`
-	Email         string    `json:"email"`
-	Username      string    `json:"username"`
-	Password      string    `json:"password"`
-	StoreName     string    `json:"store_name"`
-	StoreLocation string    `json:"store_location" validate:"required,min=3,max=128"`
-	PhoneNumber   string    `json:"phone_number" validate:"required"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID             uuid.UUID `json:"id"`
+	Name           string    `json:"name"`
+	Email          string    `json:"email"`
+	Username       string    `json:"username"`
+	Password       string    `json:"password"`
+	StoreName      string    `json:"store_name"`
+	StoreLocation  string    `json:"store_location"`
+	PhoneNumber    string    `json:"phone_number"`
+	ProfilePicture string    `json:"profile_picture"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }
 
 type SellerLogin struct {

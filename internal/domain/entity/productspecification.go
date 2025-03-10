@@ -7,7 +7,7 @@ import (
 )
 
 type ProductSpecification struct {
-	ID              uuid.UUID `gorm:"type:char(36):foreignKey"`
+	ID              uuid.UUID `gorm:"type:varchar(36):foreignKey"`
 	Specification_1 string    `gorm:"type:text"`
 	Specification_2 string    `gorm:"type:text"`
 	Specification_3 string    `gorm:"type:text"`

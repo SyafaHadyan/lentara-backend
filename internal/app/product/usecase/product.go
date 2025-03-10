@@ -12,7 +12,7 @@ import (
 
 type ProductUsecaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
-	GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error)
+	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
@@ -39,6 +39,7 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	}
 
 	res := make([]dto.GetAllProducts, len(*products))
+
 	for i, product := range *products {
 		res[i] = product.ParseToDTOGetAllProducts()
 	}
@@ -46,17 +47,17 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	return &res, nil
 }
 
-func (u ProductUsecase) GetSpecificProduct(productID uuid.UUID) (dto.GetSpecificProduct, error) {
+func (u ProductUsecase) GetProductByID(productID uuid.UUID) (dto.GetProductByID, error) {
 	product := &entity.Product{
 		ID: productID,
 	}
 
-	err := u.ProductRepository.GetSpecificProduct(product)
+	err := u.ProductRepository.GetProductByID(product)
 	if err != nil {
-		return dto.GetSpecificProduct{}, err
+		return dto.GetProductByID{}, err
 	}
 
-	return product.ParseToDTOGetSpecificProduct(), err
+	return product.ParseToDTOGetProductByID(), err
 }
 
 func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {
@@ -91,19 +92,36 @@ func (u ProductUsecase) SearchProduct(query string) (*[]dto.SearchProduct, error
 	return &res, nil
 }
 
-func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
-	product := entity.Product{
-		ID:          uuid.New(),
-		Title:       request.Title,
-		Description: request.Description,
-		Category:    request.Category,
-		Origin:      request.Origin,
-		Price:       request.Price,
-		Stock:       request.Stock,
-		PhotoUrl:    request.PhotoUrl,
+func (u ProductUsecase) SearchAndCategoryProduct(query string, category string) (*[]dto.SearchAndCategoryProduct, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.SearchAndCategoryProduct(products, query, category)
+	if err != nil {
+		return &[]dto.SearchAndCategoryProduct{}, fiber.NewError(http.StatusInternalServerError, "failed to get products using current query and selected category")
 	}
 
-	err := u.ProductRepository.Create(&product)
+	res := make([]dto.SearchAndCategoryProduct, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOSearchAndCategoryProduct()
+	}
+
+	return &res, nil
+}
+
+func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
+	product := entity.Product{
+		ID:           uuid.New(),
+		Title:        request.Title,
+		Description:  request.Description,
+		Category:     request.Category,
+		Origin:       request.Origin,
+		ProductOwner: uuid.New(),
+		Price:        request.Price,
+		Stock:        request.Stock,
+		PhotoUrl:     request.PhotoUrl,
+	}
+
+	err := u.ProductRepository.CreateProduct(&product)
 	if err != nil {
 		return dto.ResponseCreateProduct{}, fiber.NewError(http.StatusBadRequest, "failed to create product")
 	}

@@ -26,8 +26,8 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 	routerGroup = routerGroup.Group("/")
 
-	routerGroup.Get("/products", handler.GetAllProducts)
-	routerGroup.Get("/products/:id", handler.GetSpecificProduct)
+	routerGroup.Get("/products/", handler.GetAllProducts)
+	routerGroup.Get("/products/:id", handler.GetProductByID)
 	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
@@ -36,6 +36,11 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
+	//page, err := strconv.Atoi(ctx.Params("page"))
+	//if err != nil {
+	//	return fiber.NewError(http.StatusBadRequest, "page number must be specified")
+	//}
+
 	res, err := h.ProductUseCase.GetAllProducts()
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get products")
@@ -46,13 +51,13 @@ func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h ProductHandler) GetSpecificProduct(ctx *fiber.Ctx) error {
+func (h ProductHandler) GetProductByID(ctx *fiber.Ctx) error {
 	productID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "not a valid uuid")
 	}
 
-	product, err := h.ProductUseCase.GetSpecificProduct(productID)
+	product, err := h.ProductUseCase.GetProductByID(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product")
 	}
@@ -130,7 +135,7 @@ func (h ProductHandler) UpdateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product")
 	}
 
-	product, err := h.ProductUseCase.GetSpecificProduct(productID)
+	product, err := h.ProductUseCase.GetProductByID(productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product info")
 	}

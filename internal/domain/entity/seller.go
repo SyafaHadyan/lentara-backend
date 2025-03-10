@@ -23,13 +23,17 @@ type Seller struct {
 
 func (s Seller) ParseToDTOResponseSellerRegister() dto.ResponseSellerRegister {
 	return dto.ResponseSellerRegister{
-		ID:        s.ID,
-		Name:      s.Name,
-		Email:     s.Email,
-		Username:  s.Username,
-		Password:  s.Password,
-		CreatedAt: s.CreatedAt,
-		UpdatedAt: s.UpdatedAt,
+		ID:             s.ID,
+		Name:           s.Name,
+		Email:          s.Email,
+		Username:       s.Username,
+		Password:       s.Password,
+		StoreName:      s.StoreName,
+		StoreLocation:  s.StoreLocation,
+		PhoneNumber:    s.PhoneNumber,
+		ProfilePicture: s.ProfilePicture,
+		CreatedAt:      s.CreatedAt,
+		UpdatedAt:      s.UpdatedAt,
 	}
 }
 
