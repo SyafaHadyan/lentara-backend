@@ -38,11 +38,14 @@ func (u *SellerUsecase) SellerRegister(register dto.SellerRegister) (dto.Respons
 	}
 
 	seller := entity.Seller{
-		ID:       uuid.New(),
-		Name:     register.Name,
-		Email:    register.Email,
-		Username: register.Username,
-		Password: string(hashedPassword),
+		ID:            uuid.New(),
+		Name:          register.Name,
+		Email:         register.Email,
+		Username:      register.Username,
+		Password:      string(hashedPassword),
+		StoreName:     register.StoreName,
+		StoreLocation: register.StoreLocation,
+		PhoneNumber:   register.PhoneNumber,
 	}
 
 	err = u.sellerRepo.SellerRegister(&seller)
@@ -76,13 +79,14 @@ func (u *SellerUsecase) SellerLogin(login dto.SellerLogin) (string, error) {
 
 func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.UpdateSellerInfo, error) {
 	sellerUpdate := &entity.Seller{
-		ID:            sellerID,
-		Name:          seller.Name,
-		Email:         seller.Email,
-		Username:      seller.Username,
-		Password:      seller.Password,
-		StoreLocation: seller.StoreLocation,
-		PhoneNumber:   seller.PhoneNumber,
+		ID:             sellerID,
+		Name:           seller.Name,
+		Email:          seller.Email,
+		Username:       seller.Username,
+		Password:       seller.Password,
+		StoreLocation:  seller.StoreLocation,
+		PhoneNumber:    seller.PhoneNumber,
+		ProfilePicture: seller.ProfilePicture,
 	}
 
 	err := u.sellerRepo.UpdateSellerInfo(sellerUpdate)
@@ -95,15 +99,16 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 
 func (u *SellerUsecase) GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error) {
 	sellerInfo := &entity.Seller{
-		ID:            sellerID,
-		Name:          seller.Name,
-		Email:         seller.Email,
-		Username:      seller.Username,
-		Password:      seller.Password,
-		StoreLocation: seller.StoreLocation,
-		PhoneNumber:   seller.PhoneNumber,
-		CreatedAt:     seller.CreatedAt,
-		UpdatedAt:     seller.UpdatedAt,
+		ID:             sellerID,
+		Name:           seller.Name,
+		Email:          seller.Email,
+		Username:       seller.Username,
+		Password:       seller.Password,
+		StoreLocation:  seller.StoreLocation,
+		PhoneNumber:    seller.PhoneNumber,
+		ProfilePicture: seller.ProfilePicture,
+		CreatedAt:      seller.CreatedAt,
+		UpdatedAt:      seller.UpdatedAt,
 	}
 
 	err := u.sellerRepo.GetSellerInfo(sellerInfo)
