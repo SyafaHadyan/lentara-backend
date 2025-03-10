@@ -95,13 +95,39 @@ func (h *SellerHandler) UpdateSellerInfo(ctx *fiber.Ctx) error {
 
 	log.Println(update)
 
-	res, err := h.sellerUsecase.UpdateSellerInfo(update, sellerID)
+	_, err = h.sellerUsecase.UpdateSellerInfo(update, sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to uppdate seller info")
 	}
 
+	var seller dto.GetSellerInfo
+
+	res, err := h.sellerUsecase.GetSellerInfo(seller, sellerID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get updated seller data")
+	}
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully updated seller info",
+		"payload": res,
+	})
+}
+
+func (h *SellerHandler) GetSellerInfo(ctx *fiber.Ctx) error {
+	sellerID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
+	}
+
+	var sellerInfo dto.GetSellerInfo
+
+	res, err := h.sellerUsecase.GetSellerInfo(sellerInfo, sellerID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get seller info",
 		"payload": res,
 	})
 }

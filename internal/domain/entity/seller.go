@@ -55,3 +55,17 @@ func (s Seller) ParseToDTOResponseUpdateSellerInfo() dto.UpdateSellerInfo {
 		UpdatedAt:     s.UpdatedAt,
 	}
 }
+
+func (s Seller) ParseToDTOGetSellerInfo() dto.GetSellerInfo {
+	return dto.GetSellerInfo{
+		ID:            s.ID,
+		Name:          s.Name,
+		Email:         s.Email,
+		Username:      s.Username,
+		Password:      s.Password,
+		StoreLocation: s.StoreLocation,
+		PhoneNumber:   s.PhoneNumber,
+		CreatedAt:     s.CreatedAt,
+		UpdatedAt:     s.UpdatedAt,
+	}
+}

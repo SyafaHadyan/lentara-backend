@@ -16,6 +16,7 @@ type SellerUsecaseItf interface {
 	SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error)
 	SellerLogin(login dto.SellerLogin) (string, error)
 	UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.UpdateSellerInfo, error)
+	GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error)
 }
 
 type SellerUsecase struct {
@@ -90,4 +91,25 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 	}
 
 	return sellerUpdate.ParseToDTOResponseUpdateSellerInfo(), nil
+}
+
+func (u *SellerUsecase) GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error) {
+	sellerInfo := &entity.Seller{
+		ID:            sellerID,
+		Name:          seller.Name,
+		Email:         seller.Email,
+		Username:      seller.Username,
+		Password:      seller.Password,
+		StoreLocation: seller.StoreLocation,
+		PhoneNumber:   seller.PhoneNumber,
+		CreatedAt:     seller.CreatedAt,
+		UpdatedAt:     seller.UpdatedAt,
+	}
+
+	err := u.sellerRepo.GetSellerInfo(sellerInfo)
+	if err != nil {
+		return dto.GetSellerInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
+	}
+
+	return sellerInfo.ParseToDTOGetSellerInfo(), nil
 }

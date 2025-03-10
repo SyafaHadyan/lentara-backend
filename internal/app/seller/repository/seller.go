@@ -12,6 +12,7 @@ type SellerMySQLItf interface {
 	SellerLogin(seller *entity.Seller) error
 	GetSellerLoginInfo(seller *entity.Seller, sellerLogin dto.SellerInfo) error
 	UpdateSellerInfo(seller *entity.Seller) error
+	GetSellerInfo(seller *entity.Seller) error
 }
 
 type SellerMySQL struct {
@@ -36,4 +37,8 @@ func (r *SellerMySQL) SellerLogin(seller *entity.Seller) error {
 
 func (r *SellerMySQL) UpdateSellerInfo(seller *entity.Seller) error {
 	return r.db.Debug().Updates(seller).Error
+}
+
+func (r *SellerMySQL) GetSellerInfo(seller *entity.Seller) error {
+	return r.db.Debug().First(seller).Error
 }

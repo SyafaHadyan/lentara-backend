@@ -58,3 +58,15 @@ type UpdateSellerInfo struct {
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 }
+
+type GetSellerInfo struct {
+	ID            uuid.UUID `json:"id"`
+	Name          string    `json:"name"`
+	Email         string    `json:"email"`
+	Username      string    `json:"username"`
+	StoreLocation string    `json:"store_location"`
+	PhoneNumber   string    `json:"phone_number"`
+	Password      string    `json:"password"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
