@@ -36,12 +36,13 @@ func (u *UserUsecase) Register(register dto.Register) (dto.ResponseRegister, err
 	}
 
 	user := entity.User{
-		ID:       uuid.New(),
-		Name:     register.Name,
-		Email:    register.Email,
-		Username: register.Username,
-		Password: string(hashedPassword),
-		IsAdmin:  false,
+		ID:             uuid.New(),
+		Name:           register.Name,
+		Email:          register.Email,
+		Username:       register.Username,
+		Password:       string(hashedPassword),
+		IsAdmin:        false,
+		ProfilePicture: "https://static.vecteezy.com/system/resources/previews/026/619/142/original/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg",
 	}
 
 	err = u.userRepo.Create(&user)
