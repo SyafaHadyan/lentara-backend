@@ -14,6 +14,9 @@ import (
 	productspecificationhandler "lentara-backend/internal/app/productspecification/interface/rest"
 	productspecificationrepository "lentara-backend/internal/app/productspecification/repository"
 	productspecificationusecase "lentara-backend/internal/app/productspecification/usecase"
+	sellerhandler "lentara-backend/internal/app/seller/interface/rest"
+	sellerrepository "lentara-backend/internal/app/seller/repository"
+	sellerusecase "lentara-backend/internal/app/seller/usecase"
 	userhandler "lentara-backend/internal/app/user/interface/rest"
 	userrepository "lentara-backend/internal/app/user/repository"
 	userusecase "lentara-backend/internal/app/user/usecase"
@@ -26,6 +29,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/idempotency"
 )
 
 func Start(args []string) error {
@@ -68,12 +72,15 @@ func Start(args []string) error {
 
 	middleware := middleware.NewMiddleWare(*jwt)
 
-	app.Use(cors.New(cors.Config{
-		AllowHeaders: "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
-		AllowOrigins: "*",
-		// AllowCredentials: true,
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-	}))
+	app.Use(
+		cors.New(cors.Config{
+			AllowHeaders: "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
+			AllowOrigins: "*",
+			// AllowCredentials: true,
+			AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+		}),
+		idempotency.New(),
+	)
 
 	v1 := app.Group("/api/v1")
 
@@ -92,6 +99,9 @@ func Start(args []string) error {
 	cartRepository := cartrepository.NewCartMySQL(database)
 	cartUseCase := cartusecase.NewCartUsecase(cartRepository)
 	carthandler.NewCartHandler(v1, val, cartUseCase)
+	sellerRepository := sellerrepository.NewSellerMySQL(database)
+	sellerUseCase := sellerusecase.NewSellerUsecase(sellerRepository, jwt)
+	sellerhandler.NewSellerHandler(v1, val, sellerUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }

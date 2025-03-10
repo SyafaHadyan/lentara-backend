@@ -9,10 +9,10 @@ import (
 
 type User struct {
 	ID            uuid.UUID `json:"id" gorm:"type:varchar(36);primaryKey"`
-	Name          string    `json:"name" gorm:"type:text;not null;max=50"`
+	Name          string    `json:"name" gorm:"type:text;not null"`
 	Email         string    `json:"email" gorm:"type:text;not null;unique"`
 	Username      string    `json:"username" gorm:"type:text;not null;unique"`
-	Password      string    `json:"password" gorm:"type:text;not null;max=128"`
+	Password      string    `json:"password" gorm:"type:text;not null"`
 	IsAdmin       bool      `json:"is_admin" gorm:"type:boolean;default:0"`
 	RentProposal  int32     `json:"rent_proposal" gorm:"type:int"`
 	RentComplete  int32     `json:"rent_complete" gorm:"type:int"`
