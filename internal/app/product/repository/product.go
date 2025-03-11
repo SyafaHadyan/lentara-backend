@@ -36,7 +36,7 @@ func (r ProductMySQL) GetProductByID(products *entity.Product) error {
 }
 
 func (r ProductMySQL) GetProductsBySellerID(products *[]entity.Product, sellerID uuid.UUID) error {
-	return r.db.Debug().Where("seller_id = ?", sellerID).Error
+	return r.db.Debug().Where("seller_id = ?", sellerID).Find(products).Error
 }
 
 func (r ProductMySQL) GetProductCategory(products *[]entity.Product, category string) error {
