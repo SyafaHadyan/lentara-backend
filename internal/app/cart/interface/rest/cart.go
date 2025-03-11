@@ -36,6 +36,7 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, mid
 	routerGroup.Post("/", middleware.Authentication, cartHandler.CreateCart)
 	routerGroup.Patch("/:cartid", cartHandler.UpdateCart)
 	routerGroup.Get("/cartid/:id", cartHandler.GetCartByID)
+	routerGroup.Get("/cartuser/", middleware.Authentication, cartHandler.GetCartsByUserID)
 	routerGroup.Delete("/cartid/:id", cartHandler.DeleteCartByCartID)
 	routerGroup.Delete("/cartuser/:id", cartHandler.DeleteCartByUserID)
 }
@@ -46,8 +47,6 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid product id")
 	}
-
-	log.Println(ctx.Locals("userID"))
 
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
@@ -117,6 +116,23 @@ func (h CartHandler) GetCartByID(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully get cart by id",
+		"payload": res,
+	})
+}
+
+func (h CartHandler) GetCartsByUserID(ctx *fiber.Ctx) error {
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	res, err := h.CartUseCase.GetCartsByUserID(userID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get carts by user id")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get carts by user id",
 		"payload": res,
 	})
 }

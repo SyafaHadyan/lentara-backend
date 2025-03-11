@@ -3,12 +3,14 @@ package repository
 import (
 	"lentara-backend/internal/domain/entity"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type ProductMySQLItf interface {
 	GetAllProducts(products *[]entity.Product) error
 	GetProductByID(products *entity.Product) error
+	GetProductsBySellerID(products *[]entity.Product, sellerID uuid.UUID) error
 	GetProductCategory(products *[]entity.Product, category string) error
 	SearchProduct(products *[]entity.Product, query string) error
 	SearchAndCategoryProduct(products *[]entity.Product, query string, category string) error
@@ -31,6 +33,10 @@ func (r ProductMySQL) GetAllProducts(products *[]entity.Product) error {
 
 func (r ProductMySQL) GetProductByID(products *entity.Product) error {
 	return r.db.Debug().First(products).Error
+}
+
+func (r ProductMySQL) GetProductsBySellerID(products *[]entity.Product, sellerID uuid.UUID) error {
+	return r.db.Debug().Where("seller_id = ?", sellerID).Error
 }
 
 func (r ProductMySQL) GetProductCategory(products *[]entity.Product, category string) error {

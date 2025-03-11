@@ -13,6 +13,7 @@ import (
 type ProductUseCaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
 	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
+	GetProductsBySellerID(sellerID uuid.UUID) (*[]dto.GetProductsBySellerID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error)
@@ -58,6 +59,22 @@ func (u ProductUseCase) GetProductByID(productID uuid.UUID) (dto.GetProductByID,
 	}
 
 	return product.ParseToDTOGetProductByID(), err
+}
+
+func (u ProductUseCase) GetProductsBySellerID(sellerID uuid.UUID) (*[]dto.GetProductsBySellerID, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.GetProductsBySellerID(products, sellerID)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to get products by seller id")
+	}
+
+	res := make([]dto.GetProductsBySellerID, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOGetProductsBySellerID()
+	}
+
+	return &res, nil
 }
 
 func (u ProductUseCase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {

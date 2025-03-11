@@ -41,6 +41,24 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 	}
 }
 
+func (p Product) ParseToDTOGetProductsBySellerID() dto.GetProductsBySellerID {
+	return dto.GetProductsBySellerID{
+		ID:          p.ID,
+		Title:       p.Title,
+		Description: p.Description,
+		Category:    p.Category,
+		Origin:      p.Origin,
+		SellerID:    p.SellerID,
+		Price:       p.Price,
+		Stock:       p.Stock,
+		RentCount:   p.RentCount,
+		Rating:      p.Rating,
+		PhotoUrl:    p.PhotoUrl,
+		CreatedAt:   p.CreatedAt,
+		UpdatedAt:   p.UpdatedAt,
+	}
+}
+
 func (p Product) ParseToDTOGetProductByID() dto.GetProductByID {
 	return dto.GetProductByID{
 		ID:          p.ID,

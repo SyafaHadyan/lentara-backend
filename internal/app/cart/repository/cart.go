@@ -11,6 +11,7 @@ type CartMySQLItf interface {
 	CreateCart(cart *entity.Cart) error
 	UpdateCart(cart *entity.Cart) error
 	GetCartByID(cart *entity.Cart) error
+	GetCartsByUserID(cart *[]entity.Cart, userID uuid.UUID) error
 	DeleteCartByCartID(cart *entity.Cart) error
 	DeleteCartByUserID(cart *entity.Cart, userID uuid.UUID) error
 }
@@ -33,6 +34,10 @@ func (r *CartMySQL) UpdateCart(cart *entity.Cart) error {
 
 func (r *CartMySQL) GetCartByID(cart *entity.Cart) error {
 	return r.db.Debug().First(cart).Error
+}
+
+func (r *CartMySQL) GetCartsByUserID(cart *[]entity.Cart, userID uuid.UUID) error {
+	return r.db.Debug().Where("user_id = ?", userID).Find(cart).Error
 }
 
 func (r *CartMySQL) DeleteCartByCartID(cart *entity.Cart) error {

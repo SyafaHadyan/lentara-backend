@@ -22,6 +22,22 @@ type GetAllProducts struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type GetProductsBySellerID struct {
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Category    string    `json:"category"`
+	Origin      string    `json:"origin"`
+	SellerID    uuid.UUID `json:"seller_id"`
+	Price       int64     `json:"price"`
+	Stock       int32     `json:"stock"`
+	RentCount   int32     `json:"rent_count"`
+	Rating      float32   `json:"rating"`
+	PhotoUrl    string    `json:"photo_url"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
 type GetProductByID struct {
 	ID          uuid.UUID `json:"id"`
 	Title       string    `json:"title"`
