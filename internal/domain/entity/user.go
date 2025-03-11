@@ -49,3 +49,17 @@ func (u User) ParseToDTOResponseLogin() dto.ResponseLogin {
 		UpdatedAt: u.UpdatedAt,
 	}
 }
+
+func (u User) ParseToDTOGetUserInfoByUserID() dto.GetUserInfoByUserID {
+	return dto.GetUserInfoByUserID{
+		ID:             u.ID,
+		Name:           u.Name,
+		Email:          u.Email,
+		Username:       u.Username,
+		Password:       u.Password,
+		IsAdmin:        u.IsAdmin,
+		ProfilePicture: u.ProfilePicture,
+		CreatedAt:      u.CreatedAt,
+		UpdatedAt:      u.UpdatedAt,
+	}
+}

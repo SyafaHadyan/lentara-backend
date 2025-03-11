@@ -44,7 +44,7 @@ func (h ProductMediaHandler) CreateProductMedia(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create product media")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "successfully created product media",
 		"payload": res,
 	})

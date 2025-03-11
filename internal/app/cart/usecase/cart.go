@@ -11,9 +11,10 @@ import (
 )
 
 type CartUsecaseItf interface {
-	CreateCart(cart dto.CreateCart, userID uuid.UUID) (dto.CreateCart, error)
-	UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error)
-	GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error)
+	CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error)
+	UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error)
+	GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error)
+	GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error)
 	DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error)
 	DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error)
 }
@@ -28,11 +29,12 @@ func NewCartUsecase(cartRepo repository.CartMySQLItf) CartUsecaseItf {
 	}
 }
 
-func (u *CartUsecase) CreateCart(cart dto.CreateCart, userID uuid.UUID) (dto.CreateCart, error) {
+func (u *CartUsecase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error) {
 	cartUser := entity.Cart{
 		CartItemID: uuid.New(),
 		UserID:     userID,
 		ProductID:  cart.ProductID,
+		SellerID:   sellerID,
 		Count:      cart.Count,
 	}
 
@@ -44,10 +46,9 @@ func (u *CartUsecase) CreateCart(cart dto.CreateCart, userID uuid.UUID) (dto.Cre
 	return cartUser.ParseToDTOCreateCart(), nil
 }
 
-func (u *CartUsecase) UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error) {
+func (u *CartUsecase) UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error) {
 	cartUser := entity.Cart{
-		CartItemID: cart.CartItemID,
-		ProductID:  cart.ProductID,
+		CartItemID: cartID,
 		Count:      cart.Count,
 	}
 
@@ -59,17 +60,33 @@ func (u *CartUsecase) UpdateCart(cart dto.UpdateCart) (dto.UpdateCart, error) {
 	return cartUser.ParseToDTOUpdateCart(), nil
 }
 
-func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByID, error) {
+func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error) {
 	cartUser := entity.Cart{
 		CartItemID: cartID,
 	}
 
 	err := u.cartRepo.GetCartByID(&cartUser)
 	if err != nil {
-		return dto.GetCartByID{}, fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
+		return dto.GetCartByCartID{}, fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
 	}
 
-	return cartUser.ParseToDTOGetCartByID(), nil
+	return cartUser.ParseToDTOGetCartByCartID(), nil
+}
+
+func (u *CartUsecase) GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error) {
+	cartUserResult := new([]entity.Cart)
+
+	err := u.cartRepo.GetCartsByUserID(cartUserResult, user)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to get carts by user id")
+	}
+
+	res := make([]dto.GetCartsByUserID, len(*cartUserResult))
+	for i, cart := range *cartUserResult {
+		res[i] = cart.ParseToDTOGetCartsByUserID()
+	}
+
+	return &res, nil
 }
 
 func (u *CartUsecase) DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error) {

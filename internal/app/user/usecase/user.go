@@ -12,24 +12,25 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserUsecaseItf interface {
+type UserUseCaseItf interface {
 	Register(dto.Register) (dto.ResponseRegister, error)
 	Login(dto.Login) (string, error)
+	GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error)
 }
 
-type UserUsecase struct {
+type UserUseCase struct {
 	userRepo repository.UserMySQLItf
 	jwt      jwt.JWTItf
 }
 
-func NewUserUsecase(userRepo repository.UserMySQLItf, jwt *jwt.JWT) UserUsecaseItf {
-	return &UserUsecase{
+func NewUserUseCase(userRepo repository.UserMySQLItf, jwt *jwt.JWT) UserUseCaseItf {
+	return &UserUseCase{
 		userRepo: userRepo,
 		jwt:      jwt,
 	}
 }
 
-func (u *UserUsecase) Register(register dto.Register) (dto.ResponseRegister, error) {
+func (u UserUseCase) Register(register dto.Register) (dto.ResponseRegister, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return dto.ResponseRegister{}, fiber.NewError(http.StatusInternalServerError, "failed to hash user password")
@@ -53,7 +54,7 @@ func (u *UserUsecase) Register(register dto.Register) (dto.ResponseRegister, err
 	return user.ParseToDTOResponseRegister(), nil
 }
 
-func (u *UserUsecase) Login(login dto.Login) (string, error) {
+func (u UserUseCase) Login(login dto.Login) (string, error) {
 	var user entity.User
 
 	err := u.userRepo.Get(&user, dto.UserParam{Username: login.Username})
@@ -74,7 +75,20 @@ func (u *UserUsecase) Login(login dto.Login) (string, error) {
 	return token, nil
 }
 
-// func (u *UserUsecase) Login(login dto.Login) (dto.Reesponselogin, error) {
+func (u UserUseCase) GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error) {
+	user := entity.User{
+		ID: userID,
+	}
+
+	err := u.userRepo.GetUserInfoByUserID(&user, userID)
+	if err != nil {
+		return dto.GetUserInfoByUserID{}, fiber.NewError(http.StatusInternalServerError, "failed to get user info by user id")
+	}
+
+	return user.ParseToDTOGetUserInfoByUserID(), nil
+}
+
+// func (u *UserUseCase) Login(login dto.Login) (dto.Reesponselogin, error) {
 // 	err := bcrypt.CompareHashAndPassword(repository.UserMySQL, []byte(login.Password))
 // 	if err != nil {
 // 		return dto.ResponseLogin{}, fiber.NewError(http.StatusBadRequest, "invalid password")
