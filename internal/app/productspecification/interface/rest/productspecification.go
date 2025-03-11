@@ -75,7 +75,7 @@ func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) 
 		return fiber.NewError(http.StatusBadRequest, "failed to validate payload")
 	}
 
-	res, err := h.ProductSpecificationUseCase.UpdateProductSpecification(productID, request)
+	res, err := h.ProductSpecificationUseCase.UpdateProductSpecification(request, productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
 	}
