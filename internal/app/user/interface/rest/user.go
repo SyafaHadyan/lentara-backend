@@ -11,10 +11,10 @@ import (
 
 type UserHandler struct {
 	Validator   *validator.Validate
-	userUsecase usecase.UserUsecaseItf
+	userUsecase usecase.UserUseCaseItf
 }
 
-func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, userUsecase usecase.UserUsecaseItf) {
+func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, userUsecase usecase.UserUseCaseItf) {
 	userHandler := UserHandler{
 		Validator:   validator,
 		userUsecase: userUsecase,

@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type ProductUsecaseItf interface {
+type ProductUseCaseItf interface {
 	GetAllProducts() (*[]dto.GetAllProducts, error)
 	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
@@ -20,17 +20,17 @@ type ProductUsecaseItf interface {
 	DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error)
 }
 
-type ProductUsecase struct {
+type ProductUseCase struct {
 	ProductRepository repository.ProductMySQLItf
 }
 
-func NewProductUsecase(productRepository repository.ProductMySQLItf) ProductUsecaseItf {
-	return &ProductUsecase{
+func NewProductUseCase(productRepository repository.ProductMySQLItf) ProductUseCaseItf {
+	return &ProductUseCase{
 		ProductRepository: productRepository,
 	}
 }
 
-func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
+func (u ProductUseCase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	products := new([]entity.Product)
 
 	err := u.ProductRepository.GetAllProducts(products)
@@ -47,7 +47,7 @@ func (u ProductUsecase) GetAllProducts() (*[]dto.GetAllProducts, error) {
 	return &res, nil
 }
 
-func (u ProductUsecase) GetProductByID(productID uuid.UUID) (dto.GetProductByID, error) {
+func (u ProductUseCase) GetProductByID(productID uuid.UUID) (dto.GetProductByID, error) {
 	product := &entity.Product{
 		ID: productID,
 	}
@@ -60,7 +60,7 @@ func (u ProductUsecase) GetProductByID(productID uuid.UUID) (dto.GetProductByID,
 	return product.ParseToDTOGetProductByID(), err
 }
 
-func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {
+func (u ProductUseCase) GetProductCategory(productCategory string) (*[]dto.GetProductCategory, error) {
 	products := new([]entity.Product)
 
 	err := u.ProductRepository.GetProductCategory(products, productCategory)
@@ -76,7 +76,7 @@ func (u ProductUsecase) GetProductCategory(productCategory string) (*[]dto.GetPr
 	return &res, nil
 }
 
-func (u ProductUsecase) SearchProduct(query string) (*[]dto.SearchProduct, error) {
+func (u ProductUseCase) SearchProduct(query string) (*[]dto.SearchProduct, error) {
 	products := new([]entity.Product)
 
 	err := u.ProductRepository.SearchProduct(products, query)
@@ -92,7 +92,7 @@ func (u ProductUsecase) SearchProduct(query string) (*[]dto.SearchProduct, error
 	return &res, nil
 }
 
-func (u ProductUsecase) SearchAndCategoryProduct(query string, category string) (*[]dto.SearchAndCategoryProduct, error) {
+func (u ProductUseCase) SearchAndCategoryProduct(query string, category string) (*[]dto.SearchAndCategoryProduct, error) {
 	products := new([]entity.Product)
 
 	err := u.ProductRepository.SearchAndCategoryProduct(products, query, category)
@@ -108,7 +108,7 @@ func (u ProductUsecase) SearchAndCategoryProduct(query string, category string) 
 	return &res, nil
 }
 
-func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error) {
+func (u ProductUseCase) CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error) {
 	product := entity.Product{
 		ID:          uuid.New(),
 		Title:       request.Title,
@@ -129,7 +129,7 @@ func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct, sellerID
 	return product.ParseToDTOResponseCreateProduct(), nil
 }
 
-func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
+func (u ProductUseCase) UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error {
 	product := &entity.Product{
 		ID:          ProductID,
 		Title:       request.Title,
@@ -151,7 +151,7 @@ func (u ProductUsecase) UpdateProduct(ProductID uuid.UUID, request dto.UpdatePro
 	return nil
 }
 
-func (u ProductUsecase) DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error) {
+func (u ProductUseCase) DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error) {
 	productID := &entity.Product{
 		ID: ProductID,
 	}

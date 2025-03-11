@@ -15,17 +15,17 @@ import (
 
 type ProductHandler struct {
 	Validator      *validator.Validate
-	ProductUseCase usecase.ProductUsecaseItf
-	SellerUseCase  sellerusecase.SellerUsecaseItf
 	Middleware     middleware.MiddlewareItf
+	ProductUseCase usecase.ProductUseCaseItf
+	SellerUseCase  sellerusecase.SellerUsecaseItf
 }
 
-func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf, sellerUseCase sellerusecase.SellerUsecaseItf, middleware middleware.MiddlewareItf) {
+func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, productUseCase usecase.ProductUseCaseItf, sellerUseCase sellerusecase.SellerUsecaseItf) {
 	handler := ProductHandler{
 		Validator:      validator,
+		Middleware:     middleware,
 		ProductUseCase: productUseCase,
 		SellerUseCase:  sellerUseCase,
-		Middleware:     middleware,
 	}
 
 	routerGroup = routerGroup.Group("/")
@@ -106,7 +106,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 
 	sellerID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
 	if sellerID == uuid.Nil {

@@ -1,8 +1,11 @@
 package rest
 
 import (
-	"lentara-backend/internal/app/cart/usecase"
+	usecase "lentara-backend/internal/app/cart/usecase"
+	productusecase "lentara-backend/internal/app/product/usecase"
+	userusecase "lentara-backend/internal/app/user/usecase"
 	"lentara-backend/internal/domain/dto"
+	"lentara-backend/internal/middleware"
 	"log"
 	"net/http"
 
@@ -12,38 +15,55 @@ import (
 )
 
 type CartHandler struct {
-	Validator   *validator.Validate
-	cartUsecase usecase.CartUsecaseItf
+	Validator      *validator.Validate
+	Middleware     middleware.MiddlewareItf
+	CartUseCase    usecase.CartUsecaseItf
+	UserUseCase    userusecase.UserUseCaseItf
+	ProductUseCase productusecase.ProductUseCaseItf
 }
 
-func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, cartUsecase usecase.CartUsecaseItf) {
+func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, cartUseCase usecase.CartUsecaseItf, userUseCase userusecase.UserUseCaseItf, productUseCase productusecase.ProductUseCaseItf) {
 	cartHandler := CartHandler{
-		Validator:   validator,
-		cartUsecase: cartUsecase,
+		Validator:      validator,
+		Middleware:     middleware,
+		CartUseCase:    cartUseCase,
+		UserUseCase:    userUseCase,
+		ProductUseCase: productUseCase,
 	}
 
 	routerGroup = routerGroup.Group("/cart")
 
-	routerGroup.Post("/:id", cartHandler.CreateCart)
-	routerGroup.Patch("/:id", cartHandler.UpdateCart)
+	routerGroup.Post("/", middleware.Authentication, cartHandler.CreateCart)
+	routerGroup.Patch("/:cartid", cartHandler.UpdateCart)
 	routerGroup.Get("/cartid/:id", cartHandler.GetCartByID)
 	routerGroup.Delete("/cartid/:id", cartHandler.DeleteCartByCartID)
 	routerGroup.Delete("/cartuser/:id", cartHandler.DeleteCartByUserID)
 }
 
-func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
+func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	var create dto.CreateCart
 	err := ctx.BodyParser(&create)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid product id")
 	}
 
-	userID, err := uuid.Parse(ctx.Params("id"))
+	log.Println(ctx.Locals("userID"))
+
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "invalid user id")
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
-	res, err := c.cartUsecase.CreateCart(create, userID)
+	if userID == uuid.Nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	productInfo, err := h.ProductUseCase.GetProductByID(create.ProductID)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "can't find product with current id")
+	}
+
+	res, err := h.CartUseCase.CreateCart(create, userID, productInfo.SellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create cart")
 	}
@@ -54,26 +74,24 @@ func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *CartHandler) UpdateCart(ctx *fiber.Ctx) error {
+func (h CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 	var update dto.UpdateCart
 	err := ctx.BodyParser(&update)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
 	}
 
-	_, err = c.cartUsecase.UpdateCart(update)
+	cartID, err := uuid.Parse(ctx.Params("cartid"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
+	}
+
+	_, err = h.CartUseCase.UpdateCart(update, cartID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update cart")
 	}
 
-	cartID, err := uuid.Parse(update.CartItemID.String())
-	if err != nil {
-		/* Proceed even if cart id is invalid */
-		log.Println("failed to get cart ID")
-		log.Println(err)
-	}
-
-	resUpdate, err := c.cartUsecase.GetCartByID(cartID)
+	resUpdate, err := h.CartUseCase.GetCartByID(cartID)
 	if err != nil {
 		/* Proceed even if failed to get cart from database */
 		log.Println("failed to get update form database")
@@ -86,13 +104,13 @@ func (c *CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *CartHandler) GetCartByID(ctx *fiber.Ctx) error {
+func (h CartHandler) GetCartByID(ctx *fiber.Ctx) error {
 	cartID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
 	}
 
-	res, err := c.cartUsecase.GetCartByID(cartID)
+	res, err := h.CartUseCase.GetCartByID(cartID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
 	}
@@ -103,13 +121,13 @@ func (c *CartHandler) GetCartByID(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *CartHandler) DeleteCartByCartID(ctx *fiber.Ctx) error {
+func (h CartHandler) DeleteCartByCartID(ctx *fiber.Ctx) error {
 	cartID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
 	}
 
-	res, err := c.cartUsecase.DeleteCartByCartID(cartID)
+	res, err := h.CartUseCase.DeleteCartByCartID(cartID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to delete cart by id")
 	}
@@ -120,13 +138,13 @@ func (c *CartHandler) DeleteCartByCartID(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *CartHandler) DeleteCartByUserID(ctx *fiber.Ctx) error {
+func (h CartHandler) DeleteCartByUserID(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid user id")
 	}
 
-	res, err := c.cartUsecase.DeleteCartByUserID(userID)
+	res, err := h.CartUseCase.DeleteCartByUserID(userID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to delete cart by user id")
 	}
