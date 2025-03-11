@@ -1,8 +1,10 @@
 package rest
 
 import (
-	"lentara-backend/internal/app/product/usecase"
+	usecase "lentara-backend/internal/app/product/usecase"
+	sellerusecase "lentara-backend/internal/app/seller/usecase"
 	"lentara-backend/internal/domain/dto"
+	"lentara-backend/internal/domain/entity"
 	"lentara-backend/internal/middleware"
 	"net/http"
 
@@ -14,13 +16,15 @@ import (
 type ProductHandler struct {
 	Validator      *validator.Validate
 	ProductUseCase usecase.ProductUsecaseItf
+	SellerUseCase  sellerusecase.SellerUsecaseItf
 	Middleware     middleware.MiddlewareItf
 }
 
-func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf, middleware middleware.MiddlewareItf) {
+func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, productUseCase usecase.ProductUsecaseItf, sellerUseCase sellerusecase.SellerUsecaseItf, middleware middleware.MiddlewareItf) {
 	handler := ProductHandler{
 		Validator:      validator,
 		ProductUseCase: productUseCase,
+		SellerUseCase:  sellerUseCase,
 		Middleware:     middleware,
 	}
 
@@ -32,7 +36,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
 	routerGroup.Patch("/products/:id", middleware.Authentication, handler.UpdateProduct)
-	routerGroup.Delete("/products/:id", middleware.Authentication, middleware.Authorization, handler.DeleteProduct)
+	routerGroup.Delete("/products/:id", middleware.Authentication, middleware.AdminUser, handler.DeleteProduct)
 }
 
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
@@ -89,7 +93,6 @@ func (h ProductHandler) SearchProduct(ctx *fiber.Ctx) error {
 
 func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	var request dto.RequestCreateProduct
-	// request := new(dto.RequestCreateProduct)
 
 	err := ctx.BodyParser(&request)
 	if err != nil {
@@ -101,7 +104,25 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "failed to validate request")
 	}
 
-	res, err := h.ProductUseCase.CreateProduct(request)
+	sellerID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
+	}
+
+	if sellerID == uuid.Nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	sellerInfo := entity.Seller{
+		ID: sellerID,
+	}
+
+	productOrigin, err := h.SellerUseCase.GetSellerInfo(sellerInfo.ParseToDTOGetSellerInfo(), sellerID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
+	}
+
+	res, err := h.ProductUseCase.CreateProduct(request, sellerID, productOrigin.StoreLocation)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create product")
 	}

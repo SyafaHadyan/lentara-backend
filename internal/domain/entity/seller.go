@@ -39,22 +39,28 @@ func (s Seller) ParseToDTOResponseSellerRegister() dto.ResponseSellerRegister {
 
 func (s Seller) ParseToDTOResponseSellerLogin() dto.ResponseSellerLogin {
 	return dto.ResponseSellerLogin{
-		ID:        s.ID,
-		Name:      s.Name,
-		Email:     s.Email,
-		Username:  s.Username,
-		Password:  s.Password,
-		CreatedAt: s.CreatedAt,
-		UpdatedAt: s.UpdatedAt,
-	}
-}
-
-func (s Seller) ParseToDTOResponseUpdateSellerInfo() dto.UpdateSellerInfo {
-	return dto.UpdateSellerInfo{
+		ID:             s.ID,
 		Name:           s.Name,
 		Email:          s.Email,
 		Username:       s.Username,
 		Password:       s.Password,
+		StoreName:      s.StoreName,
+		StoreLocation:  s.StoreLocation,
+		PhoneNumber:    s.PhoneNumber,
+		ProfilePicture: s.ProfilePicture,
+		CreatedAt:      s.CreatedAt,
+		UpdatedAt:      s.UpdatedAt,
+	}
+}
+
+func (s Seller) ParseToDTOResponseUpdateSellerInfo() dto.ResponseUpdateSellerInfo {
+	return dto.ResponseUpdateSellerInfo{
+		ID:             s.ID,
+		Name:           s.Name,
+		Email:          s.Email,
+		Username:       s.Username,
+		Password:       s.Password,
+		StoreName:      s.StoreName,
 		StoreLocation:  s.StoreLocation,
 		PhoneNumber:    s.PhoneNumber,
 		ProfilePicture: s.ProfilePicture,
@@ -70,6 +76,7 @@ func (s Seller) ParseToDTOGetSellerInfo() dto.GetSellerInfo {
 		Email:          s.Email,
 		Username:       s.Username,
 		Password:       s.Password,
+		StoreName:      s.StoreName,
 		StoreLocation:  s.StoreLocation,
 		PhoneNumber:    s.PhoneNumber,
 		ProfilePicture: s.ProfilePicture,

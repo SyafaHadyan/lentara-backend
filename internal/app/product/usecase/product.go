@@ -15,7 +15,7 @@ type ProductUsecaseItf interface {
 	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
-	CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error)
+	CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error)
 	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
 	DeleteProduct(ProductID uuid.UUID, request dto.DeleteProduct) (dto.ResponseDeleteProduct, error)
 }
@@ -108,17 +108,17 @@ func (u ProductUsecase) SearchAndCategoryProduct(query string, category string) 
 	return &res, nil
 }
 
-func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct) (dto.ResponseCreateProduct, error) {
+func (u ProductUsecase) CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error) {
 	product := entity.Product{
-		ID:           uuid.New(),
-		Title:        request.Title,
-		Description:  request.Description,
-		Category:     request.Category,
-		Origin:       request.Origin,
-		ProductOwner: uuid.New(),
-		Price:        request.Price,
-		Stock:        request.Stock,
-		PhotoUrl:     request.PhotoUrl,
+		ID:          uuid.New(),
+		Title:       request.Title,
+		Description: request.Description,
+		Category:    request.Category,
+		Origin:      productOrigin,
+		SellerID:    sellerID,
+		Price:       request.Price,
+		Stock:       request.Stock,
+		PhotoUrl:    request.PhotoUrl,
 	}
 
 	err := u.ProductRepository.CreateProduct(&product)

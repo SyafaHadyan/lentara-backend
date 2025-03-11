@@ -8,8 +8,9 @@ import (
 
 type CreateCart struct {
 	CartItemID uuid.UUID `json:"cart_item_id"`
-	UserID     uuid.UUID `json:"user_id"`
+	UserID     uuid.UUID `json:"user_id" validate:"required"`
 	ProductID  uuid.UUID `json:"product_id" validate:"required"`
+	SellerID   uuid.UUID `json:"seller_id" validate:"required"`
 	Count      int32     `json:"count" validate:"required"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
@@ -17,17 +18,19 @@ type CreateCart struct {
 
 type UpdateCart struct {
 	CartItemID uuid.UUID `json:"cart_item_id"`
-	UserID     uuid.UUID `json:"user_id"`
-	ProductID  uuid.UUID `json:"product_id"`
+	UserID     uuid.UUID `json:"user_id" validate:"omitempty,required"`
+	ProductID  uuid.UUID `json:"product_id" validate:"omitempty,required"`
+	SellerID   uuid.UUID `json:"seller_id" validate:"omitempty,required"`
 	Count      int32     `json:"count"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
-type GetCartByID struct {
+type GetCartByCartID struct {
 	CartItemID uuid.UUID `json:"cart_item_id"`
 	UserID     uuid.UUID `json:"user_id"`
 	ProductID  uuid.UUID `json:"product_id"`
+	SellerID   uuid.UUID `json:"seller_id"`
 	Count      int32     `json:"count"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`

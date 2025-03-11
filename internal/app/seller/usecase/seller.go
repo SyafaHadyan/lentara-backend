@@ -15,7 +15,7 @@ import (
 type SellerUsecaseItf interface {
 	SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error)
 	SellerLogin(login dto.SellerLogin) (string, error)
-	UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.UpdateSellerInfo, error)
+	UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error)
 	GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error)
 }
 
@@ -78,13 +78,14 @@ func (u *SellerUsecase) SellerLogin(login dto.SellerLogin) (string, error) {
 	return token, nil
 }
 
-func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.UpdateSellerInfo, error) {
+func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error) {
 	sellerUpdate := &entity.Seller{
 		ID:             sellerID,
 		Name:           seller.Name,
 		Email:          seller.Email,
 		Username:       seller.Username,
 		Password:       seller.Password,
+		StoreName:      seller.StoreName,
 		StoreLocation:  seller.StoreLocation,
 		PhoneNumber:    seller.PhoneNumber,
 		ProfilePicture: seller.ProfilePicture,
@@ -92,7 +93,7 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 
 	err := u.sellerRepo.UpdateSellerInfo(sellerUpdate)
 	if err != nil {
-		return dto.UpdateSellerInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to update seller info")
+		return dto.ResponseUpdateSellerInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to update seller info")
 	}
 
 	return sellerUpdate.ParseToDTOResponseUpdateSellerInfo(), nil

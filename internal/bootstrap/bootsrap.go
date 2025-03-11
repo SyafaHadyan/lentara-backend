@@ -84,9 +84,6 @@ func Start(args []string) error {
 
 	v1 := app.Group("/api/v1")
 
-	productRepository := productrepository.NewProductMySQL(database)
-	productUseCase := productusecase.NewProductUsecase(productRepository)
-	producthandler.NewProductHandler(v1, val, productUseCase, middleware)
 	productSpecificationRepository := productspecificationrepository.NewProductSpecificationMySQL(database)
 	productSpecificationUseCase := productspecificationusecase.NewProductSpecificationUsecase(productSpecificationRepository)
 	productspecificationhandler.NewProductSpecificationHandler(v1, val, productSpecificationUseCase)
@@ -102,6 +99,9 @@ func Start(args []string) error {
 	sellerRepository := sellerrepository.NewSellerMySQL(database)
 	sellerUseCase := sellerusecase.NewSellerUsecase(sellerRepository, jwt)
 	sellerhandler.NewSellerHandler(v1, val, sellerUseCase)
+	productRepository := productrepository.NewProductMySQL(database)
+	productUseCase := productusecase.NewProductUsecase(productRepository)
+	producthandler.NewProductHandler(v1, val, productUseCase, sellerUseCase, middleware)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
