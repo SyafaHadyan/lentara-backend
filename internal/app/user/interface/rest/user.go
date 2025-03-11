@@ -91,6 +91,6 @@ func (h UserHandler) GetUserInfoByUserID(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully get user info by user id",
-		"paylaod": res,
+		"payload": res,
 	})
 }
