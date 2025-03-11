@@ -37,12 +37,17 @@ func (h ProductSpecificationHandler) CreateProductSpecification(ctx *fiber.Ctx) 
 		return fiber.NewError(http.StatusInternalServerError, "failed to create product specification")
 	}
 
-	// err = h.Validator.Struct(request)
-	// if err != nil {
-	// 	return fiber.NewError(http.StatusBadRequest, "invalid request body")
-	// }
+	err = h.Validator.Struct(request)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	}
 
-	res, err := h.ProductSpecificationUseCase.CreateProductSpecification(request)
+	productID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid product id")
+	}
+
+	res, err := h.ProductSpecificationUseCase.CreateProductSpecification(request, productID)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "product specification already exist, use PATCH instead")
 	}
@@ -70,7 +75,7 @@ func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) 
 		return fiber.NewError(http.StatusBadRequest, "failed to validate payload")
 	}
 
-	res, err := h.ProductSpecificationUseCase.UpdateProductSpecification(productID, request)
+	res, err := h.ProductSpecificationUseCase.UpdateProductSpecification(request, productID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
 	}

@@ -32,7 +32,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 	routerGroup.Get("/products/", handler.GetAllProducts)
 	routerGroup.Get("/products/:id", handler.GetProductByID)
-	// routerGroup.Get("/seller/products/:id", handler.GetProductsBySellerID)
+	routerGroup.Get("/seller/products/:id", handler.GetProductsBySellerID)
 	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
@@ -81,7 +81,9 @@ func (h ProductHandler) GetProductsBySellerID(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get products by seller id")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(res)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"payload": res,
+	})
 }
 
 func (h ProductHandler) GetProductCategory(ctx *fiber.Ctx) error {

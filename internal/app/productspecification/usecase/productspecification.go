@@ -11,8 +11,8 @@ import (
 )
 
 type ProductSpecificationUsecaseItf interface {
-	CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error)
-	UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.ResponseUpdateProductSpecification, error)
+	CreateProductSpecification(productSpecification dto.CreateProductSpecification, procuctID uuid.UUID) (dto.ResponseCreateProductSpecification, error)
+	UpdateProductSpecification(productSpecification dto.UpdateProductSpecification, procuctID uuid.UUID) (dto.ResponseUpdateProductSpecification, error)
 	GetProductSpecification(productID uuid.UUID) (*[]dto.GetProductSpecification, error)
 	DeleteProductSpecification(productID uuid.UUID, request dto.DeleteProductSpecification) (dto.DeleteProductSpecification, error)
 }
@@ -27,9 +27,9 @@ func NewProductSpecificationUsecase(productSpecificationRepository repository.Pr
 	}
 }
 
-func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error) {
+func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification, proudctID uuid.UUID) (dto.ResponseCreateProductSpecification, error) {
 	product := entity.ProductSpecification{
-		ID:              productSpecification.ID,
+		ID:              proudctID,
 		Specification_1: productSpecification.Specification1,
 		Specification_2: productSpecification.Specification2,
 		Specification_3: productSpecification.Specification3,
@@ -44,9 +44,9 @@ func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecifica
 	return product.ParseToDTOResponseCreateProductSpecification(), nil
 }
 
-func (u ProductSpecificationUsecase) UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.ResponseUpdateProductSpecification, error) {
+func (u ProductSpecificationUsecase) UpdateProductSpecification(productSpecification dto.UpdateProductSpecification, productID uuid.UUID) (dto.ResponseUpdateProductSpecification, error) {
 	product := &entity.ProductSpecification{
-		ID:              ProductID,
+		ID:              productID,
 		Specification_1: productSpecification.Specification1,
 		Specification_2: productSpecification.Specification2,
 		Specification_3: productSpecification.Specification3,
@@ -54,7 +54,7 @@ func (u ProductSpecificationUsecase) UpdateProductSpecification(ProductID uuid.U
 		Specification_5: productSpecification.Specification5,
 	}
 
-	err := u.ProductSpecificationRepository.UpdateProductSpecification(product, ProductID)
+	err := u.ProductSpecificationRepository.UpdateProductSpecification(product, productID)
 	if err != nil {
 		return dto.ResponseUpdateProductSpecification{}, fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
 	}
