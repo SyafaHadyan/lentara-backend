@@ -48,7 +48,7 @@ func (c *CartHandler) CreateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create cart")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "successfully created cart item",
 		"payload": res,
 	})

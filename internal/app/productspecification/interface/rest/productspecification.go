@@ -75,7 +75,7 @@ func (h ProductSpecificationHandler) UpdateProductSpecification(ctx *fiber.Ctx) 
 		return fiber.NewError(http.StatusInternalServerError, "failed to update product specifications")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"payload": res,
 	})
 }

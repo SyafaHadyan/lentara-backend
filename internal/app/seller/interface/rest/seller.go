@@ -27,6 +27,7 @@ func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, s
 	routerGroup.Post("/register", SellerHandler.SellerRegister)
 	routerGroup.Post("/login", SellerHandler.SellerLogin)
 	routerGroup.Patch("/update/:id", SellerHandler.UpdateSellerInfo)
+	routerGroup.Get("/:id", SellerHandler.GetSellerInfo)
 }
 
 func (h *SellerHandler) SellerRegister(ctx *fiber.Ctx) error {
@@ -46,7 +47,7 @@ func (h *SellerHandler) SellerRegister(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create seller user")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "successfully created seller user",
 		"payload": res,
 	})

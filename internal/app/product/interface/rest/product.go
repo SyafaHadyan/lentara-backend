@@ -127,7 +127,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create product")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "successfully created prodcut",
 		"payload": res,
 	})
