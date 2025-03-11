@@ -11,7 +11,7 @@ import (
 )
 
 type ProductSpecificationUsecaseItf interface {
-	CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error)
+	CreateProductSpecification(productSpecification dto.CreateProductSpecification, procuctID uuid.UUID) (dto.ResponseCreateProductSpecification, error)
 	UpdateProductSpecification(ProductID uuid.UUID, productSpecification dto.UpdateProductSpecification) (dto.ResponseUpdateProductSpecification, error)
 	GetProductSpecification(productID uuid.UUID) (*[]dto.GetProductSpecification, error)
 	DeleteProductSpecification(productID uuid.UUID, request dto.DeleteProductSpecification) (dto.DeleteProductSpecification, error)
@@ -27,9 +27,9 @@ func NewProductSpecificationUsecase(productSpecificationRepository repository.Pr
 	}
 }
 
-func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification) (dto.ResponseCreateProductSpecification, error) {
+func (u ProductSpecificationUsecase) CreateProductSpecification(productSpecification dto.CreateProductSpecification, proudctID uuid.UUID) (dto.ResponseCreateProductSpecification, error) {
 	product := entity.ProductSpecification{
-		ID:              productSpecification.ID,
+		ID:              proudctID,
 		Specification_1: productSpecification.Specification1,
 		Specification_2: productSpecification.Specification2,
 		Specification_3: productSpecification.Specification3,
