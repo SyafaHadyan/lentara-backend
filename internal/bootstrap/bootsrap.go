@@ -78,7 +78,7 @@ func Start(args []string) error {
 			AllowHeaders: "*",
 			AllowOrigins: "*",
 			// AllowCredentials: true,
-			AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+			AllowMethods: "*",
 		}),
 		idempotency.New(),
 	)
