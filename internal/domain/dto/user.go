@@ -71,3 +71,15 @@ type UpdateUserInfo struct {
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
+
+type GetUserInfoByUserID struct {
+	ID             uuid.UUID `json:"id"`
+	Name           string    `json:"name"`
+	Email          string    `json:"email"`
+	Username       string    `json:"username"`
+	Password       string    `json:"password"`
+	IsAdmin        bool      `json:"is_admin"`
+	ProfilePicture string    `json:"profile_picture"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+}

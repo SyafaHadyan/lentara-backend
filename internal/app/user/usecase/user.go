@@ -15,6 +15,7 @@ import (
 type UserUseCaseItf interface {
 	Register(dto.Register) (dto.ResponseRegister, error)
 	Login(dto.Login) (string, error)
+	GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error)
 }
 
 type UserUseCase struct {
@@ -72,6 +73,19 @@ func (u UserUseCase) Login(login dto.Login) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (u UserUseCase) GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error) {
+	user := entity.User{
+		ID: userID,
+	}
+
+	err := u.userRepo.GetUserInfoByUserID(&user, userID)
+	if err != nil {
+		return dto.GetUserInfoByUserID{}, fiber.NewError(http.StatusInternalServerError, "failed to get user info by user id")
+	}
+
+	return user.ParseToDTOGetUserInfoByUserID(), nil
 }
 
 // func (u *UserUseCase) Login(login dto.Login) (dto.Reesponselogin, error) {

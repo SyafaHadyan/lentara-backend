@@ -4,6 +4,7 @@ import (
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -11,6 +12,7 @@ type UserMySQLItf interface {
 	Create(user *entity.User) error
 	Update(user *entity.User) error
 	Get(user *entity.User, userParam dto.UserParam) error
+	GetUserInfoByUserID(user *entity.User, userID uuid.UUID) error
 	Login(user *entity.User) error
 }
 
@@ -32,6 +34,10 @@ func (r *UserMySQL) Update(user *entity.User) error {
 
 func (r *UserMySQL) Get(user *entity.User, userParam dto.UserParam) error {
 	return r.db.Debug().First(&user, userParam).Error
+}
+
+func (r *UserMySQL) GetUserInfoByUserID(user *entity.User, userID uuid.UUID) error {
+	return r.db.Debug().First(user, userID).Error
 }
 
 func (r *UserMySQL) Login(user *entity.User) error {

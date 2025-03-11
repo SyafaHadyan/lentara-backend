@@ -89,7 +89,7 @@ func Start(args []string) error {
 	productspecificationhandler.NewProductSpecificationHandler(v1, val, productSpecificationUseCase)
 	userRepository := userrepository.NewUserMySQL(database)
 	userUseCase := userusecase.NewUserUseCase(userRepository, jwt)
-	userhandler.NewUserHandler(v1, val, userUseCase)
+	userhandler.NewUserHandler(v1, val, middleware, userUseCase)
 	productMediaRepository := productmediarepository.NewProductMediaMySQL(database)
 	productMediaUseCase := productmediausecase.NewProductMediaUsecase(productMediaRepository)
 	productmediahandler.NewProductMediahandler(v1, productMediaUseCase)
