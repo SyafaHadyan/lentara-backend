@@ -100,20 +100,11 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 }
 
 func (u *SellerUsecase) GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error) {
-	sellerInfo := &entity.Seller{
-		ID:             sellerID,
-		Name:           seller.Name,
-		Email:          seller.Email,
-		Username:       seller.Username,
-		Password:       seller.Password,
-		StoreLocation:  seller.StoreLocation,
-		PhoneNumber:    seller.PhoneNumber,
-		ProfilePicture: seller.ProfilePicture,
-		CreatedAt:      seller.CreatedAt,
-		UpdatedAt:      seller.UpdatedAt,
+	sellerInfo := entity.Seller{
+		ID: sellerID,
 	}
 
-	err := u.sellerRepo.GetSellerInfo(sellerInfo)
+	err := u.sellerRepo.GetSellerInfo(&sellerInfo, sellerID)
 	if err != nil {
 		return dto.GetSellerInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
 	}

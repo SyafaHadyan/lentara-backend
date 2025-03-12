@@ -14,24 +14,25 @@ import (
 type UserHandler struct {
 	Validator   *validator.Validate
 	Middleware  middleware.MiddlewareItf
-	userUsecase usecase.UserUseCaseItf
+	userUseCase usecase.UserUseCaseItf
 }
 
-func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, userUsecase usecase.UserUseCaseItf) {
+func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, userUseCase usecase.UserUseCaseItf) {
 	userHandler := UserHandler{
 		Validator:   validator,
 		Middleware:  middleware,
-		userUsecase: userUsecase,
+		userUseCase: userUseCase,
 	}
 
 	routerGroup = routerGroup.Group("/users")
 
 	routerGroup.Post("/register", userHandler.RegisterUser)
 	routerGroup.Post("/login", userHandler.LoginUser)
+	routerGroup.Patch("/update", middleware.Authentication, userHandler.UpdateUserInfo)
 	routerGroup.Get("/info", middleware.Authentication, userHandler.GetUserInfoByUserID)
 }
 
-func (u *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
+func (u UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 	var register dto.Register
 	err := ctx.BodyParser(&register)
 	if err != nil {
@@ -43,7 +44,7 @@ func (u *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	res, err := u.userUsecase.Register(register)
+	res, err := u.userUseCase.Register(register)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create user")
 	}
@@ -54,7 +55,7 @@ func (u *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h *UserHandler) LoginUser(ctx *fiber.Ctx) error {
+func (h UserHandler) LoginUser(ctx *fiber.Ctx) error {
 	var login dto.Login
 
 	err := ctx.BodyParser(&login)
@@ -67,7 +68,7 @@ func (h *UserHandler) LoginUser(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
 	}
 
-	token, err := h.userUsecase.Login(login)
+	token, err := h.userUseCase.Login(login)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "username or password is invalid")
 	}
@@ -78,13 +79,42 @@ func (h *UserHandler) LoginUser(ctx *fiber.Ctx) error {
 	})
 }
 
+func (h UserHandler) UpdateUserInfo(ctx *fiber.Ctx) error {
+	var user dto.UpdateUserInfo
+
+	err := ctx.BodyParser(&user)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	err = h.Validator.Struct(user)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	}
+
+	userID, err := uuid.Parse((ctx.Locals("userID").(string)))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	res, err := h.userUseCase.UpdateUserInfo(user, userID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update user info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully updated user info",
+		"payload": res,
+	})
+}
+
 func (h UserHandler) GetUserInfoByUserID(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
-	res, err := h.userUsecase.GetUserInfoByUserID(userID)
+	res, err := h.userUseCase.GetUserInfoByUserID(userID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get user info by user id")
 	}

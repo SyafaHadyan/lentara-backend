@@ -15,21 +15,21 @@ import (
 type SellerHandler struct {
 	Validator     *validator.Validate
 	Middleware    middleware.MiddlewareItf
-	sellerUsecase usecase.SellerUsecaseItf
+	sellerUseCase usecase.SellerUsecaseItf
 }
 
-func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, sellerUsecase usecase.SellerUsecaseItf) {
+func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, sellerUseCase usecase.SellerUsecaseItf) {
 	SellerHandler := SellerHandler{
 		Validator:     validator,
 		Middleware:    middleware,
-		sellerUsecase: sellerUsecase,
+		sellerUseCase: sellerUseCase,
 	}
 
 	routerGroup = routerGroup.Group("/seller")
 
 	routerGroup.Post("/register", SellerHandler.SellerRegister)
 	routerGroup.Post("/login", SellerHandler.SellerLogin)
-	routerGroup.Patch("/update/:id", SellerHandler.UpdateSellerInfo)
+	routerGroup.Patch("/update", middleware.Authentication, SellerHandler.UpdateSellerInfo)
 	routerGroup.Get("/info", middleware.Authentication, SellerHandler.GetSellerInfo)
 }
 
@@ -45,7 +45,7 @@ func (h *SellerHandler) SellerRegister(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	res, err := h.sellerUsecase.SellerRegister(register)
+	res, err := h.sellerUseCase.SellerRegister(register)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create seller user")
 	}
@@ -68,7 +68,7 @@ func (h *SellerHandler) SellerLogin(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	token, err := h.sellerUsecase.SellerLogin(login)
+	token, err := h.sellerUseCase.SellerLogin(login)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "username or password is invalid")
 	}
@@ -87,7 +87,7 @@ func (h *SellerHandler) UpdateSellerInfo(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
 	}
 
-	sellerID, err := uuid.Parse(ctx.Params("id"))
+	sellerID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
 	}
@@ -99,14 +99,14 @@ func (h *SellerHandler) UpdateSellerInfo(ctx *fiber.Ctx) error {
 
 	log.Println(update)
 
-	_, err = h.sellerUsecase.UpdateSellerInfo(update, sellerID)
+	_, err = h.sellerUseCase.UpdateSellerInfo(update, sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to uppdate seller info")
 	}
 
 	var seller dto.GetSellerInfo
 
-	res, err := h.sellerUsecase.GetSellerInfo(seller, sellerID)
+	res, err := h.sellerUseCase.GetSellerInfo(seller, sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get updated seller data")
 	}
@@ -125,7 +125,7 @@ func (h *SellerHandler) GetSellerInfo(ctx *fiber.Ctx) error {
 
 	var sellerInfo dto.GetSellerInfo
 
-	res, err := h.sellerUsecase.GetSellerInfo(sellerInfo, sellerID)
+	res, err := h.sellerUseCase.GetSellerInfo(sellerInfo, sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
 	}

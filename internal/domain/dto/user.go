@@ -67,7 +67,7 @@ type UpdateUserInfo struct {
 	Username     string    `json:"username" validate:"omitempty,required,min=3,max=128"`
 	Password     string    `json:"password" validate:"omitempty,required,min=8,max=128"`
 	UserLocation string    `json:"user_location" validate:"omitempty,required,min=3,max=256"`
-	PhoneNumber  string    `json:"phone_number" validate:"omitempy,required"`
+	PhoneNumber  string    `json:"phone_number" validate:"omitempty,required"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
@@ -78,6 +78,8 @@ type GetUserInfoByUserID struct {
 	Email          string    `json:"email"`
 	Username       string    `json:"username"`
 	Password       string    `json:"password"`
+	UserLocation   string    `json:"user_location"`
+	PhoneNumber    string    `json:"phone_number"`
 	IsAdmin        bool      `json:"is_admin"`
 	ProfilePicture string    `json:"profile_picture"`
 	CreatedAt      time.Time `json:"created_at"`
