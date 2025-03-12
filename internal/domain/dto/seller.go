@@ -13,7 +13,7 @@ type SellerRegister struct {
 	Username       string    `json:"username" validate:"required,min=3,max=128"`
 	Password       string    `json:"password" validate:"required,min=8,max=128"`
 	StoreName      string    `json:"store_name" validate:"required,min=3,max=128"`
-	StoreLocation  string    `json:"store_location" validate:"required,min=3,max=128"`
+	StoreLocation  string    `json:"store_location" validate:"required,min=3,max=512"`
 	PhoneNumber    string    `json:"phone_number" validate:"required"`
 	ProfilePicture string    `json:"profile_picture"`
 	CreatedAt      time.Time `json:"created_at"`
@@ -64,7 +64,7 @@ type UpdateSellerInfo struct {
 	Username       string    `json:"username" validate:"omitempty,required,min=3,max=128"`
 	Password       string    `json:"password" validate:"omitempty,required,min=8,max=128"`
 	StoreName      string    `json:"store_name"  validate:"omitempty,required,min=3,max=128"`
-	StoreLocation  string    `json:"store_location" validate:"omitempty,required,min=3,max=256"`
+	StoreLocation  string    `json:"store_location" validate:"omitempty,required,min=3,max=512"`
 	PhoneNumber    string    `json:"phone_number" validate:"omitempty,required"`
 	ProfilePicture string    `json:"profile_picture"`
 	CreatedAt      time.Time `json:"created_at"`

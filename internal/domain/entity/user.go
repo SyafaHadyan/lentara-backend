@@ -13,6 +13,8 @@ type User struct {
 	Email          string    `json:"email" gorm:"type:text;not null;unique"`
 	Username       string    `json:"username" gorm:"type:text;not null;unique"`
 	Password       string    `json:"password" gorm:"type:text;not null"`
+	UserLocation   string    `json:"user_location" gorm:"type:text;not null"`
+	PhoneNumber    string    `json:"phone_number" gorm:"type:text;not null"`
 	IsAdmin        bool      `json:"is_admin" gorm:"type:boolean;default:0"`
 	RentProposal   int32     `json:"rent_proposal" gorm:"type:int"`
 	RentComplete   int32     `json:"rent_complete" gorm:"type:int"`
@@ -47,6 +49,19 @@ func (u User) ParseToDTOResponseLogin() dto.ResponseLogin {
 		IsAdmin:   u.IsAdmin,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
+	}
+}
+
+func (u User) ParseToDTOUpdateUserInfo() dto.UpdateUserInfo {
+	return dto.UpdateUserInfo{
+		Name:         u.Name,
+		Email:        u.Email,
+		Username:     u.Username,
+		Password:     u.Password,
+		UserLocation: u.UserLocation,
+		PhoneNumber:  u.PhoneNumber,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
 	}
 }
 

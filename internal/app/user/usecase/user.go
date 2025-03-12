@@ -5,6 +5,7 @@ import (
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
 	"lentara-backend/internal/infra/jwt"
+	"log"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,6 +17,7 @@ type UserUseCaseItf interface {
 	Register(dto.Register) (dto.ResponseRegister, error)
 	Login(dto.Login) (string, error)
 	GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error)
+	UpdateUserInfo(user dto.UpdateUserInfo, userID uuid.UUID) (dto.UpdateUserInfo, error)
 }
 
 type UserUseCase struct {
@@ -46,7 +48,7 @@ func (u UserUseCase) Register(register dto.Register) (dto.ResponseRegister, erro
 		ProfilePicture: "https://static.vecteezy.com/system/resources/previews/026/619/142/original/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg",
 	}
 
-	err = u.userRepo.Create(&user)
+	err = u.userRepo.RegisterUser(&user)
 	if err != nil {
 		return dto.ResponseRegister{}, fiber.NewError(http.StatusInternalServerError, "failed to create user")
 	}
@@ -57,7 +59,7 @@ func (u UserUseCase) Register(register dto.Register) (dto.ResponseRegister, erro
 func (u UserUseCase) Login(login dto.Login) (string, error) {
 	var user entity.User
 
-	err := u.userRepo.Get(&user, dto.UserParam{Username: login.Username})
+	err := u.userRepo.GetUserUsername(&user, dto.UserParam{Username: login.Username})
 	if err != nil {
 		return "", fiber.NewError(http.StatusBadRequest, "username or password is invalid")
 	}
@@ -75,6 +77,31 @@ func (u UserUseCase) Login(login dto.Login) (string, error) {
 	return token, nil
 }
 
+func (u UserUseCase) UpdateUserInfo(user dto.UpdateUserInfo, userID uuid.UUID) (dto.UpdateUserInfo, error) {
+	userUpdate := entity.User{
+		ID:           userID,
+		Name:         user.Name,
+		Email:        user.Email,
+		Username:     user.Username,
+		Password:     user.Password,
+		UserLocation: user.UserLocation,
+		PhoneNumber:  user.PhoneNumber,
+	}
+
+	err := u.userRepo.UpdateUserInfo(&userUpdate)
+	if err != nil {
+		return dto.UpdateUserInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to update user info")
+	}
+
+	err = u.userRepo.GetUserInfoByUserID(&userUpdate, userID)
+	if err != nil {
+		// Continue even if failed to get updated user data
+		log.Println("failed to get updated user data")
+	}
+
+	return userUpdate.ParseToDTOUpdateUserInfo(), nil
+}
+
 func (u UserUseCase) GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUserID, error) {
 	user := entity.User{
 		ID: userID,
@@ -87,18 +114,3 @@ func (u UserUseCase) GetUserInfoByUserID(userID uuid.UUID) (dto.GetUserInfoByUse
 
 	return user.ParseToDTOGetUserInfoByUserID(), nil
 }
-
-// func (u *UserUseCase) Login(login dto.Login) (dto.Reesponselogin, error) {
-// 	err := bcrypt.CompareHashAndPassword(repository.UserMySQL, []byte(login.Password))
-// 	if err != nil {
-// 		return dto.ResponseLogin{}, fiber.NewError(http.StatusBadRequest, "invalid password")
-// 	}
-//
-// 	config, err := env.New()
-// 	if err != nil {
-// 		return dto.ResponseLogin{}, fiber.NewError(http.StatusInternalServerError, "failed to get env")
-// 	}
-//
-// 	token = jwt.New(jwt.SigningMethodHS256)
-// 	s = token.SignedString(config.JWTSecretKey)
-// }
