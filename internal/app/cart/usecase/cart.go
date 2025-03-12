@@ -32,11 +32,12 @@ func NewCartUseCase(cartRepo repository.CartMySQLItf) CartUseCaseItf {
 
 func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error) {
 	cartUser := entity.Cart{
-		CartItemID: uuid.New(),
-		UserID:     userID,
-		ProductID:  cart.ProductID,
-		SellerID:   sellerID,
-		Count:      cart.Count,
+		CartItemID:   uuid.New(),
+		UserID:       userID,
+		ProductID:    cart.ProductID,
+		SellerID:     sellerID,
+		Count:        cart.Count,
+		RentDuration: cart.RentDuration,
 	}
 
 	err := u.cartRepo.CreateCart(&cartUser)
@@ -49,8 +50,9 @@ func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID 
 
 func (u CartUseCase) UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error) {
 	cartUser := entity.Cart{
-		CartItemID: cartID,
-		Count:      cart.Count,
+		CartItemID:   cartID,
+		Count:        cart.Count,
+		RentDuration: cart.RentDuration,
 	}
 
 	err := u.cartRepo.UpdateCart(&cartUser)

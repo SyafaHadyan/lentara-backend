@@ -50,6 +50,11 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid product id")
 	}
 
+	err = h.Validator.Struct(create)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	}
+
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
