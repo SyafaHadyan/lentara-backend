@@ -65,6 +65,18 @@ func (c Cart) ParseToDTOGetCartsByUserID() dto.GetCartsByUserID {
 	}
 }
 
+func (c Cart) ParseToDTOGetCartsByUserIDAndSellerID() dto.GetCartsByUserIDAndSellerID {
+	return dto.GetCartsByUserIDAndSellerID{
+		CartItemID: c.CartItemID,
+		UserID:     c.UserID,
+		ProductID:  c.ProductID,
+		SellerID:   c.SellerID,
+		Count:      c.Count,
+		CreatedAt:  c.CreatedAt,
+		UpdatedAt:  c.UpdatedAt,
+	}
+}
+
 func (c Cart) ParseToDTODeleteCartByCartID() dto.DeleteCartByCartID {
 	return dto.DeleteCartByCartID{
 		CartItemID: c.CartItemID,

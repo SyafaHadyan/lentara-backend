@@ -101,7 +101,7 @@ func Start(args []string) error {
 	productUseCase := productusecase.NewProductUseCase(productRepository)
 	producthandler.NewProductHandler(v1, val, middleware, productUseCase, sellerUseCase)
 	cartRepository := cartrepository.NewCartMySQL(database)
-	cartUseCase := cartusecase.NewCartUsecase(cartRepository)
+	cartUseCase := cartusecase.NewCartUseCase(cartRepository)
 	carthandler.NewCartHandler(v1, val, middleware, cartUseCase, userUseCase, productUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))

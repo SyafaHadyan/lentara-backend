@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	usecase "lentara-backend/internal/app/cart/usecase"
 	productusecase "lentara-backend/internal/app/product/usecase"
 	userusecase "lentara-backend/internal/app/user/usecase"
@@ -17,12 +18,12 @@ import (
 type CartHandler struct {
 	Validator      *validator.Validate
 	Middleware     middleware.MiddlewareItf
-	CartUseCase    usecase.CartUsecaseItf
+	CartUseCase    usecase.CartUseCaseItf
 	UserUseCase    userusecase.UserUseCaseItf
 	ProductUseCase productusecase.ProductUseCaseItf
 }
 
-func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, cartUseCase usecase.CartUsecaseItf, userUseCase userusecase.UserUseCaseItf, productUseCase productusecase.ProductUseCaseItf) {
+func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, cartUseCase usecase.CartUseCaseItf, userUseCase userusecase.UserUseCaseItf, productUseCase productusecase.ProductUseCaseItf) {
 	cartHandler := CartHandler{
 		Validator:      validator,
 		Middleware:     middleware,
@@ -37,6 +38,7 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, mid
 	routerGroup.Patch("/:cartid", cartHandler.UpdateCart)
 	routerGroup.Get("/cartid/:id", cartHandler.GetCartByID)
 	routerGroup.Get("/cartuser/", middleware.Authentication, cartHandler.GetCartsByUserID)
+	routerGroup.Get("/cartseller/", middleware.Authentication, cartHandler.GetCartsByUserIDAndSellerID)
 	routerGroup.Delete("/cartid/:id", cartHandler.DeleteCartByCartID)
 	routerGroup.Delete("/cartuser/:id", cartHandler.DeleteCartByUserID)
 }
@@ -134,6 +136,28 @@ func (h CartHandler) GetCartsByUserID(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully get carts by user id",
 		"payload": res,
+	})
+}
+
+func (h CartHandler) GetCartsByUserIDAndSellerID(ctx *fiber.Ctx) error {
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		fmt.Println(userID)
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	seller, err := h.CartUseCase.GetSellerListFromUserCart(userID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get seller list from user id")
+	}
+
+	for i := 0; i < len(seller); i++ {
+		fmt.Println(i)
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get carts from current user grouped by seller id",
+		"payload": seller,
 	})
 }
 
