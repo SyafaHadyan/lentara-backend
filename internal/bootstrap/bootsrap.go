@@ -74,7 +74,6 @@ func Start(args []string) error {
 
 	app.Use(
 		cors.New(cors.Config{
-			// AllowHeaders: "Authorization,Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
 			AllowHeaders: "*",
 			AllowOrigins: "*",
 			// AllowCredentials: true,
@@ -96,12 +95,12 @@ func Start(args []string) error {
 	productmediahandler.NewProductMediahandler(v1, productMediaUseCase)
 	sellerRepository := sellerrepository.NewSellerMySQL(database)
 	sellerUseCase := sellerusecase.NewSellerUsecase(sellerRepository, jwt)
-	sellerhandler.NewSellerHandler(v1, val, sellerUseCase)
+	sellerhandler.NewSellerHandler(v1, val, middleware, sellerUseCase)
 	productRepository := productrepository.NewProductMySQL(database)
 	productUseCase := productusecase.NewProductUseCase(productRepository)
 	producthandler.NewProductHandler(v1, val, middleware, productUseCase, sellerUseCase)
 	cartRepository := cartrepository.NewCartMySQL(database)
-	cartUseCase := cartusecase.NewCartUsecase(cartRepository)
+	cartUseCase := cartusecase.NewCartUseCase(cartRepository)
 	carthandler.NewCartHandler(v1, val, middleware, cartUseCase, userUseCase, productUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))

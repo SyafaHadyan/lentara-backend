@@ -10,26 +10,27 @@ import (
 	"github.com/google/uuid"
 )
 
-type CartUsecaseItf interface {
+type CartUseCaseItf interface {
 	CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error)
 	UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error)
 	GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error)
 	GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error)
 	DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error)
 	DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error)
+	GetSellerListFromUserCart(userID uuid.UUID) ([]string, error)
 }
 
-type CartUsecase struct {
+type CartUseCase struct {
 	cartRepo repository.CartMySQLItf
 }
 
-func NewCartUsecase(cartRepo repository.CartMySQLItf) CartUsecaseItf {
-	return &CartUsecase{
+func NewCartUseCase(cartRepo repository.CartMySQLItf) CartUseCaseItf {
+	return &CartUseCase{
 		cartRepo: cartRepo,
 	}
 }
 
-func (u *CartUsecase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error) {
+func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error) {
 	cartUser := entity.Cart{
 		CartItemID: uuid.New(),
 		UserID:     userID,
@@ -46,7 +47,7 @@ func (u *CartUsecase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID
 	return cartUser.ParseToDTOCreateCart(), nil
 }
 
-func (u *CartUsecase) UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error) {
+func (u CartUseCase) UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error) {
 	cartUser := entity.Cart{
 		CartItemID: cartID,
 		Count:      cart.Count,
@@ -60,7 +61,7 @@ func (u *CartUsecase) UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.Upd
 	return cartUser.ParseToDTOUpdateCart(), nil
 }
 
-func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error) {
+func (u CartUseCase) GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error) {
 	cartUser := entity.Cart{
 		CartItemID: cartID,
 	}
@@ -73,7 +74,7 @@ func (u *CartUsecase) GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error)
 	return cartUser.ParseToDTOGetCartByCartID(), nil
 }
 
-func (u *CartUsecase) GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error) {
+func (u CartUseCase) GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error) {
 	cartUserResult := new([]entity.Cart)
 
 	err := u.cartRepo.GetCartsByUserID(cartUserResult, user)
@@ -89,7 +90,23 @@ func (u *CartUsecase) GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID,
 	return &res, nil
 }
 
-func (u *CartUsecase) DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error) {
+func (u CartUseCase) GetCartsByUserAndSellerID(userID uuid.UUID, sellerID uuid.UUID) (*[]dto.GetCartsByUserIDAndSellerID, error) {
+	cartUserResult := new([]entity.Cart)
+
+	err := u.cartRepo.GetCartsByUserIDAndSellerID(cartUserResult, userID, sellerID)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to get carts by user id and seller id")
+	}
+
+	res := make([]dto.GetCartsByUserIDAndSellerID, len(*cartUserResult))
+	for i, cart := range *cartUserResult {
+		res[i] = cart.ParseToDTOGetCartsByUserIDAndSellerID()
+	}
+
+	return &res, nil
+}
+
+func (u CartUseCase) DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error) {
 	cartUser := entity.Cart{
 		CartItemID: CartID,
 	}
@@ -102,7 +119,7 @@ func (u *CartUsecase) DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCart
 	return cartUser.ParseToDTODeleteCartByCartID(), nil
 }
 
-func (u *CartUsecase) DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error) {
+func (u CartUseCase) DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error) {
 	cartUserID := entity.Cart{
 		UserID: UserID,
 	}
@@ -113,4 +130,15 @@ func (u *CartUsecase) DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUser
 	}
 
 	return cartUserID.ParseToDTODeleteCartByUserID(), nil
+}
+
+func (u CartUseCase) GetSellerListFromUserCart(userID uuid.UUID) ([]string, error) {
+	cartUserResult := new([]string)
+
+	err := u.cartRepo.GetSellerListFromUserCart(cartUserResult, userID)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to get seller list from user id")
+	}
+
+	return *cartUserResult, nil
 }

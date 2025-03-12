@@ -3,6 +3,7 @@ package rest
 import (
 	"lentara-backend/internal/app/seller/usecase"
 	"lentara-backend/internal/domain/dto"
+	"lentara-backend/internal/middleware"
 	"log"
 	"net/http"
 
@@ -13,12 +14,14 @@ import (
 
 type SellerHandler struct {
 	Validator     *validator.Validate
+	Middleware    middleware.MiddlewareItf
 	sellerUsecase usecase.SellerUsecaseItf
 }
 
-func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, sellerUsecase usecase.SellerUsecaseItf) {
+func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, sellerUsecase usecase.SellerUsecaseItf) {
 	SellerHandler := SellerHandler{
 		Validator:     validator,
+		Middleware:    middleware,
 		sellerUsecase: sellerUsecase,
 	}
 
@@ -27,7 +30,7 @@ func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, s
 	routerGroup.Post("/register", SellerHandler.SellerRegister)
 	routerGroup.Post("/login", SellerHandler.SellerLogin)
 	routerGroup.Patch("/update/:id", SellerHandler.UpdateSellerInfo)
-	routerGroup.Get("/:id", SellerHandler.GetSellerInfo)
+	routerGroup.Get("/info", middleware.Authentication, SellerHandler.GetSellerInfo)
 }
 
 func (h *SellerHandler) SellerRegister(ctx *fiber.Ctx) error {
@@ -115,9 +118,9 @@ func (h *SellerHandler) UpdateSellerInfo(ctx *fiber.Ctx) error {
 }
 
 func (h *SellerHandler) GetSellerInfo(ctx *fiber.Ctx) error {
-	sellerID, err := uuid.Parse(ctx.Params("id"))
+	sellerID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	var sellerInfo dto.GetSellerInfo
