@@ -110,6 +110,48 @@ func (p Product) ParseToDTOGetProductCategory() dto.GetProductCategory {
 	}
 }
 
+func (p Product) ParseToDTOSortProductByPrice() dto.SortProductByPrice {
+	return dto.SortProductByPrice{
+		ID:          p.ID,
+		Title:       p.Title,
+		Description: p.Description,
+		Category:    p.Category,
+		Origin:      p.Origin,
+		SellerID:    p.SellerID,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
+		Stock:       p.Stock,
+		RentCount:   p.RentCount,
+		Rating:      p.Rating,
+		PhotoUrl:    p.PhotoUrl,
+		CreatedAt:   p.CreatedAt,
+		UpdatedAt:   p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTOFilterProductByRating() dto.FilterProductByRating {
+	return dto.FilterProductByRating{
+		ID:          p.ID,
+		Title:       p.Title,
+		Description: p.Description,
+		Category:    p.Category,
+		Origin:      p.Origin,
+		SellerID:    p.SellerID,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
+		Stock:       p.Stock,
+		RentCount:   p.RentCount,
+		Rating:      p.Rating,
+		PhotoUrl:    p.PhotoUrl,
+		CreatedAt:   p.CreatedAt,
+		UpdatedAt:   p.UpdatedAt,
+	}
+}
+
 func (p Product) ParseToDTOSearchProduct() dto.SearchProduct {
 	return dto.SearchProduct{
 		ID:          p.ID,

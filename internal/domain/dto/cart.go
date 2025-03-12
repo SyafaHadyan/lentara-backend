@@ -20,10 +20,10 @@ type CreateCart struct {
 type UpdateCart struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
-	ProductID    uuid.UUID `json:"product_id"`
+	ProductID    uuid.UUID `json:"product_id" validate:"omitempty,required"`
 	SellerID     uuid.UUID `json:"seller_id"`
-	Count        uint8     `json:"count"`
-	RentDuration uint8     `json:"rent_duration"`
+	Count        uint8     `json:"count" validate:"omitempty,required"`
+	RentDuration uint8     `json:"rent_duration" validate:"omitempty,required"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }

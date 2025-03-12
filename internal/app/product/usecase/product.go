@@ -15,6 +15,8 @@ type ProductUseCaseItf interface {
 	GetProductByID(productID uuid.UUID) (dto.GetProductByID, error)
 	GetProductsBySellerID(sellerID uuid.UUID) (*[]dto.GetProductsBySellerID, error)
 	GetProductCategory(ProductCategory string) (*[]dto.GetProductCategory, error)
+	SortProductByPrice(sort string) (*[]dto.SortProductByPrice, error)
+	FilterProductByRating(rating string) (*[]dto.FilterProductByRating, error)
 	SearchProduct(query string) (*[]dto.SearchProduct, error)
 	CreateProduct(request dto.RequestCreateProduct, sellerID uuid.UUID, productOrigin string) (dto.ResponseCreateProduct, error)
 	UpdateProduct(ProductID uuid.UUID, request dto.UpdateProduct) error
@@ -88,6 +90,38 @@ func (u ProductUseCase) GetProductCategory(productCategory string) (*[]dto.GetPr
 	res := make([]dto.GetProductCategory, len(*products))
 	for i, product := range *products {
 		res[i] = product.ParseToDTOGetProductCategory()
+	}
+
+	return &res, nil
+}
+
+func (u ProductUseCase) SortProductByPrice(sort string) (*[]dto.SortProductByPrice, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.SortProductByPrice(products, sort)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to sort product by price")
+	}
+
+	res := make([]dto.SortProductByPrice, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOSortProductByPrice()
+	}
+
+	return &res, nil
+}
+
+func (u ProductUseCase) FilterProductByRating(rating string) (*[]dto.FilterProductByRating, error) {
+	products := new([]entity.Product)
+
+	err := u.ProductRepository.FilterProductByRating(products, rating)
+	if err != nil {
+		return nil, fiber.NewError(http.StatusInternalServerError, "failed to sort product by price")
+	}
+
+	res := make([]dto.FilterProductByRating, len(*products))
+	for i, product := range *products {
+		res[i] = product.ParseToDTOFilterProductByRating()
 	}
 
 	return &res, nil

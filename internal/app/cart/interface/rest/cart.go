@@ -55,6 +55,12 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
+	validateRentDuration := create.RentDuration
+
+	if validateRentDuration != 1 && validateRentDuration != 3 && validateRentDuration != 5 && validateRentDuration != 7 {
+		return fiber.NewError(http.StatusBadRequest, "invalid rent duration")
+	}
+
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
@@ -85,6 +91,17 @@ func (h CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 	err := ctx.BodyParser(&update)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	err = h.Validator.Struct(update)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
+	}
+
+	validateRentDuration := update.RentDuration
+
+	if validateRentDuration != 0 && validateRentDuration != 1 && validateRentDuration != 3 && validateRentDuration != 5 && validateRentDuration != 7 {
+		return fiber.NewError(http.StatusBadRequest, "invalid rent duration")
 	}
 
 	cartID, err := uuid.Parse(ctx.Params("cartid"))
