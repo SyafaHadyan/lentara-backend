@@ -14,10 +14,13 @@ type Product struct {
 	Category    string    `gorm:"type:text;not null"`
 	Origin      string    `gorm:"type:text;not null"`
 	SellerID    uuid.UUID `gorm:"type:varchar(36);not null;foreignKey"`
-	Price       int64     `gorm:"type:bigint;not null"`
+	Price_1     int64     `gorm:"type:bigint;not null"`
+	Price_3     int64     `gorm:"type:bigint;not null"`
+	Price_5     int64     `gorm:"type:bigint;not null"`
+	Price_7     int64     `gorm:"type:bigint;not null"`
 	Stock       int32     `gorm:"type:int;not null"`
-	RentCount   int32     `gorm:"type:int"`
-	Rating      float32   `gorm:"type:float"`
+	RentCount   int32     `gorm:"type:int;not null"`
+	Rating      float32   `gorm:"type:float;"`
 	PhotoUrl    string    `gorm:"type:text;not null"`
 	CreatedAt   time.Time `gorm:"type:timestamp;autoCreateTime"`
 	UpdatedAt   time.Time `gorm:"type:timestamp;autoUpdateTime"`
@@ -31,7 +34,10 @@ func (p Product) ParseToDTOGetAllProducts() dto.GetAllProducts {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -49,7 +55,10 @@ func (p Product) ParseToDTOGetProductsBySellerID() dto.GetProductsBySellerID {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -67,7 +76,10 @@ func (p Product) ParseToDTOGetProductByID() dto.GetProductByID {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -85,7 +97,10 @@ func (p Product) ParseToDTOGetProductCategory() dto.GetProductCategory {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -103,7 +118,10 @@ func (p Product) ParseToDTOSearchProduct() dto.SearchProduct {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -121,7 +139,10 @@ func (p Product) ParseToDTOSearchAndCategoryProduct() dto.SearchAndCategoryProdu
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -139,7 +160,10 @@ func (p Product) ParseToDTOResponseCreateProduct() dto.ResponseCreateProduct {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,
@@ -157,7 +181,10 @@ func (p Product) ParseToDTODeleteProduct() dto.DeleteProduct {
 		Category:    p.Category,
 		Origin:      p.Origin,
 		SellerID:    p.SellerID,
-		Price:       p.Price,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
 		Stock:       p.Stock,
 		RentCount:   p.RentCount,
 		Rating:      p.Rating,

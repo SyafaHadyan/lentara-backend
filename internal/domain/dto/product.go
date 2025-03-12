@@ -13,7 +13,10 @@ type GetAllProducts struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -29,7 +32,10 @@ type GetProductsBySellerID struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -45,7 +51,10 @@ type GetProductByID struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -61,7 +70,10 @@ type GetProductCategory struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -77,7 +89,10 @@ type SearchProduct struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -93,7 +108,10 @@ type SearchAndCategoryProduct struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -107,7 +125,10 @@ type RequestCreateProduct struct {
 	Description string    `json:"description" validate:"required,min=5"`
 	Category    string    `json:"category" validate:"required,min=1"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price" validate:"required"`
+	Price_1     int64     `json:"price_1" validate:"required"`
+	Price_3     int64     `json:"price_3" validate:"required"`
+	Price_5     int64     `json:"price_5" validate:"required"`
+	Price_7     int64     `json:"price_7" validate:"required"`
 	Stock       int32     `json:"stock" validate:"required"`
 	PhotoUrl    string    `json:"photo_url" validate:"required"`
 }
@@ -119,7 +140,10 @@ type ResponseCreateProduct struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -134,7 +158,10 @@ type UpdateProduct struct {
 	Category    string    `json:"category" validate:"omitempty,min=1"`
 	Origin      string    `json:"origin" validate:"omitempty,min=3"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
@@ -148,7 +175,10 @@ type DeleteProduct struct {
 	Category    string    `json:"category"`
 	Origin      string    `json:"origin"`
 	SellerID    uuid.UUID `json:"seller_id"`
-	Price       int64     `json:"price"`
+	Price_1     int64     `json:"price_1"`
+	Price_3     int64     `json:"price_3"`
+	Price_5     int64     `json:"price_5"`
+	Price_7     int64     `json:"price_7"`
 	Stock       int32     `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
