@@ -35,6 +35,7 @@ func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, 
 	routerGroup.Get("/seller/products/:id", handler.GetProductsBySellerID)
 	routerGroup.Get("/products/category/:category", handler.GetProductCategory)
 	routerGroup.Get("/products/sortprice/:price", handler.SortProductByPrice)
+	routerGroup.Get("/products/rating/:rating", handler.FilterProductByRating)
 	routerGroup.Get("/search/:title", handler.SearchProduct)
 	routerGroup.Post("/products", middleware.Authentication, handler.CreateProduct)
 	routerGroup.Patch("/products/:id", middleware.Authentication, handler.UpdateProduct)
@@ -111,6 +112,27 @@ func (h ProductHandler) SortProductByPrice(ctx *fiber.Ctx) error {
 		message = "invalid sort request, returning unsorted products"
 	} else {
 		message = "successfully sorted products from " + sort + " price"
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": message,
+		"payload": res,
+	})
+}
+
+func (h ProductHandler) FilterProductByRating(ctx *fiber.Ctx) error {
+	rating := ctx.Params("rating")
+
+	res, err := h.ProductUseCase.FilterProductByRating(rating)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to sort product by price")
+	}
+
+	var message string
+	if len(rating) == 0 {
+		message = "invalid rating param, returning products using default filter"
+	} else {
+		message = "successfully sorted products with rating " + rating
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
