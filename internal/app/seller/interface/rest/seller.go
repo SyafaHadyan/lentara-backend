@@ -15,10 +15,10 @@ import (
 type SellerHandler struct {
 	Validator     *validator.Validate
 	Middleware    middleware.MiddlewareItf
-	sellerUseCase usecase.SellerUsecaseItf
+	sellerUseCase usecase.SellerUseCaseItf
 }
 
-func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, sellerUseCase usecase.SellerUsecaseItf) {
+func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, sellerUseCase usecase.SellerUseCaseItf) {
 	SellerHandler := SellerHandler{
 		Validator:     validator,
 		Middleware:    middleware,
@@ -31,6 +31,7 @@ func NewSellerHandler(routerGroup fiber.Router, validator *validator.Validate, m
 	routerGroup.Post("/login", SellerHandler.SellerLogin)
 	routerGroup.Patch("/update", middleware.Authentication, SellerHandler.UpdateSellerInfo)
 	routerGroup.Get("/info", middleware.Authentication, SellerHandler.GetSellerInfo)
+	routerGroup.Get("/info/:id", SellerHandler.GetPublicSellerInfo)
 }
 
 func (h *SellerHandler) SellerRegister(ctx *fiber.Ctx) error {
@@ -128,6 +129,23 @@ func (h *SellerHandler) GetSellerInfo(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully get seller info",
+		"payload": res,
+	})
+}
+
+func (h *SellerHandler) GetPublicSellerInfo(ctx *fiber.Ctx) error {
+	sellerID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid seller id")
+	}
+
+	res, err := h.sellerUseCase.GetPublicSellerINfo(sellerID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get public seller info")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get public seller info",
 		"payload": res,
 	})
 }

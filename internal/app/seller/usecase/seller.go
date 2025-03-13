@@ -12,26 +12,27 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type SellerUsecaseItf interface {
+type SellerUseCaseItf interface {
 	SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error)
 	SellerLogin(login dto.SellerLogin) (string, error)
 	UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error)
 	GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, error)
+	GetPublicSellerINfo(sellerID uuid.UUID) (dto.GetPublicSellerInfo, error)
 }
 
-type SellerUsecase struct {
+type SellerUseCase struct {
 	sellerRepo repository.SellerMySQLItf
 	jwt        jwt.JWTItf
 }
 
-func NewSellerUsecase(sellerRepo repository.SellerMySQLItf, jwt *jwt.JWT) SellerUsecaseItf {
-	return &SellerUsecase{
+func NewSellerUseCase(sellerRepo repository.SellerMySQLItf, jwt *jwt.JWT) SellerUseCaseItf {
+	return &SellerUseCase{
 		sellerRepo: sellerRepo,
 		jwt:        jwt,
 	}
 }
 
-func (u *SellerUsecase) SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error) {
+func (u SellerUseCase) SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return dto.ResponseSellerRegister{}, fiber.NewError(http.StatusInternalServerError, "failed to hash seller password")
@@ -57,7 +58,7 @@ func (u *SellerUsecase) SellerRegister(register dto.SellerRegister) (dto.Respons
 	return seller.ParseToDTOResponseSellerRegister(), nil
 }
 
-func (u *SellerUsecase) SellerLogin(login dto.SellerLogin) (string, error) {
+func (u SellerUseCase) SellerLogin(login dto.SellerLogin) (string, error) {
 	var seller entity.Seller
 
 	err := u.sellerRepo.GetSellerLoginInfo(&seller, dto.SellerInfo{Username: login.Username})
@@ -78,7 +79,7 @@ func (u *SellerUsecase) SellerLogin(login dto.SellerLogin) (string, error) {
 	return token, nil
 }
 
-func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error) {
+func (u SellerUseCase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error) {
 	sellerUpdate := &entity.Seller{
 		ID:             sellerID,
 		Name:           seller.Name,
@@ -99,7 +100,7 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 	return sellerUpdate.ParseToDTOResponseUpdateSellerInfo(), nil
 }
 
-func (u *SellerUsecase) GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, error) {
+func (u SellerUseCase) GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, error) {
 	sellerInfo := entity.Seller{}
 
 	err := u.sellerRepo.GetSellerInfo(&sellerInfo, sellerID)
@@ -108,4 +109,15 @@ func (u *SellerUsecase) GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, er
 	}
 
 	return sellerInfo.ParseToDTOGetSellerInfo(), nil
+}
+
+func (u SellerUseCase) GetPublicSellerINfo(sellerID uuid.UUID) (dto.GetPublicSellerInfo, error) {
+	sellerInfo := entity.Seller{}
+
+	err := u.sellerRepo.GetSellerInfo(&sellerInfo, sellerID)
+	if err != nil {
+		return dto.GetPublicSellerInfo{}, fiber.NewError(http.StatusInternalServerError, "failed to get public seller info")
+	}
+
+	return sellerInfo.ParseToDTOGetPublicSellerInfo(), nil
 }

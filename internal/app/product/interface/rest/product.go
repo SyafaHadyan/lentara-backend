@@ -17,10 +17,10 @@ type ProductHandler struct {
 	Validator      *validator.Validate
 	Middleware     middleware.MiddlewareItf
 	ProductUseCase usecase.ProductUseCaseItf
-	SellerUseCase  sellerusecase.SellerUsecaseItf
+	SellerUseCase  sellerusecase.SellerUseCaseItf
 }
 
-func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, productUseCase usecase.ProductUseCaseItf, sellerUseCase sellerusecase.SellerUsecaseItf) {
+func NewProductHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, productUseCase usecase.ProductUseCaseItf, sellerUseCase sellerusecase.SellerUseCaseItf) {
 	handler := ProductHandler{
 		Validator:      validator,
 		Middleware:     middleware,
@@ -85,7 +85,7 @@ func (h ProductHandler) GetProductByID(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully get product by id",
 		"product": product,
-		"seller":  sellerInfo,
+		"seller":  sellerInfo.ParseToDTOGetPublicSellerInfo(),
 	})
 }
 
