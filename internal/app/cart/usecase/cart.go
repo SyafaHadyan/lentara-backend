@@ -161,21 +161,27 @@ func (u CartUseCase) GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error
 	var productCount uint8
 	var totalPrice uint64
 	var voucher uint64
+	var serviceCost uint64
+	var DepositeAmount uint64
 
 	for _, cart := range *cartUserResult {
 		productCount += cart.Count
 		totalPrice += cart.Price
 	}
 
+	serviceCost = uint64(float64(totalPrice) * float64(u.config.SerivceCost) / float64(100))
+	DepositeAmount = uint64(float64(totalPrice) * float64(u.config.DepositePercentage) / float64(100))
+	totalPrice += (serviceCost + DepositeAmount - voucher)
+
 	cartSummary := dto.GetCartSummary{
 		UserID:             userID,
 		ProductCount:       productCount,
 		DeliveryCost:       0,
-		ServiceCost:        uint64(float64(totalPrice) * u.config.SerivceCost / float64(100)),
-		DepositeAmout:      uint64(float64(totalPrice) * float64(u.config.DepositePercentage/100)),
+		ServiceCost:        serviceCost,
+		DepositeAmount:     DepositeAmount,
 		DepositePercentage: uint64(u.config.DepositePercentage),
 		Voucher:            0,
-		TotalPrice:         totalPrice - voucher,
+		TotalPrice:         totalPrice,
 	}
 
 	return cartSummary, nil
