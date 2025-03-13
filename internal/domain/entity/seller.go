@@ -84,3 +84,14 @@ func (s Seller) ParseToDTOGetSellerInfo() dto.GetSellerInfo {
 		UpdatedAt:      s.UpdatedAt,
 	}
 }
+
+func (s Seller) ParseToDTOGetPublicSellerInfo() dto.GetPublicSellerInfo {
+	return dto.GetPublicSellerInfo{
+		Name:           s.Name,
+		StoreName:      s.StoreName,
+		StoreLocation:  s.StoreLocation,
+		ProfilePicture: s.ProfilePicture,
+		CreatedAt:      s.CreatedAt,
+		UpdatedAt:      s.UpdatedAt,
+	}
+}

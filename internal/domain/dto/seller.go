@@ -98,3 +98,12 @@ type GetSellerInfo struct {
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
 }
+
+type GetPublicSellerInfo struct {
+	Name           string    `json:"name"`
+	StoreName      string    `json:"store_name"`
+	StoreLocation  string    `json:"store_location"`
+	ProfilePicture string    `json:"profile_picture"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+}
