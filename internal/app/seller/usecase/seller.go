@@ -16,7 +16,7 @@ type SellerUsecaseItf interface {
 	SellerRegister(register dto.SellerRegister) (dto.ResponseSellerRegister, error)
 	SellerLogin(login dto.SellerLogin) (string, error)
 	UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID uuid.UUID) (dto.ResponseUpdateSellerInfo, error)
-	GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error)
+	GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, error)
 }
 
 type SellerUsecase struct {
@@ -99,10 +99,8 @@ func (u *SellerUsecase) UpdateSellerInfo(seller dto.UpdateSellerInfo, sellerID u
 	return sellerUpdate.ParseToDTOResponseUpdateSellerInfo(), nil
 }
 
-func (u *SellerUsecase) GetSellerInfo(seller dto.GetSellerInfo, sellerID uuid.UUID) (dto.GetSellerInfo, error) {
-	sellerInfo := entity.Seller{
-		ID: sellerID,
-	}
+func (u *SellerUsecase) GetSellerInfo(sellerID uuid.UUID) (dto.GetSellerInfo, error) {
+	sellerInfo := entity.Seller{}
 
 	err := u.sellerRepo.GetSellerInfo(&sellerInfo, sellerID)
 	if err != nil {

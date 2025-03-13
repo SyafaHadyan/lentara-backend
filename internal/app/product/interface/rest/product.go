@@ -69,7 +69,24 @@ func (h ProductHandler) GetProductByID(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get product")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(product)
+	seller, err := h.SellerUseCase.GetSellerInfo(product.SellerID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
+	}
+
+	sellerInfo := &entity.Seller{
+		ID:             seller.ID,
+		Name:           seller.Name,
+		StoreName:      seller.StoreName,
+		StoreLocation:  seller.StoreLocation,
+		ProfilePicture: seller.ProfilePicture,
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get product by id",
+		"product": product,
+		"seller":  sellerInfo,
+	})
 }
 
 func (h ProductHandler) GetProductsBySellerID(ctx *fiber.Ctx) error {
@@ -174,11 +191,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
-	sellerInfo := entity.Seller{
-		ID: sellerID,
-	}
-
-	productOrigin, err := h.SellerUseCase.GetSellerInfo(sellerInfo.ParseToDTOGetSellerInfo(), sellerID)
+	productOrigin, err := h.SellerUseCase.GetSellerInfo(sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
 	}

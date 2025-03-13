@@ -104,9 +104,7 @@ func (h *SellerHandler) UpdateSellerInfo(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to uppdate seller info")
 	}
 
-	var seller dto.GetSellerInfo
-
-	res, err := h.sellerUseCase.GetSellerInfo(seller, sellerID)
+	res, err := h.sellerUseCase.GetSellerInfo(sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get updated seller data")
 	}
@@ -123,9 +121,7 @@ func (h *SellerHandler) GetSellerInfo(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
-	var sellerInfo dto.GetSellerInfo
-
-	res, err := h.sellerUseCase.GetSellerInfo(sellerInfo, sellerID)
+	res, err := h.sellerUseCase.GetSellerInfo(sellerID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
 	}
