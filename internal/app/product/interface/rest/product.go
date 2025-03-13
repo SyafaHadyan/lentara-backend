@@ -6,6 +6,7 @@ import (
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
 	"lentara-backend/internal/middleware"
+	"log"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -71,7 +72,9 @@ func (h ProductHandler) GetProductByID(ctx *fiber.Ctx) error {
 
 	seller, err := h.SellerUseCase.GetSellerInfo(product.SellerID)
 	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
+		// Continue even if failed to get seller info
+		log.Println("failed to get seller info")
+		// return fiber.NewError(http.StatusInternalServerError, "failed to get seller info")
 	}
 
 	sellerInfo := &entity.Seller{

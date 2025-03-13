@@ -13,6 +13,7 @@ type Cart struct {
 	ProductID    uuid.UUID `json:"product_id" gorm:"type:varchar(36);foreignKey"`
 	SellerID     uuid.UUID `json:"seller_id" gorm:"type:varchar(36);foreignKey"`
 	Count        uint8     `json:"count" gorm:"type:smallint unsigned"`
+	Price        uint64    `json:"price" gorm:"type:bigint unsigned"`
 	RentDuration uint8     `json:"rent_duration" gorm:"type:smallint unsigned"`
 	CreatedAt    time.Time `json:"created_at" gorm:"type:timestamp;autoCreateTime"`
 	UpdatedAt    time.Time `json:"updated_at" gorm:"type:timestamp;autoUpdateTime"`
@@ -25,6 +26,7 @@ func (c Cart) ParseToDTOCreateCart() dto.CreateCart {
 		ProductID:    c.ProductID,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
+		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
@@ -38,6 +40,7 @@ func (c Cart) ParseToDTOUpdateCart() dto.UpdateCart {
 		ProductID:    c.ProductID,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
+		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
@@ -51,6 +54,7 @@ func (c Cart) ParseToDTOGetCartByCartID() dto.GetCartByCartID {
 		ProductID:    c.ProductID,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
+		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
@@ -64,6 +68,7 @@ func (c Cart) ParseToDTOGetCartsByUserID() dto.GetCartsByUserID {
 		ProductID:    c.ProductID,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
+		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
@@ -77,11 +82,25 @@ func (c Cart) ParseToDTOGetCartsByUserIDAndSellerID() dto.GetCartsByUserIDAndSel
 		ProductID:    c.ProductID,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
+		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
 	}
 }
+
+// func (c Cart) ParseToDTOGetCartSummary() dto.GetCartSummary {
+// 	return dto.GetCartSummary{
+// 		UserID:             c.UserID,
+// 		ProductCount:       c.ProductCount,
+// 		DeliveryCost:       c.DeliveryCost,
+// 		ServiceCost:        c.SeriveCost,
+// 		DepositeAmout:      c.DepositeAmount,
+// 		DepositePercentage: c.DepositePercentage,
+// 		Voucher:            c.Voucher,
+// 		TotalPrice:         c.TotalPrice,
+// 	}
+// }
 
 func (c Cart) ParseToDTODeleteCartByCartID() dto.DeleteCartByCartID {
 	return dto.DeleteCartByCartID{
