@@ -6,14 +6,16 @@ import (
 )
 
 type Env struct {
-	AppPort      int    `env:"APP_PORT"`
-	DBUsername   string `env:"DB_USERNAME"`
-	DBPassword   string `env:"DB_PASSWORD"`
-	DBHost       string `env:"DB_HOST"`
-	DBPort       int    `env:"DB_PORT"`
-	DBName       string `env:"DB_NAME"`
-	JWTSecretKey string `env:"JWT_SECRET_KEY"`
-	JWTExpired   int    `env:"JWT_EXPIRED"`
+	AppPort            int     `env:"APP_PORT"`
+	DBUsername         string  `env:"DB_USERNAME"`
+	DBPassword         string  `env:"DB_PASSWORD"`
+	DBHost             string  `env:"DB_HOST"`
+	DBPort             int     `env:"DB_PORT"`
+	DBName             string  `env:"DB_NAME"`
+	JWTSecretKey       string  `env:"JWT_SECRET_KEY"`
+	JWTExpired         int     `env:"JWT_EXPIRED"`
+	SerivceCost        float64 `env:"SERVICE_COST"`
+	DepositePercentage float64 `env:"DEPOSITE_PERCENTAGE"`
 }
 
 func New() (*Env, error) {

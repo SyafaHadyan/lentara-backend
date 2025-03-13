@@ -4,6 +4,7 @@ import (
 	"lentara-backend/internal/app/cart/repository"
 	"lentara-backend/internal/domain/dto"
 	"lentara-backend/internal/domain/entity"
+	"lentara-backend/internal/infra/env"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,32 +12,36 @@ import (
 )
 
 type CartUseCaseItf interface {
-	CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error)
+	CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error)
 	UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error)
 	GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error)
 	GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error)
 	DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error)
 	DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error)
 	GetSellerListFromUserCart(userID uuid.UUID) ([]string, error)
+	GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error)
 }
 
 type CartUseCase struct {
 	cartRepo repository.CartMySQLItf
+	config   *env.Env
 }
 
-func NewCartUseCase(cartRepo repository.CartMySQLItf) CartUseCaseItf {
+func NewCartUseCase(cartRepo repository.CartMySQLItf, config *env.Env) CartUseCaseItf {
 	return &CartUseCase{
 		cartRepo: cartRepo,
+		config:   config,
 	}
 }
 
-func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID) (dto.CreateCart, error) {
+func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error) {
 	cartUser := entity.Cart{
 		CartItemID:   uuid.New(),
 		UserID:       userID,
 		ProductID:    cart.ProductID,
 		SellerID:     sellerID,
 		Count:        cart.Count,
+		Price:        price,
 		RentDuration: cart.RentDuration,
 	}
 
@@ -143,4 +148,35 @@ func (u CartUseCase) GetSellerListFromUserCart(userID uuid.UUID) ([]string, erro
 	}
 
 	return *cartUserResult, nil
+}
+
+func (u CartUseCase) GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error) {
+	cartUserResult := new([]entity.Cart)
+
+	err := u.cartRepo.GetCartsByUserID(cartUserResult, userID)
+	if err != nil {
+		return dto.GetCartSummary{}, fiber.NewError(http.StatusInternalServerError, "failed to get carts from user id")
+	}
+
+	var productCount uint8
+	var totalPrice uint64
+	var voucher uint64
+
+	for _, cart := range *cartUserResult {
+		productCount += cart.Count
+		totalPrice += cart.Price
+	}
+
+	cartSummary := dto.GetCartSummary{
+		UserID:             userID,
+		ProductCount:       productCount,
+		DeliveryCost:       0,
+		ServiceCost:        uint64(float64(totalPrice) * u.config.SerivceCost / float64(100)),
+		DepositeAmout:      uint64(float64(totalPrice) * float64(u.config.DepositePercentage/100)),
+		DepositePercentage: uint64(u.config.DepositePercentage),
+		Voucher:            0,
+		TotalPrice:         totalPrice - voucher,
+	}
+
+	return cartSummary, nil
 }
