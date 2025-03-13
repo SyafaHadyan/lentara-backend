@@ -180,6 +180,8 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to parse request body")
 	}
 
+	log.Println(request)
+
 	err = h.Validator.Struct(request)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "failed to validate request")

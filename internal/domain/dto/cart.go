@@ -71,7 +71,7 @@ type GetCartSummary struct {
 	ProductCount       uint8     `json:"product_count"`
 	DeliveryCost       uint64    `json:"delivery_cost"`
 	ServiceCost        uint64    `json:"service_cost"`
-	DepositeAmout      uint64    `json:"deposite_amount"`
+	DepositeAmount     uint64    `json:"deposite_amount"`
 	DepositePercentage uint64    `json:"deposite_percentage"`
 	Voucher            uint64    `json:"voucher"`
 	TotalPrice         uint64    `json:"total_price"`
