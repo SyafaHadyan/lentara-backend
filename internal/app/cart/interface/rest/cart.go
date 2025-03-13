@@ -19,8 +19,8 @@ type CartHandler struct {
 	Validator      *validator.Validate
 	Middleware     middleware.MiddlewareItf
 	CartUseCase    usecase.CartUseCaseItf
-	UserUseCase    userusecase.UserUseCaseItf
 	ProductUseCase productusecase.ProductUseCaseItf
+	UserUseCase    userusecase.UserUseCaseItf
 }
 
 func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, middleware middleware.MiddlewareItf, cartUseCase usecase.CartUseCaseItf, userUseCase userusecase.UserUseCaseItf, productUseCase productusecase.ProductUseCaseItf) {
@@ -28,8 +28,8 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, mid
 		Validator:      validator,
 		Middleware:     middleware,
 		CartUseCase:    cartUseCase,
-		UserUseCase:    userUseCase,
 		ProductUseCase: productUseCase,
+		UserUseCase:    userUseCase,
 	}
 
 	routerGroup = routerGroup.Group("/cart")
@@ -48,7 +48,7 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	var create dto.CreateCart
 	err := ctx.BodyParser(&create)
 	if err != nil {
-		return fiber.NewError(http.StatusBadRequest, "invalid product id")
+		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
 	err = h.Validator.Struct(create)

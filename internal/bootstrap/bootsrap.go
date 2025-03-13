@@ -5,6 +5,9 @@ import (
 	carthandler "lentara-backend/internal/app/cart/interface/rest"
 	cartrepository "lentara-backend/internal/app/cart/repository"
 	cartusecase "lentara-backend/internal/app/cart/usecase"
+	paymenthandler "lentara-backend/internal/app/payment/interface/rest"
+	paymentrepository "lentara-backend/internal/app/payment/repository"
+	paymentusecase "lentara-backend/internal/app/payment/usecase"
 	producthandler "lentara-backend/internal/app/product/interface/rest"
 	productrepository "lentara-backend/internal/app/product/repository"
 	productusecase "lentara-backend/internal/app/product/usecase"
@@ -102,6 +105,9 @@ func Start(args []string) error {
 	cartRepository := cartrepository.NewCartMySQL(database)
 	cartUseCase := cartusecase.NewCartUseCase(cartRepository, config)
 	carthandler.NewCartHandler(v1, val, middleware, cartUseCase, userUseCase, productUseCase)
+	paymentRepository := paymentrepository.NewPaymentMySQL(database)
+	paymentUseCase := paymentusecase.NewPaymentUseCase(paymentRepository)
+	paymenthandler.NewPaymentHandler(v1, val, config, middleware, paymentUseCase, productUseCase, userUseCase, sellerUseCase, cartUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
