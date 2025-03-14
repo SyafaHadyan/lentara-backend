@@ -5,6 +5,9 @@ import (
 	carthandler "lentara-backend/internal/app/cart/interface/rest"
 	cartrepository "lentara-backend/internal/app/cart/repository"
 	cartusecase "lentara-backend/internal/app/cart/usecase"
+	mediahandler "lentara-backend/internal/app/media/interface/rest"
+	mediarepository "lentara-backend/internal/app/media/repository"
+	mediausecase "lentara-backend/internal/app/media/usecase"
 	paymenthandler "lentara-backend/internal/app/payment/interface/rest"
 	paymentrepository "lentara-backend/internal/app/payment/repository"
 	paymentusecase "lentara-backend/internal/app/payment/usecase"
@@ -108,6 +111,9 @@ func Start(args []string) error {
 	paymentRepository := paymentrepository.NewPaymentMySQL(database)
 	paymentUseCase := paymentusecase.NewPaymentUseCase(paymentRepository)
 	paymenthandler.NewPaymentHandler(v1, val, config, middleware, paymentUseCase, productUseCase, userUseCase, sellerUseCase, cartUseCase)
+	mediaRepository := mediarepository.NewMediaMySQL(database)
+	mediaUseCase := mediausecase.NewMediaUseCase(mediaRepository)
+	mediahandler.NewMediaHandler(v1, val, config, middleware, mediaUseCase, productUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
