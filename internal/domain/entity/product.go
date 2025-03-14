@@ -18,7 +18,7 @@ type Product struct {
 	Price_3     int64     `gorm:"type:bigint;not null"`
 	Price_5     int64     `gorm:"type:bigint;not null"`
 	Price_7     int64     `gorm:"type:bigint;not null"`
-	Stock       int32     `gorm:"type:int;not null"`
+	Stock       uint32    `gorm:"type:int unsigned;not null"`
 	RentCount   int32     `gorm:"type:int;not null"`
 	Rating      float32   `gorm:"type:float;"`
 	PhotoUrl    string    `gorm:"type:text;not null"`
@@ -212,6 +212,24 @@ func (p Product) ParseToDTOResponseCreateProduct() dto.ResponseCreateProduct {
 		PhotoUrl:    p.PhotoUrl,
 		CreatedAt:   p.CreatedAt,
 		UpdatedAt:   p.UpdatedAt,
+	}
+}
+
+func (p Product) ParseToDTOUpdateProduct() dto.UpdateProduct {
+	return dto.UpdateProduct{
+		Title:       p.Title,
+		Description: p.Description,
+		Category:    p.Category,
+		Origin:      p.Origin,
+		SellerID:    p.SellerID,
+		Price_1:     p.Price_1,
+		Price_3:     p.Price_3,
+		Price_5:     p.Price_5,
+		Price_7:     p.Price_7,
+		Stock:       p.Stock,
+		RentCount:   p.RentCount,
+		Rating:      p.Rating,
+		PhotoUrl:    p.PhotoUrl,
 	}
 }
 

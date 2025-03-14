@@ -17,7 +17,7 @@ type GetAllProducts struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -36,7 +36,7 @@ type GetProductsBySellerID struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -55,7 +55,7 @@ type GetProductByID struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -74,7 +74,7 @@ type GetProductCategory struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -93,7 +93,7 @@ type SortProductByPrice struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -112,7 +112,7 @@ type FilterProductByRating struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -131,7 +131,7 @@ type SearchProduct struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -150,7 +150,7 @@ type SearchAndCategoryProduct struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -167,7 +167,7 @@ type RequestCreateProduct struct {
 	Price_3     int64     `json:"price_3" validate:"required"`
 	Price_5     int64     `json:"price_5" validate:"required"`
 	Price_7     int64     `json:"price_7" validate:"required"`
-	Stock       int32     `json:"stock" validate:"required"`
+	Stock       uint32    `json:"stock" validate:"required"`
 	PhotoUrl    string    `json:"photo_url" validate:"required"`
 }
 
@@ -182,7 +182,7 @@ type ResponseCreateProduct struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -200,7 +200,7 @@ type UpdateProduct struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
@@ -217,7 +217,7 @@ type DeleteProduct struct {
 	Price_3     int64     `json:"price_3"`
 	Price_5     int64     `json:"price_5"`
 	Price_7     int64     `json:"price_7"`
-	Stock       int32     `json:"stock"`
+	Stock       uint32    `json:"stock"`
 	RentCount   int32     `json:"rent_count"`
 	Rating      float32   `json:"rating"`
 	PhotoUrl    string    `json:"photo_url"`
