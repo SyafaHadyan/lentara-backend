@@ -26,6 +26,9 @@ import (
 	userhandler "lentara-backend/internal/app/user/interface/rest"
 	userrepository "lentara-backend/internal/app/user/repository"
 	userusecase "lentara-backend/internal/app/user/usecase"
+	voucherhandler "lentara-backend/internal/app/voucher/interface/rest"
+	voucherrepository "lentara-backend/internal/app/voucher/repository"
+	voucherusecase "lentara-backend/internal/app/voucher/usecase"
 	"lentara-backend/internal/infra/env"
 	"lentara-backend/internal/infra/fiber"
 	"lentara-backend/internal/infra/jwt"
@@ -114,6 +117,9 @@ func Start(args []string) error {
 	mediaRepository := mediarepository.NewMediaMySQL(database)
 	mediaUseCase := mediausecase.NewMediaUseCase(mediaRepository)
 	mediahandler.NewMediaHandler(v1, val, config, middleware, mediaUseCase, productUseCase)
+	voucherRepository := voucherrepository.NewVoucherMySQL(database)
+	voucherUseCase := voucherusecase.NewVoucherUseCase(voucherRepository)
+	voucherhandler.NewVoucherHandler(v1, val, middleware, voucherUseCase)
 
 	return app.Listen(fmt.Sprintf(":%d", config.AppPort))
 }
