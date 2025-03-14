@@ -50,7 +50,7 @@ func (h MediaHandler) UploadMedia(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "successfully uploaded media",
-		"payload": "https://lentara-be.syafahadyan.com/" + fileName,
+		"payload": "https://lentara-be.syafahadyan.com/images/" + fileName,
 	})
 
 	// os.WriteFile("file", file)
