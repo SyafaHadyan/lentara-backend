@@ -120,9 +120,29 @@ func (h PaymentHandler) UpdatePayment(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusInternalServerError, "failed to update payment status")
 	}
 
+	orderID, err := uuid.Parse(update.OrderID)
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid user id")
+	}
+
+	userID, err := h.PaymentUseCase.GetUserIDFromOrderID(orderID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get user info")
+	}
+
+	var cartDeletetionStatus dto.DeleteCartByUserID
+
+	if res.Status == "capture" || res.Status == "settlement" {
+		cartDeletetionStatus, err = h.CartUseCase.DeleteCartByUserID(userID)
+		if err != nil {
+			log.Println("failed to delete cart from user id")
+		}
+	}
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "successfully updated payment status",
-		"payload": res,
+		"message":               "successfully updated payment status",
+		"cart_deleteion_status": cartDeletetionStatus,
+		"payload":               res,
 	})
 }
 
