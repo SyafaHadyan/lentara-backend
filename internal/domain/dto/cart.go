@@ -10,6 +10,7 @@ type CreateCart struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
 	ProductID    uuid.UUID `json:"product_id" validate:"required"`
+	ProductName  string    `json:"product_name"`
 	SellerID     uuid.UUID `json:"seller_id"`
 	Count        uint8     `json:"count" validate:"required"`
 	Price        uint64    `json:"price"`
@@ -22,6 +23,7 @@ type UpdateCart struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
 	ProductID    uuid.UUID `json:"product_id" validate:"omitempty,required"`
+	ProductName  string    `json:"product_name"`
 	SellerID     uuid.UUID `json:"seller_id"`
 	Count        uint8     `json:"count" validate:"omitempty,required"`
 	Price        uint64    `json:"price"`
@@ -34,6 +36,7 @@ type GetCartByCartID struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
 	ProductID    uuid.UUID `json:"product_id"`
+	ProductName  string    `json:"product_name"`
 	SellerID     uuid.UUID `json:"seller_id"`
 	Count        uint8     `json:"count"`
 	Price        uint64    `json:"price"`
@@ -46,6 +49,7 @@ type GetCartsByUserID struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
 	ProductID    uuid.UUID `json:"product_id"`
+	ProductName  string    `json:"product_name"`
 	SellerID     uuid.UUID `json:"seller_id"`
 	Count        uint8     `json:"count"`
 	Price        uint64    `json:"price"`
@@ -58,6 +62,7 @@ type GetCartsByUserIDAndSellerID struct {
 	CartItemID   uuid.UUID `json:"cart_item_id"`
 	UserID       uuid.UUID `json:"user_id"`
 	ProductID    uuid.UUID `json:"product_id"`
+	ProductName  string    `json:"product_name"`
 	SellerID     uuid.UUID `json:"seller_id"`
 	Count        uint8     `json:"count"`
 	Price        uint64    `json:"price"`
@@ -66,7 +71,7 @@ type GetCartsByUserIDAndSellerID struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-type GetCartSummary struct {
+type GetOrderSummary struct {
 	UserID             uuid.UUID `json:"user_id"`
 	ProductCount       uint8     `json:"product_count"`
 	DeliveryCost       uint64    `json:"delivery_cost"`
@@ -75,6 +80,12 @@ type GetCartSummary struct {
 	DepositePercentage uint64    `json:"deposite_percentage"`
 	Voucher            uint64    `json:"voucher"`
 	TotalPrice         uint64    `json:"total_price"`
+}
+
+type GetCartSummary struct {
+	ProductName string `json:"name"`
+	Count       uint8  `json:"count"`
+	Price       uint64 `json:"price"`
 }
 
 type DeleteCartByCartID struct {

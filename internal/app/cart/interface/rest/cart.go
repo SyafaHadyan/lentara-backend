@@ -42,6 +42,7 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, mid
 	routerGroup.Get("/cartseller/", middleware.Authentication, cartHandler.GetCartsByUserIDAndSellerID)
 	routerGroup.Delete("/cartid/:id", middleware.Authentication, cartHandler.DeleteCartByCartID)
 	routerGroup.Delete("/cartuser/", middleware.Authentication, cartHandler.DeleteCartByUserID)
+	routerGroup.Get("/ordersummary", middleware.Authentication, cartHandler.GetOrderSummary)
 	routerGroup.Get("/summary", middleware.Authentication, cartHandler.GetCartSummary)
 }
 
@@ -92,7 +93,7 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 
 	price *= uint64(create.Count)
 
-	res, err := h.CartUseCase.CreateCart(create, userID, productInfo.SellerID, price)
+	res, err := h.CartUseCase.CreateCart(create, productInfo.Title, userID, productInfo.SellerID, price)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create cart")
 	}
@@ -281,19 +282,37 @@ func (h CartHandler) DeleteCartByUserID(ctx *fiber.Ctx) error {
 	})
 }
 
+func (h CartHandler) GetOrderSummary(ctx *fiber.Ctx) error {
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
+	res, err := h.CartUseCase.GetOrderSummary(userID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get cart summary from user id")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "successfully get order summary",
+		"payload": res,
+	})
+}
+
 func (h CartHandler) GetCartSummary(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
-	res, err := h.CartUseCase.GetCartSummary(userID)
+	res, totalPrice, err := h.CartUseCase.GetCartSumamry(userID)
 	if err != nil {
-		return fiber.NewError(http.StatusInternalServerError, "failed to get cart summary from user id")
+		return fiber.NewError(http.StatusInternalServerError, "failed to get cart summary")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
-		"message": "successfully get cart summary",
-		"payload": res,
+		"message":     "successfully get cart summary",
+		"payload":     res,
+		"total_price": totalPrice,
 	})
 }

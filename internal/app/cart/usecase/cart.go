@@ -12,14 +12,15 @@ import (
 )
 
 type CartUseCaseItf interface {
-	CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error)
+	CreateCart(cart dto.CreateCart, productName string, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error)
 	UpdateCart(cart dto.UpdateCart, cartID uuid.UUID) (dto.UpdateCart, error)
 	GetCartByID(cartID uuid.UUID) (dto.GetCartByCartID, error)
 	GetCartsByUserID(user uuid.UUID) (*[]dto.GetCartsByUserID, error)
 	DeleteCartByCartID(CartID uuid.UUID) (dto.DeleteCartByCartID, error)
 	DeleteCartByUserID(UserID uuid.UUID) (dto.DeleteCartByUserID, error)
 	GetSellerListFromUserCart(userID uuid.UUID) ([]string, error)
-	GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error)
+	GetOrderSummary(userID uuid.UUID) (dto.GetOrderSummary, error)
+	GetCartSumamry(userID uuid.UUID) (*[]dto.GetCartSummary, uint64, error)
 }
 
 type CartUseCase struct {
@@ -34,11 +35,12 @@ func NewCartUseCase(cartRepo repository.CartMySQLItf, config *env.Env) CartUseCa
 	}
 }
 
-func (u CartUseCase) CreateCart(cart dto.CreateCart, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error) {
+func (u CartUseCase) CreateCart(cart dto.CreateCart, productName string, userID uuid.UUID, sellerID uuid.UUID, price uint64) (dto.CreateCart, error) {
 	cartUser := entity.Cart{
 		CartItemID:   uuid.New(),
 		UserID:       userID,
 		ProductID:    cart.ProductID,
+		ProductName:  productName,
 		SellerID:     sellerID,
 		Count:        cart.Count,
 		Price:        price,
@@ -150,12 +152,12 @@ func (u CartUseCase) GetSellerListFromUserCart(userID uuid.UUID) ([]string, erro
 	return *cartUserResult, nil
 }
 
-func (u CartUseCase) GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error) {
+func (u CartUseCase) GetOrderSummary(userID uuid.UUID) (dto.GetOrderSummary, error) {
 	cartUserResult := new([]entity.Cart)
 
 	err := u.cartRepo.GetCartsByUserID(cartUserResult, userID)
 	if err != nil {
-		return dto.GetCartSummary{}, fiber.NewError(http.StatusInternalServerError, "failed to get carts from user id")
+		return dto.GetOrderSummary{}, fiber.NewError(http.StatusInternalServerError, "failed to get carts from user id")
 	}
 
 	var productCount uint8
@@ -173,7 +175,7 @@ func (u CartUseCase) GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error
 	DepositeAmount = uint64(float64(totalPrice) * float64(u.config.DepositePercentage) / float64(100))
 	totalPrice += (serviceCost + DepositeAmount - voucher)
 
-	cartSummary := dto.GetCartSummary{
+	cartSummary := dto.GetOrderSummary{
 		UserID:             userID,
 		ProductCount:       productCount,
 		DeliveryCost:       0,
@@ -185,4 +187,25 @@ func (u CartUseCase) GetCartSummary(userID uuid.UUID) (dto.GetCartSummary, error
 	}
 
 	return cartSummary, nil
+}
+
+func (u CartUseCase) GetCartSumamry(userID uuid.UUID) (*[]dto.GetCartSummary, uint64, error) {
+	cartSummary := new([]entity.Cart)
+
+	err := u.cartRepo.GetCartsByUserID(cartSummary, userID)
+	if err != nil {
+		return nil, 0, fiber.NewError(http.StatusInternalServerError, "failed to get cart summary")
+	}
+
+	// err := u.Pro
+
+	var totalCost uint64
+
+	res := make([]dto.GetCartSummary, len(*cartSummary))
+	for i, cart := range *cartSummary {
+		res[i] = cart.ParseToDTOGetCartSummary()
+		totalCost += res[i].Price * uint64(res[i].Count)
+	}
+
+	return &res, totalCost, nil
 }
