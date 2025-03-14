@@ -6,6 +6,7 @@ import (
 	productusecase "lentara-backend/internal/app/product/usecase"
 	userusecase "lentara-backend/internal/app/user/usecase"
 	"lentara-backend/internal/domain/dto"
+	"lentara-backend/internal/domain/entity"
 	"lentara-backend/internal/middleware"
 	"log"
 	"net/http"
@@ -72,6 +73,10 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "can't find product with current id")
 	}
 
+	if productInfo.Stock < uint32(create.Count) {
+		return fiber.NewError(http.StatusBadRequest, "product count can't exceed product stock")
+	}
+
 	var price uint64
 
 	switch create.RentDuration {
@@ -90,6 +95,16 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 	res, err := h.CartUseCase.CreateCart(create, userID, productInfo.SellerID, price)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to create cart")
+	}
+
+	updateProductStock := entity.Product{
+		Stock:     productInfo.Stock - uint32(create.Count),
+		RentCount: productInfo.RentCount + int32(create.Count),
+	}
+
+	err = h.ProductUseCase.UpdateProduct(create.ProductID, updateProductStock.ParseToDTOUpdateProduct())
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to update product stock")
 	}
 
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{
