@@ -13,6 +13,7 @@ import (
 type PaymentUseCaseItf interface {
 	StorePayment(payment dto.StorePayment, orderID uuid.UUID, userID uuid.UUID, totalPrice uint64) (dto.StorePayment, error)
 	UpdatePayment(payment dto.MidtransUpdatePaymentStatus) (dto.UpdatePaymentStatus, error)
+	GetPaymentInfo(userID uuid.UUID, orderID uuid.UUID) (dto.GetPaymentStatus, error)
 }
 
 type PaymentUseCase struct {
@@ -58,4 +59,18 @@ func (u PaymentUseCase) UpdatePayment(payment dto.MidtransUpdatePaymentStatus) (
 	}
 
 	return paymentUser.ParseToDTOUpdatePayment(), nil
+}
+
+func (u PaymentUseCase) GetPaymentInfo(userID uuid.UUID, orderID uuid.UUID) (dto.GetPaymentStatus, error) {
+	orderUser := entity.Payment{
+		ID:     orderID,
+		UserID: userID,
+	}
+
+	err := u.paymentRepo.GetPaymentInfo(&orderUser, userID, orderID)
+	if err != nil {
+		return dto.GetPaymentStatus{}, fiber.NewError(http.StatusInternalServerError, "failed to get payment info")
+	}
+
+	return orderUser.ParseToDTOGetPaymentStatus(), nil
 }
