@@ -11,6 +11,7 @@ type PaymentMySQLItf interface {
 	StorePayment(payment *entity.Payment) error
 	UpdatePayment(payment *entity.Payment) error
 	GetPaymentInfo(payment *entity.Payment, userID uuid.UUID, orderID uuid.UUID) error
+	GetPaymentUserInfo(payment *entity.Payment, orderID uuid.UUID) error
 }
 
 type PaymentMySQL struct {
@@ -31,4 +32,8 @@ func (r *PaymentMySQL) UpdatePayment(payment *entity.Payment) error {
 
 func (r *PaymentMySQL) GetPaymentInfo(payment *entity.Payment, userID uuid.UUID, orderID uuid.UUID) error {
 	return r.db.Debug().Find(payment, userID, orderID).Error
+}
+
+func (r *PaymentMySQL) GetPaymentUserInfo(payment *entity.Payment, orderID uuid.UUID) error {
+	return r.db.Debug().First(payment, orderID).Error
 }
