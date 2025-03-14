@@ -82,7 +82,7 @@ func (h PaymentHandler) StorePayment(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
-	userCart, err := h.CartUseCase.GetCartSummary(userID)
+	userCart, err := h.CartUseCase.GetOrderSummary(userID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get user cart summary")
 	}

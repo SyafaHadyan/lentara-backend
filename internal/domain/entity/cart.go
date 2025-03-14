@@ -11,6 +11,7 @@ type Cart struct {
 	CartItemID   uuid.UUID `json:"cart_item_id" gorm:"type:varchar(36);primaryKey"`
 	UserID       uuid.UUID `json:"user_id" gorm:"type:varchar(36);foreignKey"`
 	ProductID    uuid.UUID `json:"product_id" gorm:"type:varchar(36);foreignKey"`
+	ProductName  string    `json:"product_name" gorm:"type:text"`
 	SellerID     uuid.UUID `json:"seller_id" gorm:"type:varchar(36);foreignKey"`
 	Count        uint8     `json:"count" gorm:"type:smallint unsigned"`
 	Price        uint64    `json:"price" gorm:"type:bigint unsigned"`
@@ -24,6 +25,7 @@ func (c Cart) ParseToDTOCreateCart() dto.CreateCart {
 		CartItemID:   c.CartItemID,
 		UserID:       c.UserID,
 		ProductID:    c.ProductID,
+		ProductName:  c.ProductName,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
 		Price:        c.Price,
@@ -38,6 +40,7 @@ func (c Cart) ParseToDTOUpdateCart() dto.UpdateCart {
 		CartItemID:   c.CartItemID,
 		UserID:       c.UserID,
 		ProductID:    c.ProductID,
+		ProductName:  c.ProductName,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
 		Price:        c.Price,
@@ -52,6 +55,7 @@ func (c Cart) ParseToDTOGetCartByCartID() dto.GetCartByCartID {
 		CartItemID:   c.CartItemID,
 		UserID:       c.UserID,
 		ProductID:    c.ProductID,
+		ProductName:  c.ProductName,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
 		Price:        c.Price,
@@ -66,6 +70,7 @@ func (c Cart) ParseToDTOGetCartsByUserID() dto.GetCartsByUserID {
 		CartItemID:   c.CartItemID,
 		UserID:       c.UserID,
 		ProductID:    c.ProductID,
+		ProductName:  c.ProductName,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
 		Price:        c.Price,
@@ -80,12 +85,21 @@ func (c Cart) ParseToDTOGetCartsByUserIDAndSellerID() dto.GetCartsByUserIDAndSel
 		CartItemID:   c.CartItemID,
 		UserID:       c.UserID,
 		ProductID:    c.ProductID,
+		ProductName:  c.ProductName,
 		SellerID:     c.SellerID,
 		Count:        c.Count,
 		Price:        c.Price,
 		RentDuration: c.RentDuration,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
+	}
+}
+
+func (c Cart) ParseToDTOGetCartSummary() dto.GetCartSummary {
+	return dto.GetCartSummary{
+		ProductName: c.ProductName,
+		Count:       c.Count,
+		Price:       c.Price,
 	}
 }
 
