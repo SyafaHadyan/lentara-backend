@@ -47,6 +47,7 @@ func NewPaymentHandler(routerGroup fiber.Router, validator *validator.Validate, 
 
 	routerGroup.Post("/new", middleware.Authentication, paymentHandler.StorePayment)
 	routerGroup.Post("/update", paymentHandler.UpdatePayment)
+	routerGroup.Get("/status/:id", middleware.Authentication, paymentHandler.GetPaymentStatus)
 }
 
 func GenerateSnapReq(orderID uuid.UUID, grossAmt int64) *snap.Request {
@@ -122,5 +123,37 @@ func (h PaymentHandler) UpdatePayment(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
 		"message": "successfully updated payment status",
 		"payload": res,
+	})
+}
+
+func (h PaymentHandler) GetPaymentStatus(ctx *fiber.Ctx) error {
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+	}
+
+	orderID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, "invalid order id")
+	}
+
+	res, err := h.PaymentUseCase.GetPaymentInfo(userID, orderID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get payment info")
+	}
+
+	var cartDeletetionStatus dto.DeleteCartByUserID
+
+	if res.Status == "capture" || res.Status == "settlement" {
+		cartDeletetionStatus, err = h.CartUseCase.DeleteCartByUserID(userID)
+		if err != nil {
+			log.Println("failed to delete cart from user id")
+		}
+	}
+
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{
+		"message":               "successfully get payment status",
+		"cart_deleteion_status": cartDeletetionStatus,
+		"payload":               res,
 	})
 }

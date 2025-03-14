@@ -37,3 +37,14 @@ func (p Payment) ParseToDTOUpdatePayment() dto.UpdatePaymentStatus {
 		UpdatedAt:  p.UpdatedAt,
 	}
 }
+
+func (p Payment) ParseToDTOGetPaymentStatus() dto.GetPaymentStatus {
+	return dto.GetPaymentStatus{
+		ID:         p.ID,
+		UserID:     p.UserID,
+		TotalPrice: p.TotalPrice,
+		Status:     p.Status,
+		CreatedAt:  p.CreatedAt,
+		UpdatedAt:  p.UpdatedAt,
+	}
+}

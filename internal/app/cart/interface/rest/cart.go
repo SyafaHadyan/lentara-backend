@@ -35,11 +35,11 @@ func NewCartHandler(routerGroup fiber.Router, validator *validator.Validate, mid
 	routerGroup = routerGroup.Group("/cart")
 
 	routerGroup.Post("/", middleware.Authentication, cartHandler.CreateCart)
-	routerGroup.Patch("/:cartid", cartHandler.UpdateCart)
-	routerGroup.Get("/cartid/:id", cartHandler.GetCartByID)
+	routerGroup.Patch("/:cartid", middleware.Authentication, cartHandler.UpdateCart)
+	routerGroup.Get("/cartid/:id", middleware.Authentication, cartHandler.GetCartByID)
 	routerGroup.Get("/cartuser/", middleware.Authentication, cartHandler.GetCartsByUserID)
 	routerGroup.Get("/cartseller/", middleware.Authentication, cartHandler.GetCartsByUserIDAndSellerID)
-	routerGroup.Delete("/cartid/:id", cartHandler.DeleteCartByCartID)
+	routerGroup.Delete("/cartid/:id", middleware.Authentication, cartHandler.DeleteCartByCartID)
 	routerGroup.Delete("/cartuser/", middleware.Authentication, cartHandler.DeleteCartByUserID)
 	routerGroup.Get("/summary", middleware.Authentication, cartHandler.GetCartSummary)
 }
@@ -51,6 +51,11 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
 	err = h.Validator.Struct(create)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "invalid request body")
@@ -60,15 +65,6 @@ func (h CartHandler) CreateCart(ctx *fiber.Ctx) error {
 
 	if validateRentDuration != 1 && validateRentDuration != 3 && validateRentDuration != 5 && validateRentDuration != 7 {
 		return fiber.NewError(http.StatusBadRequest, "invalid rent duration")
-	}
-
-	userID, err := uuid.Parse(ctx.Locals("userID").(string))
-	if err != nil {
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
-	}
-
-	if userID == uuid.Nil {
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
 	}
 
 	productInfo, err := h.ProductUseCase.GetProductByID(create.ProductID)
@@ -107,6 +103,20 @@ func (h CartHandler) UpdateCart(ctx *fiber.Ctx) error {
 	err := ctx.BodyParser(&update)
 	if err != nil {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse request body")
+	}
+
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
+	cartInfo, err := h.CartUseCase.GetCartByID(update.CartItemID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get cart info")
+	}
+
+	if userID != cartInfo.UserID {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	err = h.Validator.Struct(update)
@@ -149,9 +159,18 @@ func (h CartHandler) GetCartByID(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
 	}
 
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
 	res, err := h.CartUseCase.GetCartByID(cartID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to get cart by id")
+	}
+
+	if userID != res.UserID {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{
@@ -163,7 +182,7 @@ func (h CartHandler) GetCartByID(ctx *fiber.Ctx) error {
 func (h CartHandler) GetCartsByUserID(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	res, err := h.CartUseCase.GetCartsByUserID(userID)
@@ -181,7 +200,7 @@ func (h CartHandler) GetCartsByUserIDAndSellerID(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
 		fmt.Println(userID)
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	seller, err := h.CartUseCase.GetSellerListFromUserCart(userID)
@@ -205,6 +224,20 @@ func (h CartHandler) DeleteCartByCartID(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "invalid cart id")
 	}
 
+	userID, err := uuid.Parse(ctx.Locals("userID").(string))
+	if err != nil {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
+	userInfo, err := h.CartUseCase.GetCartByID(cartID)
+	if err != nil {
+		return fiber.NewError(http.StatusInternalServerError, "failed to get cart info")
+	}
+
+	if userInfo.UserID != userID {
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
+	}
+
 	res, err := h.CartUseCase.DeleteCartByCartID(cartID)
 	if err != nil {
 		return fiber.NewError(http.StatusInternalServerError, "failed to delete cart by id")
@@ -219,7 +252,7 @@ func (h CartHandler) DeleteCartByCartID(ctx *fiber.Ctx) error {
 func (h CartHandler) DeleteCartByUserID(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	res, err := h.CartUseCase.DeleteCartByUserID(userID)
@@ -236,7 +269,7 @@ func (h CartHandler) DeleteCartByUserID(ctx *fiber.Ctx) error {
 func (h CartHandler) GetCartSummary(ctx *fiber.Ctx) error {
 	userID, err := uuid.Parse(ctx.Locals("userID").(string))
 	if err != nil {
-		return fiber.NewError(http.StatusUnauthorized, "user unathorized")
+		return fiber.NewError(http.StatusUnauthorized, "user unauthorized")
 	}
 
 	res, err := h.CartUseCase.GetCartSummary(userID)
